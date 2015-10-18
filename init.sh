@@ -15,3 +15,12 @@ echo "******************"
 cd git
 ./init.sh
 cd ..
+
+echo
+
+echo "******************"
+echo "* Setting up zsh *"
+echo "******************"
+cd zsh
+./init.sh
+cd ..
