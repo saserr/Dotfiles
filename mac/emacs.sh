@@ -7,7 +7,7 @@ answer=$(yes_or_no)
 case $answer in
   Yes)
     echo "[homebrew] installing emacs ..."
-    brew install emacs
+    brew install --with-cocoa emacs
     ;;
   No)
     echo "[homebrew] emacs will not be installed"
