@@ -2,9 +2,9 @@
 
 if [ "$(uname)" == "Darwin" ]
 then
-  echo "********************"
+  echo "******************"
   echo "* Setting up Mac *"
-  echo "********************"
+  echo "******************"
   cd mac
   ./init.sh
   cd ..

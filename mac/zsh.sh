@@ -2,7 +2,7 @@
 
 source ../functions.sh
 
-echo "[homebrew] zsh not installed; do you want to install zsh (Yes / No)? "
+echo "[homebrew] do you want to install zsh (Yes / No)? "
 answer=$(yes_or_no)
 case $answer in
   Yes)

@@ -2,7 +2,7 @@
 
 source ../functions.sh
 
-echo "[homebrew] emacs not installed; do you want to install emacs (Yes / No)? "
+echo "[homebrew] do you want to install emacs (Yes / No)? "
 answer=$(yes_or_no)
 case $answer in
   Yes)

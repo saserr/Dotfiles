@@ -2,7 +2,8 @@
 
 source ../functions.sh
 
-echo "[homebrew] git not installed; do you want to install git (Yes / No)? "
+
+echo "[homebrew] do you want to install git (Yes / No)? "
 answer=$(yes_or_no)
 case $answer in
   Yes)
