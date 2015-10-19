@@ -18,14 +18,16 @@
 (setq visible-bell t)
 ;; Use "y or n" answers instead of full words "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
-;; turn off scroll-bar
-(scroll-bar-mode nil)
-;; turn off tool-bar
-(tool-bar-mode 0)
+(if (display-graphic-p)
+    (progn
+      ;; turn off scroll-bar
+      (scroll-bar-mode nil)
+      ;; turn off tool-bar
+      (tool-bar-mode 0)
+      ;; turn off empty space on left and right side of windows
+      (set-fringe-mode 0)))
 ;; turn on source code formatting
 (global-font-lock-mode 1)
-;; turn off empty space on left and right side of windows
-(set-fringe-mode 0)
 ;; ask for confirmation before quitting Emacs
 (add-hook 'kill-emacs-query-functions
           (lambda () (y-or-n-p "Do you really want to exit Emacs? "))
@@ -35,7 +37,7 @@
 (require 'saveplace)
 (setq-default save-place t)
 
-;; move backup to directory ~/.emacs.d/backup/
+;; move backup to directory ~/.emacs.d/backups/
 (add-to-list 'load-path "~/.emacs.d/backup-dir/")
 (require 'backup-dir)
 (make-variable-buffer-local 'backup-inhibited)
@@ -50,7 +52,7 @@
 (defun set-frame-size-according-to-resolution ()
   "Set default frame size according to display resolution"
   (interactive)
-  (if window-system
+  (if (display-graphic-p)
       (progn
 	(add-to-list 'default-frame-alist (cons 'width 120))
 	;; for the height, subtract a some pixels from the screen
