@@ -1,5 +1,17 @@
 #!/bin/bash
 
+if [ "$(uname)" == "Darwin" ]
+then
+  echo "********************"
+  echo "* Setting up Mac *"
+  echo "********************"
+  cd mac
+  ./init.sh
+  cd ..
+
+  echo
+fi
+
 echo "********************"
 echo "* Setting up emacs *"
 echo "********************"
