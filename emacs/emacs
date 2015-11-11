@@ -86,6 +86,21 @@
 	  (lambda (selected-frame)
 	    (set-frame-parameter selected-frame 'alpha transparency-level)))
 
+;; [org-mode] global commands
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cb" 'org-iswitchb)
+
+;; [org-mode] replace stars with whitespace for indentation
+(setq-default org-startup-indented 't)
+;; [org-mode] allow some edits when trees are collapsed
+(setq-default org-catch-invisible-edits 'smart)
+
+;; [org-mode] create *scratch-org*
+(switch-to-buffer (get-buffer-create (generate-new-buffer-name "*scratch-org*")))
+(org-mode)
+
 (if (and
      (equal system-type 'gnu/linux)
      (file-exists-p ".emacs.linux.el"))
