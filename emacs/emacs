@@ -16,7 +16,9 @@
 (setq inhibit-startup-message t)
 ;; turn on visual bell
 (setq visible-bell t)
-;; Use "y or n" answers instead of full words "yes or no"
+;; unbind suspend shortcut (still available with ctrl x z)
+(global-unset-key [(control z)])
+;; use "y or n" answers instead of full words "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
 (if (display-graphic-p)
     (progn
@@ -32,7 +34,6 @@
 (add-hook 'kill-emacs-query-functions
           (lambda () (y-or-n-p "Do you really want to exit Emacs? "))
           'append)
-
 ;; remember cursor position in files
 (require 'saveplace)
 (setq-default save-place t)
