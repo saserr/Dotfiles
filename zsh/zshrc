@@ -20,6 +20,8 @@ alias dh='dirs -v'
 alias g='git'
 alias h='hg'
 alias emacs='emacs -nw'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
 
 # variables
 # keep history file between sessions
