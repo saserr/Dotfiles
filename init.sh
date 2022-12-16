@@ -35,3 +35,12 @@ echo "******************"
 cd git
 ./init.sh
 cd ..
+
+echo
+
+echo "************************"
+echo "* Setting up tailscale *"
+echo "************************"
+cd tailscale
+./init.sh
+cd ..

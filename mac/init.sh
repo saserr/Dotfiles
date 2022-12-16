@@ -33,5 +33,6 @@ if [ "$continue" = true ]; then
 
   install_app 1password
   install_app google-chrome
+  install_app tailscale
   install_app visual-studio-code
 fi
