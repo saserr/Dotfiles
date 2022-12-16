@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../functions.sh
+source functions.sh
 
 continue=false
 
@@ -30,5 +30,7 @@ if [ "$continue" = true ]; then
   ./zsh.sh
   ./emacs.sh
   ./git.sh
-  ./google-chrome.sh
+
+  install_app 1password
+  install_app google-chrome
 fi
