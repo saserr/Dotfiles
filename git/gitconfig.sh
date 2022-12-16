@@ -2,13 +2,18 @@
 
 # User
 git config --global user.name "Sanjin Sehic"
-echo -n "[.gitconfig] email: "; read email
-git config --global user.email "$email"
+git config --global user.email "saserr@gmail.com"
 
 # Core
 git config --global core.pager "less -r"
-git config --global core.autocrlf input # For Mac and Linux, no EOL conversion
+git config --global core.autocrlf false # For Mac and Linux, no EOL conversion
 git config --global core.safecrlf true # Check that CRLF conversion is reversible
+
+# Commit
+# Signing
+git config --global user.signingkey "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILSLkYYio6KtU9EacWBnoD5zyaQWWIKVNVtPOndoxGfE"
+git config --global commit.gpgsign true
+git config --global gpg.format ssh
 
 # Diff
 git config --global diff.renames copies
@@ -37,19 +42,27 @@ git config --global color.diff auto
 git config --global color.status auto
 git config --global color.interactive auto
 
+# Github
+git config --global github.user saserr
+
 # Alias
 # Common
 git config --global alias.s "status -sb"
 git config --global alias.a add
 git config --global alias.br branch
 git config --global alias.ci commit
+git config --global alias.cl clone
 git config --global alias.co checkout
+git config --global alias.cp cherry-pick
 # Helpers
 git config --global alias.d "diff --word-diff"
 git config --global alias.dc "diff --cached"
 git config --global alias.ls 'log --pretty=format:"%C(yellow)%h%Cred%d\ %Creset%s%Cblue\ [%cn]" --decorate'
 git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\ %Creset%s%Cblue\ [%cn]" --decorate --numstat'
 git config --global alias.gl 'log --graph --pretty=format:'"'"'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"'"' --abbrev-commit'
+git config --global alias.ld 'log --pretty=format:"%C(yellow)%h\ %ad%Cred%d\ %Creset%s%Cblue\ [%cn]" --decorate --date=relative'
+git config --global alias.lds 'log --pretty=format:"%C(yellow)%h\ %ad%Cred%d\ %Creset%s%Cblue\ [%cn]" --decorate --date=short'
+git config --global alias.fl "log -u"
 # Interactive Rebase
 git config --global alias.ri "rebase --interactive --autosquash"
 git config --global alias.fixup '!sh -c '"'"'git commit -m "fixup! $(git log -1 --format='"'"'\'"'"''"'"'%s'"'"'\'"'"''"'"' $@)"'"'"' -'
@@ -58,3 +71,5 @@ git config --global alias.squash '!sh -c '"'"'git commit -m "squash! $(git log -
 git config --global alias.sl "stash list"
 git config --global alias.sp "stash pop"
 git config --global alias.ss "stash save"
+# Mistakes
+git config --global alias.git "!exec git"
