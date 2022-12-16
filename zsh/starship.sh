@@ -7,7 +7,7 @@ if ! installed starship; then
   answer=$(yes_or_no)
   case $answer in
     Yes)
-      if [ "$(uname)" == "Darwin" ]; then
+      if [ "$(uname -s)" == "Darwin" ]; then
         echo "[homebrew] installing starship ..."
         brew install starship
 

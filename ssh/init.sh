@@ -51,16 +51,16 @@ if installed ssh; then
     case $answer in
       Yes)
         echo "[ssh] setting up 1password as ssh agent"
-        if [ "$(uname)" == "Darwin" ]; then
+        if [ "$(uname -s)" == "Darwin" ]; then
           mkdir -p ~/.ssh/config.d/
           safe_link "1password" $PWD/1password.mac ~/.ssh/config.d/1password
           echo "Include config.d/1password" >> ~/.ssh/config
-        elif [ "$(uname)" == "Linux" ]; then
+        elif [ "$(uname -s)" == "Linux" ]; then
           mkdir -p ~/.ssh/config.d/
           safe_link "1password" $PWD/1password.linux ~/.ssh/config.d/1password
           echo "Include config.d/1password" >> ~/.ssh/config
         else
-          echo "[ssh] unknown OS \"$(uname)\""
+          echo "[ssh] unknown OS \"$(uname -s)\""
         fi
         ;;
       No)
