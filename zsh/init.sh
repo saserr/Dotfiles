@@ -3,17 +3,26 @@
 source ../functions.sh
 
 if installed zsh; then
-  echo "Setting up .zshenv ..."
-  safe_link ".zshenv" $PWD/zshenv ~/.zshenv
+  echo "Do you want to setup zsh (Yes / No)? "
+  answer=$(yes_or_no)
+  case $answer in
+    Yes)
+      echo "[zsh] setting up .zshenv ..."
+      safe_link ".zshenv" $PWD/zshenv ~/.zshenv
 
-  echo "Setting up .zshrc ..."
-  safe_link ".zshrc" $PWD/zshrc ~/.zshrc
+      echo "[zsh] setting up .zshrc ..."
+      safe_link ".zshrc" $PWD/zshrc ~/.zshrc
 
-  echo "Save the local specific zsh environment configuration into ~/.zshenv.local.zsh"
-  touch ~/.zshenv.local.zsh
+      echo "[zsh] save the local specific zsh environment configuration into ~/.zshenv.local.zsh"
+      touch ~/.zshenv.local.zsh
 
-  echo "Save the local specific zsh configuration into ~/.zshrc.local.zsh"
-  touch ~/.zshrc.local.zsh
+      echo "[zsh] save the local specific zsh configuration into ~/.zshrc.local.zsh"
+      touch ~/.zshrc.local.zsh
+      ;;
+    No)
+      echo "[zsh] will not be setup"
+      ;;
+  esac
 else
-  echo "zsh not installed; skipping its configuration"
+  echo "[zsh] not installed; skipping its configuration"
 fi
