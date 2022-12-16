@@ -3,7 +3,7 @@
 source ../functions.sh
 
 if installed emacs; then
-  echo "Do you want to setup emacs (Yes / No)? "
+  echo "Do you want to set up emacs (Yes / No)? "
   answer=$(yes_or_no)
   case $answer in
     Yes)
@@ -36,9 +36,9 @@ if installed emacs; then
       fi
       ;;
     No)
-      echo "[emacs] will not be setup"
+      echo "[emacs] will not be set up"
       ;;
   esac
 else
-  echo "[emacs] not installed; skipping its configuration"
+  echo "[emacs] not installed; skipping its setup"
 fi

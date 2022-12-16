@@ -3,7 +3,7 @@
 source ../functions.sh
 
 if installed zsh; then
-  echo "Do you want to setup zsh (Yes / No)? "
+  echo "Do you want to set up zsh (Yes / No)? "
   answer=$(yes_or_no)
   case $answer in
     Yes)
@@ -22,9 +22,9 @@ if installed zsh; then
       ./starship.sh
       ;;
     No)
-      echo "[zsh] will not be setup"
+      echo "[zsh] will not be set up"
       ;;
   esac
 else
-  echo "[zsh] not installed; skipping its configuration"
+  echo "[zsh] not installed; skipping its setup"
 fi
