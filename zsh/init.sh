@@ -13,11 +13,13 @@ if installed zsh; then
       echo "[zsh] setting up .zshrc ..."
       safe_link ".zshrc" $PWD/zshrc ~/.zshrc
 
-      echo "[zsh] save the local specific zsh environment configuration into ~/.zshenv.local.zsh"
+      echo "[zsh] save the local specific zsh environment configuration into ~/.zshenv.local.zsh ..."
       touch ~/.zshenv.local.zsh
 
-      echo "[zsh] save the local specific zsh configuration into ~/.zshrc.local.zsh"
+      echo "[zsh] save the local specific zsh configuration into ~/.zshrc.local.zsh ..."
       touch ~/.zshrc.local.zsh
+
+      ./starship.sh
       ;;
     No)
       echo "[zsh] will not be setup"
