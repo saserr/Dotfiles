@@ -10,4 +10,5 @@ if installed apt; then
   ./git.sh
   ./emacs.sh
   ./tailscale.sh
+  ./docker.sh
 fi

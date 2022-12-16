@@ -56,4 +56,5 @@ if [ "$continue" = true ]; then
   install_app google-chrome
   install_app tailscale
   install_app visual-studio-code
+  install_app docker
 fi
