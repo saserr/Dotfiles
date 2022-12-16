@@ -12,7 +12,7 @@ else
   answer=$(yes_or_no)
   case $answer in
     Yes)
-      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       continue=true
       ;;
     No)
