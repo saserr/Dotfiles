@@ -72,19 +72,6 @@ bindkey '^[[4~' end-of-line
 bindkey '^[[5~' up-line-or-history
 bindkey '^[[6~' down-line-or-history
 
-# Path to your oh-my-zsh configuration.
-export ZSH=$HOME/.oh-my-zsh
-
-# Set to the name theme to load.
-# Look in ~/.oh-my-zsh/themes/
-export ZSH_THEME="saserr"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(ant gem git git-flow mvn mercurial ruby sbt scala svn)
-
 if [ -f ~/.zshrc.local.zsh ]; then
   source ~/.zshrc.local.zsh
 fi
-
-source $ZSH/oh-my-zsh.sh
