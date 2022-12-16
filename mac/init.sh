@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source functions.sh
+source ../functions.sh
 
 continue=false
 
@@ -24,11 +24,31 @@ fi
 if [ "$continue" = true ]; then
   echo "[homebrew] updating ..."
   brew update
-  echo "[homebrew] upgrading ..."
+  echo "[homebrew] upgrading"
   brew upgrade
 
   ./zsh.sh
   ./git.sh
+
+  install_app() {
+    local app=$1
+
+    if ! brew list | grep -q $app; then
+      echo "[mac] do you want to install $app (Yes / No)? "
+      answer=$(yes_or_no)
+      case $answer in
+        Yes)
+          echo "[homebrew] installing $app"
+          brew install --cask $app
+          ;;
+        No)
+          echo "[mac] $app will not be installed"
+          ;;
+      esac
+    else
+      echo "[mac] $app already installed"
+    fi
+  }
 
   install_app emacs
   install_app 1password

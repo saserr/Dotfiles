@@ -9,6 +9,15 @@ if [ "$(uname -s)" == "Darwin" ]; then
   cd ..
 
   echo
+elif [ "$(uname -s)" == "Linux" ]; then
+  echo "********************"
+  echo "* Setting up Linux *"
+  echo "********************"
+  cd linux
+  ./init.sh
+  cd ..
+
+  echo
 fi
 
 echo "******************"
