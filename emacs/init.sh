@@ -25,6 +25,11 @@ if installed emacs; then
       echo "[emacs] save the local specific emacs configuration into ~/.emacs.local.el ..."
       touch ~/.emacs.local.el
 
+      if installed git; then
+        echo "[emacs] appending emacs .gitignore"
+        curl https://www.toptal.com/developers/gitignore/api/emacs >> ~/.gitignore
+      fi
+
       if echo $SHELL | grep -q zsh; then
         if ! echo $EDITOR | grep -q emacs; then
           echo "[zsh] setting up emacs as the default editor"

@@ -9,6 +9,13 @@ if installed git; then
     Yes)
       echo "[git] setting up .gitconfig ..."
       ./gitconfig.sh
+
+      echo "[mac] setting up .gitignore"
+      if [ "$(uname -s)" == "Darwin" ]; then
+        curl https://www.toptal.com/developers/gitignore/api/macos >> ~/.gitignore
+      elif [ "$(uname -s)" == "Linux" ]; then
+        curl https://www.toptal.com/developers/gitignore/api/linux >> ~/.gitignore
+      fi
       ;;
     No)
       echo "[git] will not be set up"
