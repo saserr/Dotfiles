@@ -4,8 +4,7 @@ source ../functions.sh
 
 continue=false
 
-if installed brew
-then
+if installed brew; then
   echo "[homebrew] already installed"
   continue=true
 else
@@ -22,8 +21,7 @@ else
   esac
 fi
 
-if [ "$continue" = true ]
-then
+if [ "$continue" = true ]; then
   echo "[homebrew] updating ..."
   brew update
   echo "[homebrew] upgrading ..."

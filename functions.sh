@@ -25,8 +25,7 @@ safe_link() {
   local from=$2
   local to=$3
 
-  if [ -e $to ]
-  then
+  if [ -e $to ]; then
     echo "[$what] $to exists; do you want to replace it (Yes / No)? "
     local answer=$(yes_or_no)
     case $answer in

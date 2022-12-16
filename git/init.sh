@@ -2,8 +2,7 @@
 
 source ../functions.sh
 
-if installed git
-then
+if installed git; then
   echo "Setting up .gitconfig ..."
   ./gitconfig.sh
 else

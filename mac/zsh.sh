@@ -8,15 +8,13 @@ case $answer in
   Yes)
     echo "[homebrew] installing zsh ..."
     brew install zsh
-    if [ $SHELL != /usr/local/bin/zsh ]
-    then
+    if [ $SHELL != /usr/local/bin/zsh ]; then
       echo "[homebrew] do you want to set this /usr/local/bin/zsh as login shell (current: $SHELL) (Yes / No)? "
       answer=$(yes_or_no)
       case $answer in
         Yes)
           echo "[homebrew] changing login shell ..."
-          if ! grep -q /usr/local/bin/zsh /etc/shells
-          then
+          if ! grep -q /usr/local/bin/zsh /etc/shells; then
             sudo echo /usr/local/bin/zsh >> /etc/shells
           fi
           chsh -s /usr/local/bin/zsh

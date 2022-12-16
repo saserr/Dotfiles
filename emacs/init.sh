@@ -2,13 +2,11 @@
 
 source ../functions.sh
 
-if installed emacs
-then
+if installed emacs; then
   echo "Setting up .emacs ..."
   safe_link ".emacs" $PWD/emacs ~/.emacs
 
-  if [ ! -e ~/.emacs.d/backups-dir/ ]
-  then
+  if [ ! -e ~/.emacs.d/backups-dir/ ]; then
     echo "Setting up backup-dir ..."
     mkdir -p ~/.emacs.d/backup-dir/
     curl http://www.northbound-train.com/emacs-hosted/backup-dir.el > ~/.emacs.d/backup-dir/backup-dir.el

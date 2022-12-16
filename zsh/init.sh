@@ -2,8 +2,7 @@
 
 source ../functions.sh
 
-if installed zsh
-then
+if installed zsh; then
   if [ -e ~/.oh-my-zsh ]
   then
     echo "[oh-my-zsh] already installed"

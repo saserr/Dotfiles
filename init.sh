@@ -1,7 +1,6 @@
 #!/bin/bash
 
-if [ "$(uname)" == "Darwin" ]
-then
+if [ "$(uname)" == "Darwin" ]; then
   echo "******************"
   echo "* Setting up Mac *"
   echo "******************"
