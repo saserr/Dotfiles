@@ -11,6 +11,15 @@ if [ "$(uname)" == "Darwin" ]; then
   echo
 fi
 
+echo "******************"
+echo "* Setting up zsh *"
+echo "******************"
+cd zsh
+./init.sh
+cd ..
+
+echo
+
 echo "********************"
 echo "* Setting up emacs *"
 echo "********************"
@@ -24,14 +33,5 @@ echo "******************"
 echo "* Setting up git *"
 echo "******************"
 cd git
-./init.sh
-cd ..
-
-echo
-
-echo "******************"
-echo "* Setting up zsh *"
-echo "******************"
-cd zsh
 ./init.sh
 cd ..

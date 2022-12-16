@@ -27,7 +27,7 @@ if [ "$continue" = true ]; then
   echo "[homebrew] upgrading ..."
   brew upgrade
 
+  ./zsh.sh
   ./emacs.sh
   ./git.sh
-  ./zsh.sh
 fi

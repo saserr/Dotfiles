@@ -22,8 +22,18 @@ if installed emacs; then
       echo "[emacs] setting up .emacs.mac.el ..."
       safe_link ".emacs.mac.el" $PWD/emacs.mac.el ~/.emacs.mac.el
 
-      echo "[emacs] save the local specific emacs configuration into ~/.emacs.local.el"
+      echo "[emacs] save the local specific emacs configuration into ~/.emacs.local.el ..."
       touch ~/.emacs.local.el
+
+      if echo $SHELL | grep -q zsh; then
+        if ! echo $EDITOR | grep -q emacs; then
+          echo "[zsh] setting up emacs as the default editor"
+          echo "export EDITOR='emacs -nw'" >> ~/.zshenv.local.zsh
+        fi
+      else
+        echo "[zsh] setting up emacs as the default editor"
+        echo "export EDITOR='emacs -nw'" >> ~/.profile
+      fi
       ;;
     No)
       echo "[emacs] will not be setup"

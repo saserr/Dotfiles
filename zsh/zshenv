@@ -1,6 +1,5 @@
 # environment variables
 export PAGER='less -r'
-export EDITOR='emacs -nw'
 
 if [ -f ~/.zshenv.local.zsh ]; then
   source ~/.zshenv.local.zsh
