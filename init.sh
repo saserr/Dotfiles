@@ -38,6 +38,15 @@ cd ..
 
 echo
 
+echo "****************************"
+echo "* Setting up 1password-cli *"
+echo "****************************"
+cd 1password-cli
+./init.sh
+cd ..
+
+echo
+
 echo "************************"
 echo "* Setting up tailscale *"
 echo "************************"

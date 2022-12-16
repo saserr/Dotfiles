@@ -32,6 +32,7 @@ if [ "$continue" = true ]; then
   ./git.sh
 
   install_app 1password
+  install_app 1password-cli
   install_app google-chrome
   install_app tailscale
   install_app visual-studio-code
