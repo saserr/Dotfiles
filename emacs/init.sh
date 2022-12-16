@@ -16,11 +16,13 @@ if installed emacs; then
         curl http://www.northbound-train.com/emacs-hosted/backup-dir.el > ~/.emacs.d/backup-dir/backup-dir.el
       fi
 
-      echo "[emacs] setting up .emacs.linux.el ..."
-      safe_link ".emacs.linux.el" $PWD/emacs.linux.el ~/.emacs.linux.el
-
-      echo "[emacs] setting up .emacs.mac.el ..."
-      safe_link ".emacs.mac.el" $PWD/emacs.mac.el ~/.emacs.mac.el
+      if [ "$(uname -s)" == "Darwin" ]; then
+        echo "[emacs] setting up .emacs.mac.el ..."
+        safe_link ".emacs.mac.el" $PWD/emacs.mac.el ~/.emacs.mac.el
+      elif [ "$(uname -s)" == "Linux" ]; then
+        echo "[emacs] setting up .emacs.linux.el ..."
+        safe_link ".emacs.linux.el" $PWD/emacs.linux.el ~/.emacs.linux.el
+      fi
 
       echo "[emacs] save the local specific emacs configuration into ~/.emacs.local.el ..."
       touch ~/.emacs.local.el
