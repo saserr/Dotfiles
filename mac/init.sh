@@ -30,4 +30,5 @@ if [ "$continue" = true ]; then
   ./zsh.sh
   ./emacs.sh
   ./git.sh
+  ./google-chrome.sh
 fi
