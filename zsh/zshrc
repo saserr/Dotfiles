@@ -71,6 +71,9 @@ bindkey '^[[3~' delete-char
 bindkey '^[[4~' end-of-line
 bindkey '^[[5~' up-line-or-history
 bindkey '^[[6~' down-line-or-history
+# autocompletion using arrow keys (based on history)
+bindkey '\e[A' history-search-backward
+bindkey '\e[B' history-search-forward
 
 if [ -f ~/.zshrc.local.zsh ]; then
   source ~/.zshrc.local.zsh
