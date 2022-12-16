@@ -2,12 +2,6 @@
 export PAGER='less -r'
 export EDITOR='emacs -nw'
 
-# configurations
-sbt_boot_dir=~/.sbt/boot/
-export SBT_OPTS="-client -XX:+CMSClassUnloadingEnabled -XX:PermSize=64M \
--XX:MaxPermSize=256M -XX:+UseGCOverheadLimit \
--D sbt.boot.directory=$sbt_boot_dir"
-
 if [ -f ~/.zshenv.local.zsh ]; then
   source ~/.zshenv.local.zsh
 fi
