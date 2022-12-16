@@ -8,7 +8,7 @@ if ! brew list | grep -q git; then
   case $answer in
     Yes)
       echo "[homebrew] installing git ..."
-      brew install git git-extras git-flow
+      brew install git git-lfs
       ;;
     No)
       echo "[homebrew] git will not be installed"
