@@ -1,0 +1,19 @@
+Host nas.saserr.me
+  HostName 100.77.184.121
+  IdentityFile ~/.ssh/nas.pub
+  IdentitiesOnly yes
+
+Host dev.saserr.me
+  IdentityFile ~/.ssh/dev.pub
+  IdentitiesOnly yes
+  ForwardAgent yes
+
+Host server.saserr.me
+  IdentityFile ~/.ssh/server.pub
+  IdentitiesOnly yes
+  ForwardAgent yes
+
+Host esxi.saserr.me
+  User root
+  IdentityFile ~/.ssh/esxi.pub
+  IdentitiesOnly yes
