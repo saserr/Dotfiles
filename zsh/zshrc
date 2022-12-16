@@ -47,7 +47,7 @@ setopt hist_no_functions # don't save function definitions in history
                             # (not needed when share_history is on)
 # setopt extended_history # save time and duration of command execution in history
                           # (doesn't work when share_history or inc_append_history is on)
-# setopt hist_ignore_dups # ignore adjecent duplicate commands
+setopt hist_ignore_dups # ignore adjecent duplicate commands
 # setopt hist_ignore_space # if command starts with space don't save it in history
 
 # directory stack options
