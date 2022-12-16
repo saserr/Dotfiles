@@ -28,9 +28,9 @@ if [ "$continue" = true ]; then
   brew upgrade
 
   ./zsh.sh
-  ./emacs.sh
   ./git.sh
 
+  install_app emacs
   install_app 1password
   install_app 1password-cli
   install_app google-chrome
