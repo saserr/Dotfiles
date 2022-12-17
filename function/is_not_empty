@@ -1,0 +1,4 @@
+is_not_empty() {
+  local value=$1
+  [ -n "$value" ]
+}

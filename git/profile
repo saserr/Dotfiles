@@ -1,0 +1,32 @@
+source function/is_file_empty
+source function/is_installed
+
+homebrew_formula='git'
+apt_package='git'
+
+configure() {
+  echo "[git] setting up .gitconfig ..."
+  ./git/gitconfig.sh
+
+  if is_installed curl; then
+    echo "[git] setting up .gitignore"
+    if is_file_empty "~/.gitignore"; then
+      echo >> ~/.gitignore
+    fi
+
+    local platform="$(platform)"
+    case $platform in
+      'mac')
+        curl https://www.toptal.com/developers/gitignore/api/macos >> ~/.gitignore
+        ;;
+      'debian')
+        curl https://www.toptal.com/developers/gitignore/api/linux >> ~/.gitignore
+        ;;
+      'linux')
+        curl https://www.toptal.com/developers/gitignore/api/linux >> ~/.gitignore
+        ;;
+    esac
+  else
+    echo "[git] skipping setting up .gitignore; no curl"
+  fi
+}

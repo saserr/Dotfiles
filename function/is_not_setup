@@ -1,0 +1,6 @@
+source function/is_file_missing
+
+is_not_setup() {
+  local program=$1
+  is_file_missing ~/.setup/$program
+}

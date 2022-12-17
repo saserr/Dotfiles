@@ -1,0 +1,29 @@
+source function/is_not_empty
+source function/platform
+
+install() {
+  local program=$1
+  local platform="$(platform)"
+  case $platform in
+    'mac')
+      if is_not_empty "$homebrew_formula"; then
+        if ! brew list | grep $homebrew_formula > /dev/null ; then
+          echo "[homebrew] installing $program ..."
+          brew install $homebrew_formula && return 0
+        else
+          echo "[$program] already installed ..."
+          return 0
+        fi
+      fi
+      ;;
+    'debian')
+      if is_not_empty "$apt_package"; then
+        echo "[apt] installing $program ..."
+        sudo apt -y install $apt_package && return 0
+      fi
+      ;;
+  esac
+
+  echo "[$platform] don't know how to install $program"
+  return 1
+}

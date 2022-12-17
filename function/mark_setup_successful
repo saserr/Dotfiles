@@ -1,0 +1,5 @@
+mark_setup_successful() {
+  local program=$1
+  mkdir -p ~/.setup/
+  echo "1" > ~/.setup/$program
+}
