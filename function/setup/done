@@ -1,0 +1,5 @@
+setup::done() {
+  local profile=$1
+  mkdir -p ~/.setup/
+  echo "1" > ~/.setup/$profile
+}

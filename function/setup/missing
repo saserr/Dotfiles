@@ -1,0 +1,4 @@
+setup::missing?() {
+  local profile=$1
+  file::missing? ~/.setup/$profile
+}
