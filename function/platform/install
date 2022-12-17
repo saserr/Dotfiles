@@ -9,7 +9,7 @@ platform::install() {
       if ! variable::empty? "$homebrew_formula"; then
         if ! brew list | grep $homebrew_formula > /dev/null ; then
           echo "[homebrew] installing $program ..."
-          brew install $homebrew_formula && return 0
+          brew update && brew install $homebrew_formula && return 0
         else
           echo "[$program] already installed ..."
           return 0
@@ -19,7 +19,7 @@ platform::install() {
     'debian')
       if ! variable::empty? "$apt_package"; then
         echo "[apt] installing $program ..."
-        sudo apt -y install $apt_package && return 0
+        sudp apt update && sudo apt -y install $apt_package && return 0
       fi
       ;;
   esac
