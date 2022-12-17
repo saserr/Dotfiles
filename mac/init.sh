@@ -50,11 +50,18 @@ if [ "$continue" = true ]; then
     fi
   }
 
-  install_app emacs
   install_app 1password
   install_app 1password-cli
   install_app google-chrome
   install_app tailscale
+
+  install_app emacs
+  install_app iterm2
   install_app visual-studio-code
   install_app docker
+
+  install_app google-drive
+  install_app resilio-sync
+  
+  install_app telegram
 fi
