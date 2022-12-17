@@ -60,7 +60,7 @@ if installed ssh; then
           safe_link "1password" $PWD/1password.linux ~/.ssh/config.d/1password
           echo "Include config.d/1password" >> ~/.ssh/config
         else
-          echo "[ssh] unknown OS \"$(uname -s)\""
+          echo "[ssh] unknown platform \"$(uname -s)\""
         fi
         ;;
       No)

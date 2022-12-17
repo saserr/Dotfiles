@@ -13,6 +13,17 @@ if ! installed starship; then
 
         echo "[zsh] enabling starship"
         echo "# enable https://starship.rs\neval \"\$(starship init zsh)\"" >> ~/.zshrc.local.zsh
+      elif [ "$(uname -s)" == "Linux" ]; then
+        echo "[apt] installing curl ..."
+        sudo apt -y install curl
+
+        echo "[apt] installing starship ..."
+        curl -sS https://starship.rs/install.sh | sh
+
+        echo "[zsh] enabling starship"
+        echo "# enable https://starship.rs\neval \"\$(starship init zsh)\"" >> ~/.zshrc.local.zsh
+      else
+        echo "[ssh] unknown platform \"$(uname -s)\""
       fi
       ;;
     No)
