@@ -2,5 +2,6 @@ homebrew_formula='git-lfs'
 apt_package='git-lfs'
 
 configure() {
+  echo "[git-lfs] installing for the current user"
   git lfs install
 }
