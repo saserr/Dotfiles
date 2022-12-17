@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if installed apt; then
   echo "[apt] updating ..."

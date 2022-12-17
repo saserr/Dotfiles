@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # User
 git config --global user.name "Sanjin Sehic"
