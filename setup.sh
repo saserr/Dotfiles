@@ -15,20 +15,20 @@ source function/variable/empty
 
 source $profile/profile
 
-if variable::empty? "$program"; then
-  program="$profile"
-fi
+text::header "Setting up $profile"
 
-text::header "Setting up $program"
+if file::missing? ~/.setup/$profile; then
+  if variable::empty? "$program"; then
+    program="$profile"
+  fi
 
-if file::missing? ~/.setup/$program; then
   platform::install $program || exit 1
 
   if [[ "$(type -t configure)" == function ]]; then
     configure || exit 1
     mkdir -p ~/.setup/
-    echo "1" > ~/.setup/$program
+    echo "1" > ~/.setup/$profile
   fi
 else
-  echo "[$program] already set up"
+  echo "[$profile] already set up"
 fi
