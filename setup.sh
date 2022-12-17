@@ -10,6 +10,7 @@ if file::missing? "$profile/profile"; then
 fi
 
 source function/platform/install
+source function/prompt/yes_or_no
 source function/text/header
 source function/variable/empty
 
@@ -32,4 +33,16 @@ if file::missing? ~/.setup/$profile; then
   echo "1" > ~/.setup/$profile
 else
   echo "[$profile] already set up"
+fi
+
+if ! variable::empty? "$recommended"; then
+  for additonal_profile in ${recommended[@]}; do
+    if file::missing? ~/.setup/$additonal_profile; then
+      echo "[$profile] do you want to install $additonal_profile (Yes / No)? "
+      if [[ $(yes_or_no) == Yes ]]; then
+        echo
+        ./setup.sh $additonal_profile
+      fi
+    fi
+  done
 fi

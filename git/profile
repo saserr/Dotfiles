@@ -4,6 +4,8 @@ source function/file/empty
 homebrew_formula='git'
 apt_package='git'
 
+recommended=(git-lfs)
+
 configure() {
   echo "[git] setting up .gitconfig ..."
   ./git/gitconfig.sh
