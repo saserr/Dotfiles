@@ -1,5 +1,0 @@
-repeat() {
-  local times=$1
-  local what=$2
-  printf "$what%.0s" $(seq 1 $times)
-}

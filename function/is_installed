@@ -1,4 +1,0 @@
-is_installed() {
-  local program=$1
-  hash $program 2>| /dev/null
-}

@@ -1,5 +1,5 @@
-source function/is_file_empty
-source function/is_installed
+source function/command/exists
+source function/file/empty
 
 homebrew_formula='git'
 apt_package='git'
@@ -8,14 +8,13 @@ configure() {
   echo "[git] setting up .gitconfig ..."
   ./git/gitconfig.sh
 
-  if is_installed curl; then
+  if command::exists? curl; then
     echo "[git] setting up .gitignore"
-    if is_file_empty "~/.gitignore"; then
+    if file::empty? "~/.gitignore"; then
       echo >> ~/.gitignore
     fi
 
-    local platform="$(platform)"
-    case $platform in
+    case "$(platform::name)" in
       'mac')
         curl https://www.toptal.com/developers/gitignore/api/macos >> ~/.gitignore
         ;;

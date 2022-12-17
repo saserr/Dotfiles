@@ -1,0 +1,10 @@
+source function/string/repeat
+
+text::header() {
+  local message=$1
+  local length=${#message}
+
+  string::repeat $((length+4)) '*'; echo
+  echo "* $message *"
+  string::repeat $((length+4)) '*'; echo
+}

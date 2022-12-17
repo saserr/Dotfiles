@@ -1,0 +1,4 @@
+command::exists?() {
+  local command=$1
+  hash $command 2>| /dev/null
+}

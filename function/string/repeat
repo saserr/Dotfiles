@@ -1,0 +1,5 @@
+string::repeat() {
+  local times=$1
+  local string=$2
+  printf "$string%.0s" $(seq 1 $times)
+}

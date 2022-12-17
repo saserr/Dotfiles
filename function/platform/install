@@ -1,12 +1,12 @@
-source function/is_not_empty
-source function/platform
+source function/platform/name
+source function/variable/empty
 
-install() {
+platform::install() {
   local program=$1
-  local platform="$(platform)"
+  local platform="$(platform::name)"
   case $platform in
     'mac')
-      if is_not_empty "$homebrew_formula"; then
+      if ! variable::empty? "$homebrew_formula"; then
         if ! brew list | grep $homebrew_formula > /dev/null ; then
           echo "[homebrew] installing $program ..."
           brew install $homebrew_formula && return 0
@@ -17,7 +17,7 @@ install() {
       fi
       ;;
     'debian')
-      if is_not_empty "$apt_package"; then
+      if ! variable::empty? "$apt_package"; then
         echo "[apt] installing $program ..."
         sudo apt -y install $apt_package && return 0
       fi

@@ -2,33 +2,32 @@
 
 profile=$1
 
-source function/is_file_missing
+source function/file/missing
 
-if is_file_missing "$profile/profile"; then
+if file::missing? "$profile/profile"; then
   echo "$profile/profile does not exits"
   exit 1
 fi
 
-source function/header
-source function/install
-source function/is_empty
-source function/is_not_setup
-source function/mark_setup_successful
+source function/platform/install
+source function/text/header
+source function/variable/empty
 
 source $profile/profile
 
-if is_empty "$program"; then
+if variable::empty? "$program"; then
   program="$profile"
 fi
 
-header "Setting up $program"
+text::header "Setting up $program"
 
-if is_not_setup $program; then
-  install $program || exit 1
+if file::missing? ~/.setup/$program; then
+  platform::install $program || exit 1
 
   if [[ "$(type -t configure)" == function ]]; then
     configure || exit 1
-    mark_setup_successful $program
+    mkdir -p ~/.setup/
+    echo "1" > ~/.setup/$program
   fi
 else
   echo "[$program] already set up"
