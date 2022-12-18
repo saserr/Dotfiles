@@ -1,0 +1,5 @@
+file::contains?() {
+  local file=$1
+  local what=$2
+  grep -q $what $file
+}

@@ -1,3 +1,5 @@
+source function/file/append
+source function/file/contains
 source function/platform/name
 source function/platform/safe_link
 source function/prompt/yes_or_no
@@ -23,6 +25,11 @@ configure() {
     case $(prompt::yes_or_no) in
       Yes)
         echo "[$platform] changing login shell to zsh ..."
+        if [[ $platform == mac ]]; then
+          if ! file::contains? /etc/shells '/usr/local/bin/zsh'; then
+            sudo file:append /etc/shells '/usr/local/bin/zsh'
+          fi
+        fi
         chsh -s $zsh_path
         ;;
       No)

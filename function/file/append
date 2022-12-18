@@ -1,0 +1,5 @@
+file::append() {
+  local file=$1
+  local what=$2
+  echo $what >> $file
+}
