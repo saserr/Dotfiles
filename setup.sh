@@ -4,7 +4,7 @@ profile=$1
 
 source function/file/missing
 
-if file::missing? "$profile/profile"; then
+if file::missing? $profile/profile; then
   echo "$profile/profile does not exits"
   exit 1
 fi
