@@ -18,7 +18,7 @@ configure() {
   local platform="$(platform::name)"
   local zsh_path=$(zsh_path $platform)
 
-  if [[ $SHELL == $zsh_path ]]; then
+  if [[ $SHELL != $zsh_path ]]; then
     echo "[$platform] do you want to set zsh as login shell (current: $SHELL) (Yes / No)? "
     case $(prompt::yes_or_no) in
       Yes)
