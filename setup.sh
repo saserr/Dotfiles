@@ -40,7 +40,7 @@ if ! variable::empty? "$recommended"; then
   for additonal_profile in ${recommended[@]}; do
     if setup::missing? $additonal_profile; then
       echo "[$profile] do you want to install $additonal_profile (Yes / No)? "
-      if [[ $(yes_or_no) == Yes ]]; then
+      if [[ $(prompt::yes_or_no) == Yes ]]; then
         echo
         ./setup.sh $additonal_profile
       fi

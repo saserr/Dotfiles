@@ -1,4 +1,4 @@
-yes_or_no() {
+prompt::yes_or_no() {
   select answer in "Yes" "No"; do
     case $answer in
       Yes)
