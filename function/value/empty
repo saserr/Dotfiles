@@ -1,4 +1,4 @@
-variable::empty?() {
+value::empty?() {
   local value=$1
   [ ! -n "$value" ]
 }

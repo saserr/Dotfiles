@@ -7,9 +7,9 @@ source function/setup/done
 
 homebrew_formula='starship'
 
-debian_install() {
-  platform::install curl || return 1
+debian_required=(curl)
 
+debian_install() {
   echo "[starship] installing ..."
   curl -sS https://starship.rs/install.sh | sh
 }

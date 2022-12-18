@@ -5,24 +5,59 @@ profile=$1
 source function/path/exists
 
 if ! path::exists? $profile/profile; then
-  echo "$profile/profile does not exits"
+  echo "[$profile] does not exits"
   exit 1
 fi
 
 source function/exists
 source function/platform/install
+source function/platform/name
 source function/prompt/yes_or_no
 source function/setup/done
 source function/setup/missing
 source function/text/header
-source function/variable/empty
+source function/value/empty
 
 source $profile/profile
 
-text::header "Setting up $profile"
-
 if setup::missing? $profile; then
-  if variable::empty? "$program"; then
+  maybe_required=( $required )
+
+  case "$(platform::name)" in
+    mac)
+      maybe_required+=( $mac_required )
+      ;;
+    debian)
+      maybe_required+=( $debian_required )
+      ;;
+  esac
+
+  required=()
+
+  for maybe_required_profile in ${maybe_required[@]}; do
+    if setup::missing? $maybe_required_profile; then
+      required+=( $maybe_required_profile )
+    fi
+  done
+
+  if ! value::empty? "${required[@]}"; then
+    echo "[$profile] requires (${required[@]}); do you want to set them up (Yes / No)?"
+    case $(prompt::yes_or_no) in
+      Yes)
+        for required_profile in ${required[@]}; do
+          ./setup.sh $required_profile || exit 1
+          echo
+        done
+        ;;
+      No)
+        exit 1
+        ;;
+    esac
+  fi
+
+  text::header "Setting up $profile"
+
+  if value::empty? "$program"; then
     program="$profile"
   fi
 
@@ -37,13 +72,13 @@ else
   echo "[$profile] already set up"
 fi
 
-if ! variable::empty? "$recommended"; then
-  for additonal_profile in ${recommended[@]}; do
-    if setup::missing? $additonal_profile; then
-      echo "[$profile] do you want to install $additonal_profile (Yes / No)? "
+if ! value::empty? "${recommended[@]}"; then
+  for recommended_profile in ${recommended[@]}; do
+    if setup::missing? $recommended_profile; then
+      echo "[$profile] do you want to install $recommended_profile (Yes / No)? "
       if [[ $(prompt::yes_or_no) == Yes ]]; then
         echo
-        ./setup.sh $additonal_profile
+        ./setup.sh $recommended_profile
       fi
     fi
   done

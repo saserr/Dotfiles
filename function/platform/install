@@ -1,12 +1,12 @@
 source function/platform/name
-source function/variable/empty
+source function/value/empty
 
 platform::install() {
   local program=$1
   local platform="$(platform::name)"
   case $platform in
     'mac')
-      if ! variable::empty? "$homebrew_formula"; then
+      if ! value::empty? "$homebrew_formula"; then
         if brew list | grep $homebrew_formula > /dev/null ; then
           echo "[homebrew] $program already installed ..."
           return 0
@@ -25,7 +25,7 @@ platform::install() {
       if function::exists? debian_install; then
         debian_install
       else
-        if ! variable::empty? "$apt_package"; then
+        if ! value::empty? "$apt_package"; then
           if apt list -i | grep -q git; then
             echo "[apt] $program already installed ..."
             return 0
