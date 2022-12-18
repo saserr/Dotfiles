@@ -1,4 +1,4 @@
-source function/file/exists
+source function/path/exists
 source function/prompt/yes_or_no
 
 platform::safe_link() {
@@ -6,7 +6,7 @@ platform::safe_link() {
   local from=$2
   local to=$3
 
-  if file::exists? $to; then
+  if path::exists? $to; then
     echo "[$what] $to exists; do you want to replace it (Yes / No)? "
     case $(prompt::yes_or_no) in
       Yes)

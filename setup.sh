@@ -2,9 +2,9 @@
 
 profile=$1
 
-source function/file/missing
+source function/path/exists
 
-if file::missing? $profile/profile; then
+if ! path::exists? $profile/profile; then
   echo "$profile/profile does not exits"
   exit 1
 fi

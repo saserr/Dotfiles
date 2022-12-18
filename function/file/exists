@@ -1,4 +1,0 @@
-file::exists?() {
-  local file=$1
-  [ -f "$file" ]
-}
