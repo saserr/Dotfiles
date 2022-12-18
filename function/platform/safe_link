@@ -1,0 +1,25 @@
+source function/file/exists
+source function/prompt/yes_or_no
+
+platform::safe_link() {
+  local what=$1
+  local from=$2
+  local to=$3
+
+  if file::exists? $to; then
+    echo "[$what] $to exists; do you want to replace it (Yes / No)? "
+    case $(prompt::yes_or_no) in
+      Yes)
+        echo "[$what] Old $to will be moved to $to.old"
+        mv $to $to.old
+        echo "[$what] $to will be linked to $from"
+        ln -s $from $to
+        ;;
+      No)
+        echo "[$what] $to will not be linked"
+        ;;
+    esac
+  else
+    ln -s $from $to
+  fi
+}

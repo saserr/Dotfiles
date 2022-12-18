@@ -1,4 +1,4 @@
 file::missing?() {
   local file=$1
-  [ ! -f "$file" ]
+  [ ! -e "$file" ]
 }

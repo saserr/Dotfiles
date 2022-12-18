@@ -1,0 +1,45 @@
+source function/platform/name
+source function/platform/safe_link
+source function/prompt/yes_or_no
+
+homebrew_formula='zsh'
+apt_package='zsh'
+
+zsh_path() {
+  local platform=$1
+  if [[ $platform == mac ]]; then
+    echo '/usr/local/bin/zsh'
+  else
+    echo '/bin/zsh'
+  fi
+}
+
+configure() {
+  local platform="$(platform::name)"
+  local zsh_path=$(zsh_path $platform)
+
+  if [[ $SHELL == $zsh_path ]]; then
+    echo "[$platform] do you want to set zsh as login shell (current: $SHELL) (Yes / No)? "
+    case $(prompt::yes_or_no) in
+      Yes)
+        echo "[$platform] changing login shell to zsh ..."
+        chsh -s $zsh_path
+        ;;
+      No)
+        echo "[$platform] $SHELL will remain the login shell ..."
+        ;;
+    esac
+  fi
+
+  echo '[zsh] setting up .zshenv ...'
+  platform::safe_link '.zshenv' $PWD/zsh/zshenv ~/.zshenv
+
+  echo '[zsh] save the local specific zsh environment configuration into ~/.zshenv.local.zsh ...'
+  touch ~/.zshenv.local.zsh
+
+  echo '[zsh] setting up .zshrc ...'
+  platform::safe_link '.zshrc' $PWD/zsh/zshrc ~/.zshrc
+
+  echo '[zsh] save the local specific zsh configuration into ~/.zshrc.local.zsh'
+  touch ~/.zshrc.local.zsh
+}
