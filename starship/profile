@@ -1,0 +1,46 @@
+source function/command/exists
+source function/file/append
+source function/file/empty
+source function/platform/install
+source function/platform/login_shell
+source function/setup/done
+
+homebrew_formula='starship'
+
+debian_install() {
+  platform::install curl || return 1
+
+  echo "[starship] installing ..."
+  curl -sS https://starship.rs/install.sh | sh
+}
+
+configure() {
+  local login_shell="$(platform::login_shell)"
+  case $login_shell in
+    'zsh')
+      echo '[starship] enabling in zsh'
+
+      local zshrc=''
+      if setup::missing? zsh; then
+        zshrc=~/.zshrc
+      else
+        zshrc=~/.zshrc.local.zsh
+      fi
+
+      if ! file::empty? $zshrc; then
+        file::append $zshrc ''
+      fi
+      file::append $zshrc '# enable https://starship.rs'
+      file::append $zshrc 'eval "$(starship init zsh)"'
+      ;;
+    'bash')
+      echo '[starship] enabling in bash'
+      file::append $zshrc '# enable https://starship.rs'
+      file::append $zshrc 'eval "$(starship init bash)"'
+      ;;
+    *)
+      echo "[starship] don't know how to enable for $login_shell"
+      return 1
+      ;;
+  esac
+}

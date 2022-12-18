@@ -9,6 +9,7 @@ if ! path::exists? $profile/profile; then
   exit 1
 fi
 
+source function/exists
 source function/platform/install
 source function/prompt/yes_or_no
 source function/setup/done
@@ -27,7 +28,7 @@ if setup::missing? $profile; then
 
   platform::install $program || exit 1
 
-  if [[ "$(type -t configure)" == function ]]; then
+  if function::exists? configure; then
     configure || exit 1
   fi
 

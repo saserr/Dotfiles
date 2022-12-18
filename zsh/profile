@@ -7,6 +7,8 @@ source function/prompt/yes_or_no
 homebrew_formula='zsh'
 apt_package='zsh'
 
+recommended=(starship)
+
 zsh_path() {
   local platform=$1
   if [[ $platform == mac ]]; then
