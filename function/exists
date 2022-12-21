@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 function::exists?() {
   local name=$1
   [[ "$(type -t $name)" == function ]]

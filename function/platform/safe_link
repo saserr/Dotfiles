@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 source function/path/exists
 source function/prompt/yes_or_no
 

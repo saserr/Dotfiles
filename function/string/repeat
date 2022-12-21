@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 string::repeat() {
   local times=$1
   local string=$2

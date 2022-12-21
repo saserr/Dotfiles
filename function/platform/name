@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 platform::name() {
   local os_name="$(uname -s)"
   case $os_name in
