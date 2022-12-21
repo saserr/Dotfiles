@@ -44,6 +44,7 @@ if setup::missing? $profile; then
     echo "[$profile] requires (${required[@]}); do you want to set them up (Yes / No)?"
     case $(prompt::yes_or_no) in
       Yes)
+        echo
         for required_profile in ${required[@]}; do
           ./setup.sh $required_profile || exit 1
           echo
