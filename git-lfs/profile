@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 homebrew_formula='git-lfs'
 apt_package='git-lfs'
 
