@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-path::exists?() {
+path::exists() {
   local path=$1
   [ -e "$path" ]
 }

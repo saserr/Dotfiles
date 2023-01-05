@@ -4,7 +4,7 @@ profile=$1
 
 source function/path/exists
 
-if ! path::exists? $profile/profile; then
+if ! path::exists $profile/profile; then
   echo "[$profile] does not exits"
   exit 1
 fi
@@ -20,7 +20,7 @@ source function/value/empty
 
 source $profile/profile
 
-if setup::missing? $profile; then
+if setup::missing $profile; then
   maybe_required=( $required )
 
   case "$(platform::name)" in
@@ -35,12 +35,12 @@ if setup::missing? $profile; then
   required=()
 
   for maybe_required_profile in ${maybe_required[@]}; do
-    if setup::missing? $maybe_required_profile; then
+    if setup::missing $maybe_required_profile; then
       required+=( $maybe_required_profile )
     fi
   done
 
-  if ! value::empty? "${required[@]}"; then
+  if ! value::empty "${required[@]}"; then
     echo "[$profile] requires (${required[@]}); do you want to set them up (Yes / No)?"
     case $(prompt::yes_or_no) in
       Yes)
@@ -58,13 +58,13 @@ if setup::missing? $profile; then
 
   text::header "Setting up $profile"
 
-  if value::empty? "$program"; then
+  if value::empty "$program"; then
     program="$profile"
   fi
 
   platform::install $program || exit 1
 
-  if function::exists? configure; then
+  if function::exists configure; then
     configure || exit 1
   fi
 
@@ -73,9 +73,9 @@ else
   echo "[$profile] already set up"
 fi
 
-if ! value::empty? "${recommended[@]}"; then
+if ! value::empty "${recommended[@]}"; then
   for recommended_profile in ${recommended[@]}; do
-    if setup::missing? $recommended_profile; then
+    if setup::missing $recommended_profile; then
       echo "[$profile] do you want to install $recommended_profile (Yes / No)? "
       if [[ $(prompt::yes_or_no) == Yes ]]; then
         echo

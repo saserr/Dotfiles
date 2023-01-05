@@ -2,7 +2,7 @@
 
 source function/path/exists
 
-setup::missing?() {
+setup::missing() {
   local profile=$1
-  ! path::exists? ~/.setup/$profile
+  ! path::exists ~/.setup/$profile
 }

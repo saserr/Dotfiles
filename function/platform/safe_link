@@ -8,7 +8,7 @@ platform::safe_link() {
   local from=$2
   local to=$3
 
-  if path::exists? $to; then
+  if path::exists $to; then
     echo "[$what] $to exists; do you want to replace it (Yes / No)? "
     case $(prompt::yes_or_no) in
       Yes)

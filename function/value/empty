@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-value::empty?() {
+value::empty() {
   local value=$1
   [ ! -n "$value" ]
 }

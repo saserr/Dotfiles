@@ -30,7 +30,7 @@ configure() {
       Yes)
         echo "[$platform] changing login shell to zsh ..."
         if [[ $platform == mac ]]; then
-          if ! file::contains? /etc/shells '/usr/local/bin/zsh'; then
+          if ! file::contains /etc/shells '/usr/local/bin/zsh'; then
             sudo file:append /etc/shells '/usr/local/bin/zsh'
           fi
         fi

@@ -23,13 +23,13 @@ configure() {
       echo '[starship] enabling in zsh'
 
       local zshrc=''
-      if setup::missing? zsh; then
+      if setup::missing zsh; then
         zshrc=~/.zshrc
       else
         zshrc=~/.zshrc.local.zsh
       fi
 
-      if ! file::empty? $zshrc; then
+      if ! file::empty $zshrc; then
         file::append $zshrc ''
       fi
       file::append $zshrc '# enable https://starship.rs'
