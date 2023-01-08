@@ -1,4 +1,4 @@
-source function/path/exists.bash
+source src/path/exists.bash
 
 setup::missing() {
   local profile=$1

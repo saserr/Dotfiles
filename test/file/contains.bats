@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/file/contains.bash
+  source src/file/contains.bash
 
   test_file="$BATS_TEST_TMPDIR/test"
   [ ! -e "$test_file" ] # $test_file does not exist

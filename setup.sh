@@ -2,21 +2,21 @@
 
 profile=$1
 
-source function/path/exists.bash
+source src/path/exists.bash
 
 if ! path::exists $profile/profile; then
   echo "[$profile] does not exits"
   exit 1
 fi
 
-source function/exists.bash
-source function/platform/install.bash
-source function/platform/name.bash
-source function/prompt/yes_or_no.bash
-source function/setup/done.bash
-source function/setup/missing.bash
-source function/text/header.bash
-source function/value/empty.bash
+source src/function/exists.bash
+source src/platform/install.bash
+source src/platform/name.bash
+source src/prompt/yes_or_no.bash
+source src/setup/done.bash
+source src/setup/missing.bash
+source src/text/header.bash
+source src/value/empty.bash
 
 source $profile/profile
 

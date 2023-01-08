@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/text/header.bash
+  source src/text/header.bash
 }
 
 @test "without arguments" {

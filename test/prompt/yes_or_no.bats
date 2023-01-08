@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/prompt/yes_or_no.bash
+  source src/prompt/yes_or_no.bash
 }
 
 @test "prompts the choices" {

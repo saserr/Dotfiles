@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/setup/done.bash
+  source src/setup/done.bash
 
   [ ! -e "$HOME/.setup/test" ] # $HOME/.setup/test does not exist
 }

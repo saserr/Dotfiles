@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-source function/file/append.bash
-source function/file/contains.bash
-source function/platform/name.bash
-source function/platform/safe_link.bash
-source function/prompt/yes_or_no.bash
+source src/file/append.bash
+source src/file/contains.bash
+source src/platform/name.bash
+source src/platform/safe_link.bash
+source src/prompt/yes_or_no.bash
 
 homebrew_formula='zsh'
 apt_package='zsh'

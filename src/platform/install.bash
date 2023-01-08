@@ -1,5 +1,5 @@
-source function/platform/name.bash
-source function/value/empty.bash
+source src/platform/name.bash
+source src/value/empty.bash
 
 platform::install() {
   local program=$1

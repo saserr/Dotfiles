@@ -1,5 +1,5 @@
-source function/text/repeat.bash
-source function/value/empty.bash
+source src/text/repeat.bash
+source src/value/empty.bash
 
 text::header() {
   local message=$1

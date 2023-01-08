@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source function/command/exists.bash
-source function/file/empty.bash
+source src/command/exists.bash
+source src/file/empty.bash
 
 homebrew_formula='git'
 apt_package='git'

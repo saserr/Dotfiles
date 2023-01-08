@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/platform/name.bash
+  source src/platform/name.bash
 }
 
 uname() {

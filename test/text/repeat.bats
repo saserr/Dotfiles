@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/text/repeat.bash
+  source src/text/repeat.bash
 }
 
 @test "fails without arguments" {

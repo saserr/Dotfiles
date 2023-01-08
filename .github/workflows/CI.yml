@@ -33,5 +33,5 @@ jobs:
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master
         with:
-          scandir: './function'
+          scandir: './src'
           check_together: 'yes'

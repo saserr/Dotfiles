@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-source function/command/exists.bash
-source function/file/append.bash
-source function/file/empty.bash
-source function/platform/install.bash
-source function/platform/login_shell.bash
-source function/setup/done.bash
+source src/command/exists.bash
+source src/file/append.bash
+source src/file/empty.bash
+source src/platform/install.bash
+source src/platform/login_shell.bash
+source src/setup/done.bash
 
 homebrew_formula='starship'
 

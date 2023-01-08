@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/setup/missing.bash
+  source src/setup/missing.bash
 }
 
 @test "fails without arguments" {
