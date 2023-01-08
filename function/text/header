@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 
 source function/string/repeat
+source function/value/empty
 
 text::header() {
   local message=$1
   local length=${#message}
 
-  string::repeat $((length+4)) '*'; echo
-  echo "* $message *"
-  string::repeat $((length+4)) '*'; echo
+  if value::empty "$message"; then
+    echo '**********'
+  else
+    string::repeat $((length + 4)) '*'
+    echo
+    echo "* $message *"
+    string::repeat $((length + 4)) '*'
+    echo
+  fi
 }

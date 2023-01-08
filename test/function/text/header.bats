@@ -5,12 +5,10 @@ setup() {
 }
 
 @test "with a missing argument" {
-  skip 'broken'
   [ "$(text::header)" = '**********' ]
 }
 
 @test "with an empty message" {
-  skip 'broken'
   [ "$(text::header '')" = '**********' ]
 }
 
