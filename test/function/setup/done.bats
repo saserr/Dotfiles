@@ -9,6 +9,13 @@ teardown() {
   rm -f "$HOME/.setup/test"
 }
 
+@test "fails without arguments" {
+  run setup::done
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: setup::done PROFILE' ]
+}
+
 @test "creates a file under ~/.setup/ with value 1" {
   setup::done 'test'
 

@@ -4,6 +4,13 @@ setup() {
   source function/command/exists
 }
 
+@test "fails without arguments" {
+  run command::exists
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: command::exists NAME' ]
+}
+
 @test "a program on \$PATH exists" {
   command::exists 'env'
 }

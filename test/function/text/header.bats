@@ -4,7 +4,7 @@ setup() {
   source function/text/header
 }
 
-@test "with a missing argument" {
+@test "without arguments" {
   [ "$(text::header)" = '**********' ]
 }
 

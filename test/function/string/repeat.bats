@@ -4,6 +4,20 @@ setup() {
   source function/string/repeat
 }
 
+@test "fails without arguments" {
+  run string::repeat
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: string::repeat TIMES TEXT' ]
+}
+
+@test "fails with only one argument" {
+  run string::repeat 2
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: string::repeat TIMES TEXT' ]
+}
+
 @test "repeat string -1 times" {
   [ "$(string::repeat -1 'foo')" = '' ]
 }
@@ -20,6 +34,6 @@ setup() {
   [ "$(string::repeat 2 'foo')" = 'foofoo' ]
 }
 
-@test "repeat empty string" {
+@test "repeat empty text" {
   [ "$(string::repeat 2 '')" = '' ]
 }

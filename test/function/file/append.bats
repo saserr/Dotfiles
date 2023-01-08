@@ -6,6 +6,21 @@ setup() {
   [ ! -e "$test_file" ] # $test_file does not exist
 }
 
+@test "fails without arguments" {
+  run file::append
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: file::append FILE [TEXT]' ]
+}
+
+@test "appends a new line with only one argument" {
+  touch "$test_file"
+
+  file::append "$test_file"
+
+  [ "$(cat -e "$test_file")" = '$' ]
+}
+
 @test "append to an empty file" {
   touch "$test_file"
 

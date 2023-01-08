@@ -10,6 +10,27 @@ setup() {
   [ ! -e "$to" ] # $to does not exist
 }
 
+@test "fails without arguments" {
+  run platform::safe_link
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: platform::safe_link NAME FROM TO' ]
+}
+
+@test "fails with only one argument" {
+  run platform::safe_link 'test'
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: platform::safe_link NAME FROM TO' ]
+}
+
+@test "fails with only two arguments" {
+  run platform::safe_link 'test' "$from"
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: platform::safe_link NAME FROM TO' ]
+}
+
 @test "makes a symlink from \$from to \$to if \$to does not exist" {
   echo 'foo' >"$from"
 

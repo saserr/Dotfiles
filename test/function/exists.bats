@@ -4,6 +4,13 @@ setup() {
   source function/exists
 }
 
+@test "fails without arguments" {
+  run function::exists
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: function::exists NAME' ]
+}
+
 @test "a function is a function" {
   function::exists 'function::exists'
 }

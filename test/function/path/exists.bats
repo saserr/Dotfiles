@@ -6,6 +6,13 @@ setup() {
   [ ! -e "$test_path" ] # $test_path does not exist
 }
 
+@test "fails without arguments" {
+  run path::exists
+
+  [ "$status" -eq 1 ]
+  [ "$output" = 'Usage: path::exists PATH' ]
+}
+
 @test "a non-existant path doesn't exist" {
   ! path::exists "$test_path"
 }
