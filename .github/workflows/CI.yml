@@ -8,15 +8,29 @@ on:
 
 jobs:
   test:
-    name: Build & Test
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
 
-    - name: Test
+    - name: Bats
       uses: addnab/docker-run-action@v3
       with:
-          image: bats/bats:latest
-          options: -v ${{ github.workspace }}:/code
-          run: bats test -r
+        image: bats/bats:latest
+        options: -v ${{ github.workspace }}:/code
+        run: bats test -r
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './function'

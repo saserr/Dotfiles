@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 platform::login_shell() {
-  if echo $SHELL | grep -q zsh; then
+  if echo "$SHELL" | grep -q zsh; then
     echo 'zsh'
-  elif echo $SHELL | grep -q bash; then
+  elif echo "$SHELL" | grep -q bash; then
     echo 'bash'
   else
-    echo $SHELL
+    echo "$SHELL"
   fi
 }
