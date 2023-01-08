@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source function/string/repeat
+source function/text/repeat
 source function/value/empty
 
 text::header() {
@@ -10,10 +10,10 @@ text::header() {
   if value::empty "$message"; then
     echo '**********'
   else
-    string::repeat $((length + 4)) '*'
+    text::repeat $((length + 4)) '*'
     echo
     echo "* $message *"
-    string::repeat $((length + 4)) '*'
+    text::repeat $((length + 4)) '*'
     echo
   fi
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-string::repeat() {
+text::repeat() {
   local times=$1
   local text=$2
 
