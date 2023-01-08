@@ -4,8 +4,11 @@ setup() {
   source function/string/repeat
 }
 
+@test "repeat string -1 times" {
+  [ "$(string::repeat -1 'foo')" = '' ]
+}
+
 @test "repeat string 0 times" {
-  skip 'broken'
   [ "$(string::repeat 0 'foo')" = '' ]
 }
 
