@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 command::exists() {
   local name=$1
 

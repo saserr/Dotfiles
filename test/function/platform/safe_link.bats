@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/platform/safe_link
+  source function/platform/safe_link.bash
 
   from="$BATS_TEST_TMPDIR/from"
   [ ! -e "$from" ] # $from does not exist

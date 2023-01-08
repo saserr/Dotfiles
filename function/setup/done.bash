@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 setup::done() {
   local profile=$1
 

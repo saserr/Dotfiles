@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 platform::name() {
   local os_name
   os_name="$(uname -s)"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source function/command/exists
-source function/file/empty
+source function/command/exists.bash
+source function/file/empty.bash
 
 homebrew_formula='git'
 apt_package='git'
@@ -15,19 +15,19 @@ configure() {
   if command::exists curl; then
     echo "[git] setting up .gitignore"
     if file::empty "~/.gitignore"; then
-      echo >> ~/.gitignore
+      echo >>~/.gitignore
     fi
 
     case "$(platform::name)" in
-      'mac')
-        curl https://www.toptal.com/developers/gitignore/api/macos >> ~/.gitignore
-        ;;
-      'debian')
-        curl https://www.toptal.com/developers/gitignore/api/linux >> ~/.gitignore
-        ;;
-      'linux')
-        curl https://www.toptal.com/developers/gitignore/api/linux >> ~/.gitignore
-        ;;
+    'mac')
+      curl https://www.toptal.com/developers/gitignore/api/macos >>~/.gitignore
+      ;;
+    'debian')
+      curl https://www.toptal.com/developers/gitignore/api/linux >>~/.gitignore
+      ;;
+    'linux')
+      curl https://www.toptal.com/developers/gitignore/api/linux >>~/.gitignore
+      ;;
     esac
   else
     echo "[git] skipping setting up .gitignore; no curl"

@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 platform::login_shell() {
   if echo "$SHELL" | grep -q zsh; then
     echo 'zsh'

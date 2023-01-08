@@ -1,7 +1,5 @@
-#!/usr/bin/env bash
-
-source function/text/repeat
-source function/value/empty
+source function/text/repeat.bash
+source function/value/empty.bash
 
 text::header() {
   local message=$1

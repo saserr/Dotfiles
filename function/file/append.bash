@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 file::append() {
   local file=$1
   local text=$2

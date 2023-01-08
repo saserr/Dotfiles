@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 path::exists() {
   local path=$1
 

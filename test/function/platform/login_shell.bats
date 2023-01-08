@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/platform/login_shell
+  source function/platform/login_shell.bash
 }
 
 @test "returns 'bash' if $SHELL is /bin/bash" {

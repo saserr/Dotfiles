@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 file::empty() {
   local file=$1
 

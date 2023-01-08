@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-source function/path/exists
+source function/path/exists.bash
 
 setup::missing() {
   local profile=$1

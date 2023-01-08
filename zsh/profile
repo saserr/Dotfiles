@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-source function/file/append
-source function/file/contains
-source function/platform/name
-source function/platform/safe_link
-source function/prompt/yes_or_no
+source function/file/append.bash
+source function/file/contains.bash
+source function/platform/name.bash
+source function/platform/safe_link.bash
+source function/prompt/yes_or_no.bash
 
 homebrew_formula='zsh'
 apt_package='zsh'
@@ -27,18 +27,18 @@ configure() {
   if [[ $SHELL != $zsh_path ]]; then
     echo "[$platform] do you want to set zsh as login shell (current: $SHELL) (Yes / No)? "
     case $(prompt::yes_or_no) in
-      Yes)
-        echo "[$platform] changing login shell to zsh ..."
-        if [[ $platform == mac ]]; then
-          if ! file::contains /etc/shells '/usr/local/bin/zsh'; then
-            sudo file:append /etc/shells '/usr/local/bin/zsh'
-          fi
+    Yes)
+      echo "[$platform] changing login shell to zsh ..."
+      if [[ $platform == mac ]]; then
+        if ! file::contains /etc/shells '/usr/local/bin/zsh'; then
+          sudo file:append /etc/shells '/usr/local/bin/zsh'
         fi
-        chsh -s $zsh_path
-        ;;
-      No)
-        echo "[$platform] $SHELL will remain the login shell ..."
-        ;;
+      fi
+      chsh -s $zsh_path
+      ;;
+    No)
+      echo "[$platform] $SHELL will remain the login shell ..."
+      ;;
     esac
   fi
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 value::empty() {
   local value=$1
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 text::repeat() {
   local times=$1
   local text=$2

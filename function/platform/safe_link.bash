@@ -1,7 +1,5 @@
-#!/usr/bin/env bash
-
-source function/path/exists
-source function/prompt/yes_or_no
+source function/path/exists.bash
+source function/prompt/yes_or_no.bash
 
 platform::safe_link() {
   local name=$1

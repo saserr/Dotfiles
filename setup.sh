@@ -2,57 +2,57 @@
 
 profile=$1
 
-source function/path/exists
+source function/path/exists.bash
 
 if ! path::exists $profile/profile; then
   echo "[$profile] does not exits"
   exit 1
 fi
 
-source function/exists
-source function/platform/install
-source function/platform/name
-source function/prompt/yes_or_no
-source function/setup/done
-source function/setup/missing
-source function/text/header
-source function/value/empty
+source function/exists.bash
+source function/platform/install.bash
+source function/platform/name.bash
+source function/prompt/yes_or_no.bash
+source function/setup/done.bash
+source function/setup/missing.bash
+source function/text/header.bash
+source function/value/empty.bash
 
 source $profile/profile
 
 if setup::missing $profile; then
-  maybe_required=( $required )
+  maybe_required=($required)
 
   case "$(platform::name)" in
-    mac)
-      maybe_required+=( $mac_required )
-      ;;
-    debian)
-      maybe_required+=( $debian_required )
-      ;;
+  mac)
+    maybe_required+=($mac_required)
+    ;;
+  debian)
+    maybe_required+=($debian_required)
+    ;;
   esac
 
   required=()
 
   for maybe_required_profile in ${maybe_required[@]}; do
     if setup::missing $maybe_required_profile; then
-      required+=( $maybe_required_profile )
+      required+=($maybe_required_profile)
     fi
   done
 
   if ! value::empty "${required[@]}"; then
     echo "[$profile] requires (${required[@]}); do you want to set them up (Yes / No)?"
     case $(prompt::yes_or_no) in
-      Yes)
+    Yes)
+      echo
+      for required_profile in ${required[@]}; do
+        ./setup.sh $required_profile || exit 1
         echo
-        for required_profile in ${required[@]}; do
-          ./setup.sh $required_profile || exit 1
-          echo
-        done
-        ;;
-      No)
-        exit 1
-        ;;
+      done
+      ;;
+    No)
+      exit 1
+      ;;
     esac
   fi
 

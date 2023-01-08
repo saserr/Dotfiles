@@ -1,7 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/path/exists
+  source function/path/exists.bash
+
   test_path="$BATS_TEST_TMPDIR/test"
   [ ! -e "$test_path" ] # $test_path does not exist
 }

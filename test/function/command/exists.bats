@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source function/command/exists
+  source function/command/exists.bash
 }
 
 @test "fails without arguments" {

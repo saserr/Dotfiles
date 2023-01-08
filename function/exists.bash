@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 function::exists() {
   local name=$1
 
