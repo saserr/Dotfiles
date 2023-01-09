@@ -4,30 +4,24 @@ setup() {
   source src/platform/name.bash
 }
 
-uname() {
-  echo "$uname_result"
-}
-
-lsb_release() {
-  echo "$lsb_release_result"
-}
-
 @test "returns 'mac' if the current platform is Darwin" {
-  uname_result='Darwin'
+  uname() { echo 'Darwin'; }
 
   [ "$(platform::name)" = 'mac' ]
+
+  unset -f uname
 }
 
-@test "returns 'debian' if the current platform is Debian" {
-  uname_result='Linux'
-  lsb_release_result='Debian'
+@test "returns the result of platform::linux::os_release if the current platform is Linux" {
+  # setup
+  uname() { echo 'Linux'; }
+  mv /etc/os-release /etc/os-release.tmp
+  echo "ID=foo" >/etc/os-release
 
-  [ "$(platform::name)" = 'debian' ]
-}
+  [ "$(platform::name)" = 'foo' ]
 
-@test "returns 'linux' if the current platform is an unknown Linux distro" {
-  uname_result='Linux'
-  lsb_release_result='Foo'
-
-  [ "$(platform::name)" = 'linux' ]
+  # cleanup
+  unset -f uname
+  rm /etc/os-release
+  mv /etc/os-release.tmp /etc/os-release
 }

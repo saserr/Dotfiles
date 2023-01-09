@@ -7,11 +7,8 @@ platform::name() {
     echo 'mac'
     ;;
   'Linux')
-    if [[ "$(lsb_release -is)" == 'Debian' ]]; then
-      echo 'debian'
-    else
-      echo 'linux'
-    fi
+    # shellcheck source=/dev/null
+    printf '%s\n' "$(source /etc/os-release && echo "$ID")"
     ;;
   *)
     echo "$os_name"
