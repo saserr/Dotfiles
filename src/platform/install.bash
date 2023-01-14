@@ -1,3 +1,4 @@
+source src/homebrew/install.bash
 source src/platform/name.bash
 source src/value/empty.bash
 
@@ -10,18 +11,8 @@ platform::install() {
   'mac')
     # shellcheck disable=SC2154
     if ! value::empty "$homebrew_formula"; then
-      if brew list | grep "$homebrew_formula" >/dev/null; then
-        echo "[homebrew] $program already installed ..."
-        return 0
-      fi
-
-      echo "[homebrew] installing $program ..."
-      if ! brew update && brew install "$homebrew_formula"; then
-        echo "[homebrew] failed to install $program"
-        return 1
-      fi
-
-      return 0
+      homebrew::install "$program" "$homebrew_formula"
+      return
     fi
     ;;
   'debian')

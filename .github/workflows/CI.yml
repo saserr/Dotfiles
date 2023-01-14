@@ -14,24 +14,28 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
     - name: Bats
       uses: addnab/docker-run-action@v3
       with:
         image: bats/bats:latest
         options: -v ${{ github.workspace }}:/code
-        run: bats test -r
+        run: find test/ -type f -name '*.bats' -not -regex 'test/helpers/.*' -exec bash -c 'bats "$@"' {} +
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
-      - name: ShellCheck
-        uses: ludeeus/action-shellcheck@master
-        with:
-          scandir: './src'
-          check_together: 'yes'
+    - name: ShellCheck
+      uses: ludeeus/action-shellcheck@master
+      with:
+        scandir: './src'
+        check_together: 'yes'
