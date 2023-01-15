@@ -1,3 +1,4 @@
+source src/apt/install.bash
 source src/homebrew/install.bash
 source src/platform/name.bash
 source src/value/empty.bash
@@ -21,18 +22,8 @@ platform::install() {
     else
       # shellcheck disable=SC2154
       if ! value::empty "$apt_package"; then
-        if apt list -i | grep -q git; then
-          echo "[apt] $program already installed ..."
-          return 0
-        fi
-
-        echo "[apt] installing $program ..."
-        if ! sudo apt update && sudo apt -y install "$apt_package"; then
-          echo "[apt] failed to install $program"
-          return 1
-        fi
-
-        return 0
+        apt::install "$program" "$apt_package"
+        return
       fi
     fi
     ;;
