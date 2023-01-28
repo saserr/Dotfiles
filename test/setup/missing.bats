@@ -20,4 +20,6 @@ setup() {
   touch ~/.setup/test
 
   ! setup::missing 'test'
+
+  rm ~/.setup/test
 }
