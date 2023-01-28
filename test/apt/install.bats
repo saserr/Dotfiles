@@ -10,16 +10,7 @@ setup() {
 @test "fails without arguments" {
   run apt::install
 
-  assert::wrong_usage 'apt::install' 'name' 'package'
-}
-
-@test "fails with only one argument" {
-  run apt::install 'foo'
-
-  [ "$status" -eq 2 ]
-  text::contains "${lines[0]}" 'apt::install'
-  text::contains "${lines[0]}" 'wrong number of arguments'
-  text::ends_with "${lines[3]}" 'arguments: name package'
+  assert::wrong_usage 'apt::install' '[name]' 'package'
 }
 
 @test "installs package if not installed" {
@@ -106,4 +97,19 @@ setup() {
   unstub dpkg
   [ "$status" -eq 1 ]
   [ "${lines[1]}" = '[apt] failed to install foo' ]
+}
+
+@test "uses package as name when only one argument is passed" {
+  stub dpkg '-s foo : exit 1'
+  stub id '-u : echo 0'
+  stub apt 'update : '
+  stub apt ' -y install foo : '
+
+  run apt::install 'foo'
+
+  unstub apt
+  unstub id
+  unstub dpkg
+  [ "$status" -eq 0 ]
+  [ "$output" = '[apt] installing foo ...' ]
 }

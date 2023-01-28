@@ -10,13 +10,7 @@ setup() {
 @test "fails without arguments" {
   run homebrew::install
 
-  assert::wrong_usage 'homebrew::install' 'name' 'formula'
-}
-
-@test "fails with only one argument" {
-  run homebrew::install 'foo'
-
-  assert::wrong_usage 'homebrew::install' 'name' 'formula'
+  assert::wrong_usage 'homebrew::install' '[name]' 'formula'
 }
 
 @test "installs formula if not installed" {
@@ -62,4 +56,16 @@ setup() {
   unstub brew
   [ "$status" -eq 1 ]
   [ "${lines[1]}" = '[homebrew] failed to install foo' ]
+}
+
+@test "uses package as name when only one argument is passed" {
+  stub brew 'list foo : exit 1'
+  stub brew 'update : '
+  stub brew 'install foo : '
+
+  run homebrew::install 'foo'
+
+  unstub brew
+  [ "$status" -eq 0 ]
+  [ "$output" = '[homebrew] installing foo ...' ]
 }

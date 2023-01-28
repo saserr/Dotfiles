@@ -1,12 +1,15 @@
-# TODO name is optional
-
 source src/arguments/expect.bash
 
 apt::install() {
-  arguments::expect $# 'name' 'package'
+  arguments::expect $# '[name]' 'package'
 
-  local name=$1
-  local package=$2
+  if [ $# -eq 1 ]; then
+    local name=$1
+    local package=$1
+  else
+    local name=$1
+    local package=$2
+  fi
 
   if dpkg -s "$package" 2>&1 | grep -q 'Status: install ok installed'; then
     echo "[apt] $name already installed ..."
