@@ -1,4 +1,4 @@
-source src/arguments/expect.bash
+import 'arguments::expect'
 
 prompt::yes_or_no() {
   arguments::expect $# # none

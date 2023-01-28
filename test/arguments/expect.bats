@@ -1,11 +1,12 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
 
-  source src/arguments/expect.bash
-  source src/text/contains.bash
-  source src/text/ends_with.bash
+  import 'arguments::expect'
+  import 'text::contains'
+  import 'text::ends_with'
 }
 
 @test "fails without arguments" {

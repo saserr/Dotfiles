@@ -2,21 +2,23 @@
 
 profile=$1
 
-source src/path/exists.bash
+source src/import.bash
+
+import 'path::exists'
 
 if ! path::exists $profile/profile; then
   echo "[$profile] does not exits"
   exit 1
 fi
 
-source src/function/exists.bash
-source src/platform/install.bash
-source src/platform/name.bash
-source src/prompt/yes_or_no.bash
-source src/setup/done.bash
-source src/setup/missing.bash
-source src/text/header.bash
-source src/value/empty.bash
+import 'function::exists'
+import 'platform::install'
+import 'platform::name'
+import 'prompt::yes_or_no'
+import 'setup::done'
+import 'setup::missing'
+import 'text::header'
+import 'value::empty'
 
 source $profile/profile
 

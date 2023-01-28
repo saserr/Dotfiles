@@ -1,9 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
 
-  source src/platform/safe_link.bash
+  import 'platform::safe_link'
 
   from="$BATS_TEST_TMPDIR/from"
   [ ! -e "$from" ] # $from does not exist

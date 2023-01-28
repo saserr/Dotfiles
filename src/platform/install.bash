@@ -1,8 +1,8 @@
-source src/apt/install.bash
-source src/arguments/expect.bash
-source src/homebrew/install.bash
-source src/platform/name.bash
-source src/value/empty.bash
+import 'apt::install'
+import 'arguments::expect'
+import 'homebrew::install'
+import 'platform::name'
+import 'value::empty'
 
 platform::install() {
   arguments::expect $# 'program'

@@ -1,4 +1,4 @@
-source src/arguments/expect.bash
+import 'arguments::expect'
 
 text::ends_with() {
   arguments::expect $# 'text' 'suffix'

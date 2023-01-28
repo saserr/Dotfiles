@@ -1,4 +1,4 @@
-source src/arguments/expect.bash
+import 'arguments::expect'
 
 function::exists() {
   arguments::expect $# 'name'

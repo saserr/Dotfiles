@@ -1,9 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
 
-  source src/function/exists.bash
+  import 'function::exists'
 }
 
 @test "fails without arguments" {

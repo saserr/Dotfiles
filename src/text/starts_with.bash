@@ -1,4 +1,4 @@
-source src/arguments/expect.bash
+import 'arguments::expect'
 
 text::starts_with() {
   arguments::expect $# 'text' 'prefix'

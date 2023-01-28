@@ -1,4 +1,4 @@
-source src/arguments/expect.bash
+import 'arguments::expect'
 
 homebrew::install() {
   arguments::expect $# '[name]' 'formula'

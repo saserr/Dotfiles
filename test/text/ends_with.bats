@@ -1,9 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
 
-  source src/text/ends_with.bash
+  import 'text::ends_with'
 }
 
 @test "fails without arguments" {

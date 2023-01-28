@@ -1,6 +1,6 @@
-source src/arguments/expect.bash
-source src/text/repeat.bash
-source src/value/empty.bash
+import 'arguments::expect'
+import 'text::repeat'
+import 'value::empty'
 
 text::header() {
   arguments::expect $# '[title]'

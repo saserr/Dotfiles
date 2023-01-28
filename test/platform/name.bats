@@ -1,7 +1,9 @@
 #!/usr/bin/env bats
 
 setup() {
-  source src/platform/name.bash
+  source 'src/import.bash'
+
+  import 'platform::name'
 }
 
 @test "returns 'mac' if the current platform is Darwin" {

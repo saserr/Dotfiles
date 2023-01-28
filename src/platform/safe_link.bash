@@ -1,6 +1,6 @@
-source src/arguments/expect.bash
-source src/path/exists.bash
-source src/prompt/yes_or_no.bash
+import 'arguments::expect'
+import 'path::exists'
+import 'prompt::yes_or_no'
 
 platform::safe_link() {
   arguments::expect $# 'name' 'from' 'to'

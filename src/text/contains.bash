@@ -1,4 +1,4 @@
-source src/arguments/expect.bash
+import 'arguments::expect'
 
 text::contains() {
   arguments::expect $# 'text' 'infix'

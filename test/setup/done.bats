@@ -1,9 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
 
-  source src/setup/done.bash
+  import 'setup::done'
 
   [ ! -e "$HOME/.setup/test" ] # $HOME/.setup/test does not exist
 }

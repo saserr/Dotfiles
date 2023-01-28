@@ -1,9 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
 
-  source src/value/empty.bash
+  import 'value::empty'
 }
 
 @test "fails without arguments" {

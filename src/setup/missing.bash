@@ -1,5 +1,5 @@
-source src/arguments/expect.bash
-source src/path/exists.bash
+import 'arguments::expect'
+import 'path::exists'
 
 setup::missing() {
   arguments::expect $# 'profile'

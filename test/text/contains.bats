@@ -1,9 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
 
-  source src/text/contains.bash
+  import 'text::contains'
 }
 
 @test "fails without arguments" {

@@ -1,9 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
 
-  source src/file/empty.bash
+  import 'file::empty'
 
   test_file="$BATS_TEST_TMPDIR/test"
   [ ! -e "$test_file" ] # $test_file does not exist

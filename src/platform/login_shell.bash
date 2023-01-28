@@ -1,4 +1,4 @@
-source src/arguments/expect.bash
+import 'arguments::expect'
 
 platform::login_shell() {
   arguments::expect $# # none

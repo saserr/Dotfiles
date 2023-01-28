@@ -1,10 +1,11 @@
 #!/usr/bin/env bats
 
 setup() {
-  load ../helpers/assert/wrong_usage
+  source 'src/import.bash'
+  load ../helpers/assert/wrong_usage.bash
   load ../helpers/mocks/stub
 
-  source src/apt/install.bash
+  import 'apt::install'
 }
 
 @test "fails without arguments" {

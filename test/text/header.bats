@@ -1,7 +1,9 @@
 #!/usr/bin/env bats
 
 setup() {
-  source src/text/header.bash
+  source 'src/import.bash'
+
+  import 'text::header'
 }
 
 @test "without arguments" {

@@ -1,10 +1,11 @@
 #!/usr/bin/env bats
 
 setup() {
+  source 'src/import.bash'
   load ../helpers/assert/wrong_usage
   load ../helpers/mocks/stub
 
-  source src/homebrew/install.bash
+  import 'homebrew::install'
 }
 
 @test "fails without arguments" {

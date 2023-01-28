@@ -1,7 +1,9 @@
 #!/usr/bin/env bats
 
 setup() {
-  source src/platform/login_shell.bash
+  source 'src/import.bash'
+
+  import 'platform::login_shell'
 }
 
 @test "returns 'bash' if $SHELL is /bin/bash" {
