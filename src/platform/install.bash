@@ -1,11 +1,15 @@
 source src/apt/install.bash
+source src/arguments/expect.bash
 source src/homebrew/install.bash
 source src/platform/name.bash
 source src/value/empty.bash
 
 platform::install() {
+  arguments::expect $# 'program'
+
   local program=$1
   local platform
+  # shellcheck disable=SC2119
   platform="$(platform::name)"
 
   case $platform in

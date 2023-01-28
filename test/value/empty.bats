@@ -1,14 +1,15 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/value/empty.bash
 }
 
 @test "fails without arguments" {
   run value::empty
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: value::empty VALUE' ]
+  assert::wrong_usage 'value::empty' 'value'
 }
 
 @test "an empty value is empty" {

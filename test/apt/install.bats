@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
   load ../helpers/mocks/stub
 
   source src/apt/install.bash
@@ -9,15 +10,16 @@ setup() {
 @test "fails without arguments" {
   run apt::install
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: apt::install NAME PACKAGE' ]
+  assert::wrong_usage 'apt::install' 'name' 'package'
 }
 
 @test "fails with only one argument" {
   run apt::install 'foo'
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: apt::install NAME PACKAGE' ]
+  [ "$status" -eq 2 ]
+  text::contains "${lines[0]}" 'apt::install'
+  text::contains "${lines[0]}" 'wrong number of arguments'
+  text::ends_with "${lines[3]}" 'arguments: name package'
 }
 
 @test "installs package if not installed" {

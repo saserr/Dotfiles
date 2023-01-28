@@ -1,10 +1,9 @@
-value::empty() {
-  local value=$1
+source src/arguments/expect.bash
 
-  if [ "$#" -lt 1 ]; then
-    echo "Usage: ${FUNCNAME[0]} VALUE"
-    return 1
-  fi
+value::empty() {
+  arguments::expect $# 'value'
+
+  local value=$1
 
   [ -z "$value" ]
 }

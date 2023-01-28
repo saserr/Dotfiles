@@ -1,4 +1,8 @@
+source src/arguments/expect.bash
+
 prompt::yes_or_no() {
+  arguments::expect $# # none
+
   select answer in "Yes" "No"; do
     case $answer in
     Yes)

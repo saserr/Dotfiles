@@ -1,4 +1,8 @@
+source src/arguments/expect.bash
+
 platform::name() {
+  arguments::expect $# # none
+
   local os_name
   os_name="$(uname -s)"
 

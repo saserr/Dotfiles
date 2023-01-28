@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/file/empty.bash
 
   test_file="$BATS_TEST_TMPDIR/test"
@@ -10,8 +12,7 @@ setup() {
 @test "fails without arguments" {
   run file::empty
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: file::empty FILE' ]
+  assert::wrong_usage 'file::empty' 'file'
 }
 
 @test "a non-existant file is empty" {

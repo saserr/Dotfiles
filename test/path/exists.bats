@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/path/exists.bash
 
   test_path="$BATS_TEST_TMPDIR/test"
@@ -10,8 +12,7 @@ setup() {
 @test "fails without arguments" {
   run path::exists
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: path::exists PATH' ]
+  assert::wrong_usage 'path::exists' 'path'
 }
 
 @test "a non-existant path doesn't exist" {

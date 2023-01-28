@@ -1,11 +1,12 @@
+# TODO name is optional
+
+source src/arguments/expect.bash
+
 homebrew::install() {
+  arguments::expect $# 'name' 'formula'
+
   local name=$1
   local formula=$2
-
-  if [ "$#" -lt 2 ]; then
-    echo "Usage: ${FUNCNAME[0]} NAME FORMULA"
-    return 1
-  fi
 
   if [ "$(brew list "$formula")" ]; then
     echo "[homebrew] $name already installed ..."

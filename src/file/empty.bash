@@ -1,10 +1,9 @@
-file::empty() {
-  local file=$1
+source src/arguments/expect.bash
 
-  if [ "$#" -lt 1 ]; then
-    echo "Usage: ${FUNCNAME[0]} FILE"
-    return 1
-  fi
+file::empty() {
+  arguments::expect $# 'file'
+
+  local file=$1
 
   [ ! -s "$file" ]
 }

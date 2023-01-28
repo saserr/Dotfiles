@@ -1,21 +1,21 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/text/repeat.bash
 }
 
 @test "fails without arguments" {
   run text::repeat
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: text::repeat TIMES TEXT' ]
+  assert::wrong_usage 'text::repeat' 'times' 'text'
 }
 
 @test "fails with only one argument" {
   run text::repeat 2
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: text::repeat TIMES TEXT' ]
+  assert::wrong_usage 'text::repeat' 'times' 'text'
 }
 
 @test "repeat string -1 times" {

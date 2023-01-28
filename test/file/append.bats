@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/file/append.bash
 
   test_file="$BATS_TEST_TMPDIR/test"
@@ -10,8 +12,7 @@ setup() {
 @test "fails without arguments" {
   run file::append
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: file::append FILE [TEXT]' ]
+  assert::wrong_usage 'file::append' 'file' '[text]'
 }
 
 @test "appends a new line with only one argument" {

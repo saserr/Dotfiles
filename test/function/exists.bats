@@ -1,14 +1,15 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/function/exists.bash
 }
 
 @test "fails without arguments" {
   run function::exists
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: function::exists NAME' ]
+  assert::wrong_usage 'function::exists' 'name'
 }
 
 @test "a function is a function" {

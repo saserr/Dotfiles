@@ -1,10 +1,9 @@
-function::exists() {
-  local name=$1
+source src/arguments/expect.bash
 
-  if [ "$#" -lt 1 ]; then
-    echo "Usage: ${FUNCNAME[0]} NAME"
-    return 1
-  fi
+function::exists() {
+  arguments::expect $# 'name'
+
+  local name=$1
 
   [ "$(type -t "$name")" = 'function' ]
 }

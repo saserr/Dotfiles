@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/setup/done.bash
 
   [ ! -e "$HOME/.setup/test" ] # $HOME/.setup/test does not exist
@@ -13,8 +15,7 @@ teardown() {
 @test "fails without arguments" {
   run setup::done
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: setup::done PROFILE' ]
+  assert::wrong_usage 'setup::done' 'profile'
 }
 
 @test "creates a file under ~/.setup/ with value 1" {

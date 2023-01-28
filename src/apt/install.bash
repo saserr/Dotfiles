@@ -1,11 +1,12 @@
+# TODO name is optional
+
+source src/arguments/expect.bash
+
 apt::install() {
+  arguments::expect $# 'name' 'package'
+
   local name=$1
   local package=$2
-
-  if [ "$#" -lt 2 ]; then
-    echo "Usage: ${FUNCNAME[0]} NAME PACKAGE"
-    return 1
-  fi
 
   if dpkg -s "$package" 2>&1 | grep -q 'Status: install ok installed'; then
     echo "[apt] $name already installed ..."

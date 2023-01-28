@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/platform/safe_link.bash
 
   from="$BATS_TEST_TMPDIR/from"
@@ -13,22 +15,19 @@ setup() {
 @test "fails without arguments" {
   run platform::safe_link
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: platform::safe_link NAME FROM TO' ]
+  assert::wrong_usage 'platform::safe_link' 'name' 'from' 'to'
 }
 
 @test "fails with only one argument" {
   run platform::safe_link 'test'
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: platform::safe_link NAME FROM TO' ]
+  assert::wrong_usage 'platform::safe_link' 'name' 'from' 'to'
 }
 
 @test "fails with only two arguments" {
   run platform::safe_link 'test' "$from"
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: platform::safe_link NAME FROM TO' ]
+  assert::wrong_usage 'platform::safe_link' 'name' 'from' 'to'
 }
 
 @test "makes a symlink from \$from to \$to if \$to does not exist" {

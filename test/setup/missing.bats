@@ -1,14 +1,15 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/setup/missing.bash
 }
 
 @test "fails without arguments" {
   run setup::missing
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: setup::missing PROFILE' ]
+  assert::wrong_usage 'setup::missing' 'profile'
 }
 
 @test "is missing if profile has not been set up" {

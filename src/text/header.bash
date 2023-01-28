@@ -1,16 +1,19 @@
+source src/arguments/expect.bash
 source src/text/repeat.bash
 source src/value/empty.bash
 
 text::header() {
-  local message=$1
-  local length=${#message}
+  arguments::expect $# '[title]'
 
-  if value::empty "$message"; then
+  local title=$1
+  local length=${#title}
+
+  if value::empty "$title"; then
     echo '**********'
   else
     text::repeat $((length + 4)) '*'
     echo
-    echo "* $message *"
+    echo "* $title *"
     text::repeat $((length + 4)) '*'
     echo
   fi

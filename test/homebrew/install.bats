@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
   load ../helpers/mocks/stub
 
   source src/homebrew/install.bash
@@ -9,15 +10,13 @@ setup() {
 @test "fails without arguments" {
   run homebrew::install
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: homebrew::install NAME FORMULA' ]
+  assert::wrong_usage 'homebrew::install' 'name' 'formula'
 }
 
 @test "fails with only one argument" {
   run homebrew::install 'foo'
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: homebrew::install NAME FORMULA' ]
+  assert::wrong_usage 'homebrew::install' 'name' 'formula'
 }
 
 @test "installs formula if not installed" {

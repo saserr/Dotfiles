@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/file/contains.bash
 
   test_file="$BATS_TEST_TMPDIR/test"
@@ -10,15 +12,13 @@ setup() {
 @test "fails without arguments" {
   run file::contains
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: file::contains FILE TEXT' ]
+  assert::wrong_usage 'file::contains' 'file' 'text'
 }
 
 @test "fails with only one argument" {
   run file::contains "$test_file"
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: file::contains FILE TEXT' ]
+  assert::wrong_usage 'file::contains' 'file' 'text'
 }
 
 @test "a non-existant file doesn't contain given text" {

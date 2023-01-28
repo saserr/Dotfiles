@@ -1,10 +1,9 @@
-path::exists() {
-  local path=$1
+source src/arguments/expect.bash
 
-  if [ "$#" -lt 1 ]; then
-    echo "Usage: ${FUNCNAME[0]} PATH"
-    return 1
-  fi
+path::exists() {
+  arguments::expect $# 'path'
+
+  local path=$1
 
   [ -e "$path" ]
 }

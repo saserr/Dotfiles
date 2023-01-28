@@ -1,14 +1,15 @@
 #!/usr/bin/env bats
 
 setup() {
+  load ../helpers/assert/wrong_usage
+
   source src/command/exists.bash
 }
 
 @test "fails without arguments" {
   run command::exists
 
-  [ "$status" -eq 1 ]
-  [ "$output" = 'Usage: command::exists NAME' ]
+  assert::wrong_usage 'command::exists' 'name'
 }
 
 @test "a program on \$PATH exists" {

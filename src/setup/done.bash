@@ -1,10 +1,9 @@
-setup::done() {
-  local profile=$1
+source src/arguments/expect.bash
 
-  if [ "$#" -lt 1 ]; then
-    echo "Usage: ${FUNCNAME[0]} PROFILE"
-    return 1
-  fi
+setup::done() {
+  arguments::expect $# 'profile'
+
+  local profile=$1
 
   mkdir -p ~/.setup/
   echo "1" >"$HOME/.setup/$profile"

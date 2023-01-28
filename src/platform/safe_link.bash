@@ -1,15 +1,13 @@
+source src/arguments/expect.bash
 source src/path/exists.bash
 source src/prompt/yes_or_no.bash
 
 platform::safe_link() {
+  arguments::expect $# 'name' 'from' 'to'
+
   local name=$1
   local from=$2
   local to=$3
-
-  if [ "$#" -lt 3 ]; then
-    echo "Usage: ${FUNCNAME[0]} NAME FROM TO"
-    return 1
-  fi
 
   echo "[$name] $to will be linked to $from"
 
@@ -25,6 +23,7 @@ platform::safe_link() {
     fi
 
     echo "[$name] $to exists; do you want to replace it (Yes / No)?"
+    # shellcheck disable=SC2119
     case $(prompt::yes_or_no) in
     Yes)
       echo "[$name] old $to will be moved to $to.old"
