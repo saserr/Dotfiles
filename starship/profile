@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-source src/command/exists.bash
-source src/file/append.bash
-source src/file/empty.bash
-source src/platform/install.bash
-source src/platform/login_shell.bash
-source src/setup/done.bash
+import 'command::exists'
+import 'file::append'
+import 'file::empty'
+import 'platform::install'
+import 'platform::login_shell'
+import 'setup::done'
 
 homebrew_formula='starship'
 
