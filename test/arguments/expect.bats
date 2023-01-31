@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'src/import.bash'
+  source 'lib/import.bash'
   load ../helpers/assert/wrong_usage
 
   import 'arguments::expect'
@@ -151,7 +151,7 @@ setup() {
 }
 
 @test "failure message mentions the current program if it is invoked outside of a function" {
-  run bash -c 'source src/arguments/expect.bash && arguments::expect 1'
+  run bash -c 'source lib/arguments/expect.bash && arguments::expect 1'
 
   text::contains "${lines[0]}" 'bash'
   text::contains "${lines[0]}" 'wrong number of arguments'

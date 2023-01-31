@@ -37,5 +37,5 @@ jobs:
     - name: ShellCheck
       uses: ludeeus/action-shellcheck@master
       with:
-        scandir: './src'
+        scandir: './lib'
         check_together: 'yes'

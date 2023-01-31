@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'src/import.bash'
+  source 'lib/import.bash'
   load ../helpers/assert/wrong_usage
 
   import 'path::exists'

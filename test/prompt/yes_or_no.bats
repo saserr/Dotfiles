@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'src/import.bash'
+  source 'lib/import.bash'
 
   import 'prompt::yes_or_no'
 }

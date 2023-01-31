@@ -2,7 +2,7 @@
 
 profile=$1
 
-source src/import.bash
+source lib/import.bash
 
 import 'path::exists'
 
