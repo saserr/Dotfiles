@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 @test "declares the 'import' function" {
-  ! type 'import'
+  ! type -t 'import'
 
   source 'lib/import.bash'
 
@@ -17,7 +17,7 @@
 }
 
 @test "imports a missing function" {
-  ! type 'arguments::expect'
+  ! type -t 'arguments::expect'
 
   source 'lib/import.bash'
   import 'arguments::expect'
@@ -41,9 +41,10 @@
   source 'lib/import.bash'
   run import 'foo'
 
-  ! type 'foo'
+  ! type -t 'foo'
   [ "$status" -eq 2 ]
-  [[ "$output" == "[import] can't load the 'foo' function"* ]]
+  [[ "${lines[0]}" == *"import"* ]]
+  [[ "${lines[0]}" == *"can't load the 'foo' function"* ]]
 }
 
 @test "exists if an unknown function is imported" {
@@ -63,7 +64,7 @@
 @test "uses \$LIB_DIR for the location of function files" {
   LIB_DIR="$BATS_TEST_TMPDIR"
   echo 'foo() { echo "bar"; }' >"$LIB_DIR/foo.bash"
-  ! type 'foo'
+  ! type -t 'foo'
 
   source 'lib/import.bash'
   import 'foo'
@@ -79,5 +80,6 @@
   run import 'foo'
 
   [ "$status" -eq 2 ]
-  [ "$output" = "[import] the 'foo' function is missing in $LIB_DIR/foo.bash" ]
+  [[ "${lines[0]}" == *"import"* ]]
+  [[ "${lines[0]}" == *"the 'foo' function is missing in $LIB_DIR/foo.bash" ]]
 }

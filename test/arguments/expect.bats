@@ -107,7 +107,8 @@ setup() {
 
   run foo
 
-  text::starts_with "${lines[0]}" '[foo] wrong number of arguments'
+  text::contains "${lines[0]}" 'foo'
+  text::contains "${lines[0]}" 'wrong number of arguments'
 }
 
 @test "failure message mentions the actual number of arguments" {
@@ -158,10 +159,22 @@ setup() {
   [ "${lines[3]}" = '' ]
 }
 
-@test "failure message mentions the current program if it is invoked outside of a function" {
+@test "failure message mentions the shell if it is invoked outside of a function" {
   run bash -c 'source lib/arguments/expect.bash && arguments::expect 1'
 
   text::contains "${lines[0]}" 'bash'
+  text::contains "${lines[0]}" 'wrong number of arguments'
+}
+
+@test "failure message mentions the script name if it is invoked outside of a function" {
+  local foo="$BATS_TEST_TMPDIR/foo"
+  echo '#!/usr/bin/env bash' >>"$foo"
+  echo 'source lib/arguments/expect.bash && arguments::expect 1' >>"$foo"
+  chmod +x "$foo"
+
+  run "$foo"
+
+  text::contains "${lines[0]}" 'foo'
   text::contains "${lines[0]}" 'wrong number of arguments'
 }
 

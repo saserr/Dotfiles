@@ -1,7 +1,7 @@
-# Do not depend on any other source files because all other files depend on this
-# one.
+# Do not import any other functions because the import function depens on
+# arguments::expect.
 
-__arguments::expect::print_error() {
+__arguments::expect::abort() {
   # check if this function has the correct number of arguments
   if [ $# -lt 2 ]; then
     local stack_position=0
@@ -14,41 +14,51 @@ __arguments::expect::print_error() {
   fi
 
   local function
-  if [ "$stack_position" -lt ${#FUNCNAME[@]} ]; then
+  # skip the last element of the FUNCNAME array which is 'main'
+  if [ $((stack_position + 1)) -lt ${#FUNCNAME[@]} ]; then
     function="${FUNCNAME[$stack_position]}"
   else
     function="$0"
   fi
 
-  printf '[%s] wrong number of arguments' "$function"
+  local messages=()
+  local message='wrong number of arguments'
   if [ $((stack_position + 1)) -lt ${#BASH_SOURCE[@]} ]; then
     local file="${BASH_SOURCE[$((stack_position + 1))]}"
     local line="${BASH_LINENO[$stack_position]}"
-    printf ' at %s (line: %d)' "$file" "$line"
+    message+=" at $file (line: $line)"
   fi
-  echo
+  messages+=("$message")
 
-  local padding
-  padding="$(printf " %.0s" $(seq 1 $((${#function} + 2))))"
+  messages+=("actual: $actual")
 
-  echo "$padding actual: $actual"
-
-  printf '%s expected: ' "$padding"
+  message='expected: '
   if [ "${vararg:?}" -ne 0 ]; then
-    printf '%d (or more)' "${required:?}"
+    message+="${required:?} (or more)"
   elif [ "${optional:?}" -gt 0 ]; then
     if [ "${required:?}" -gt 0 ]; then
-      printf '%d (+ %d optional)' "${required:?}" "${optional:?}"
+      message+="${required:?} (+ ${optional:?} optional)"
     else
-      printf '%d optional' "${optional:?}"
+      message+="${optional:?} optional"
     fi
   else
-    printf '%d' "${required:?}"
+    message+="${required:?}"
   fi
-  echo
+  messages+=("$message")
 
   if [ ${#names[@]} -gt 0 ]; then
-    echo "$padding arguments: ${names[*]}"
+    messages+=("arguments: ${names[*]}")
+  fi
+
+  if type -t 'abort' &>/dev/null; then
+    abort "$function" "${messages[@]}"
+  else
+    echo "[$function] ${messages[0]}" 1>&2
+    messages=("${messages[@]:1}")
+    for message in "${messages[@]}"; do
+      echo "    $message" 1>&2
+    done
+    exit 2
   fi
 }
 
@@ -58,8 +68,7 @@ arguments::expect() {
     local vararg=1
     local optional=1
     local required=1
-    __arguments::expect::print_error 0 $# '$#' '[name]' '...' 1>&2
-    exit 2
+    __arguments::expect::abort 0 $# '$#' '[name]' '...' 1>&2
   fi
 
   [ "$1" -eq $(($# - 1)) ] && return 0
@@ -88,7 +97,6 @@ arguments::expect() {
 
   if [ "$actual" -lt "$required" ] ||
     { [ "$vararg" -eq 0 ] && [ "$actual" -gt $((required + optional)) ]; }; then
-    __arguments::expect::print_error 1 "$actual" "${names[@]}" 1>&2
-    exit 2
+    __arguments::expect::abort 1 "$actual" "${names[@]}" 1>&2
   fi
 }
