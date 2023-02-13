@@ -1,7 +1,7 @@
 # Do not depend on any other source files because all other files depend on this
 # one.
 
-arguments::expect::__print_error() {
+__arguments::expect::print_error() {
   # check if this function has the correct number of arguments
   if [ $# -lt 2 ]; then
     local stack_position=0
@@ -34,16 +34,16 @@ arguments::expect::__print_error() {
   echo "$padding actual: $actual"
 
   printf '%s expected: ' "$padding"
-  if [ "$__vararg" -ne 0 ]; then
-    printf '%d (or more)' "$__required"
-  elif [ "$__optional" -gt 0 ]; then
-    if [ "$__required" -gt 0 ]; then
-      printf '%d (+ %d optional)' "$__required" "$__optional"
+  if [ "${vararg:?}" -ne 0 ]; then
+    printf '%d (or more)' "${required:?}"
+  elif [ "${optional:?}" -gt 0 ]; then
+    if [ "${required:?}" -gt 0 ]; then
+      printf '%d (+ %d optional)' "${required:?}" "${optional:?}"
     else
-      printf '%d optional' "$__optional"
+      printf '%d optional' "${optional:?}"
     fi
   else
-    printf '%d' "$__required"
+    printf '%d' "${required:?}"
   fi
   echo
 
@@ -55,10 +55,10 @@ arguments::expect::__print_error() {
 arguments::expect() {
   # check if this function has the correct number of arguments
   if [ $# -lt 1 ]; then
-    __vararg=1
-    __optional=1
-    __required=1
-    arguments::expect::__print_error 0 $# '$#' '[name]' '...' 1>&2
+    local vararg=1
+    local optional=1
+    local required=1
+    __arguments::expect::print_error 0 $# '$#' '[name]' '...' 1>&2
     exit 2
   fi
 
@@ -67,29 +67,28 @@ arguments::expect() {
   local actual=$1
   local names=("${@:2}")
 
-  __vararg=0
-  __optional=0
-  __required=0
-
   # count number of required and optional arguments and if there is a vararg
+  local vararg=0
+  local optional=0
+  local required=0
   local name=''
   for name in "${names[@]}"; do
     case $name in
     '...')
-      __vararg=1
+      vararg=1
       ;;
     '['*)
-      __optional=$((__optional + 1))
+      optional=$((optional + 1))
       ;;
     *)
-      __required=$((__required + 1))
+      required=$((required + 1))
       ;;
     esac
   done
 
-  if [ "$actual" -lt "$__required" ] ||
-    { [ "$__vararg" -eq 0 ] && [ "$actual" -gt $((__required + __optional)) ]; }; then
-    arguments::expect::__print_error 1 "$actual" "${names[@]}" 1>&2
+  if [ "$actual" -lt "$required" ] ||
+    { [ "$vararg" -eq 0 ] && [ "$actual" -gt $((required + optional)) ]; }; then
+    __arguments::expect::print_error 1 "$actual" "${names[@]}" 1>&2
     exit 2
   fi
 }
