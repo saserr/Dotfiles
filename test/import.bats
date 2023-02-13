@@ -43,7 +43,7 @@
 
   ! type 'foo'
   [ "$status" -eq 2 ]
-  [[ "$output" == "Can't load 'foo'"* ]]
+  [[ "$output" == "[import] can't load the 'foo' function"* ]]
 }
 
 @test "exists if an unknown function is imported" {
@@ -79,5 +79,5 @@
   run import 'foo'
 
   [ "$status" -eq 2 ]
-  [[ "$output" == "Missing 'foo'"* ]]
+  [ "$output" = "[import] the 'foo' function is missing in $LIB_DIR/foo.bash" ]
 }

@@ -62,6 +62,8 @@ arguments::expect() {
     exit 2
   fi
 
+  [ "$1" -eq $(($# - 1)) ] && return 0
+
   local actual=$1
   local names=("${@:2}")
 

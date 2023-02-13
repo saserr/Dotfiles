@@ -5,35 +5,30 @@ if ! type 'import' &>/dev/null; then
   __import_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
   __lib_dir="${LIB_DIR:-$__import_dir}"
 
-  import() {
-    if ! type 'arguments::expect' &>/dev/null; then
-      # shellcheck source=/dev/null
-      source "$__import_dir/arguments/expect.bash" >/dev/null 2>&1
-    fi
+  # shellcheck source=/dev/null
+  if ! source "$__import_dir/arguments/expect.bash" >/dev/null 2>&1 ||
+    [ "$(type -t 'arguments::expect')" != 'function' ]; then
+    echo "[import] can't load the 'arguments:expect' function" 1>&2
+    exit 2
+  fi
 
-    if type 'arguments::expect' &>/dev/null; then
-      arguments::expect $# 'function'
-    else
-      if [ $# -ne 1 ]; then
-        echo 'The function name in import is missing' 1>&2
-        exit 2
-      fi
-    fi
+  import() {
+    arguments::expect $# 'function'
 
     local name=$1
 
-    if ! type "$name" &>/dev/null; then
+    if ! type -t "$name" &>/dev/null; then
       local file
       file="$__lib_dir/${name//::/\/}.bash"
 
       # shellcheck source=/dev/null
       if ! source "$file" >/dev/null 2>&1; then
-        echo "Can't load '$name' at $file" 1>&2
+        echo "[import] can't load the '$name' function from $file" 1>&2
         exit 2
       fi
 
       if [ "$(type -t "$name")" != 'function' ]; then
-        echo "Missing '$name' at $file" 1>&2
+        echo "[import] the '$name' function is missing in $file" 1>&2
         exit 2
       fi
     fi
