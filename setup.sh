@@ -4,14 +4,16 @@ profile=$1
 
 source lib/import.bash
 
+import 'message::error'
 import 'path::exists'
 
 if ! path::exists $profile/profile; then
-  echo "[$profile] does not exits"
+  message::error "$profile" 'does not exits'
   exit 1
 fi
 
 import 'function::exists'
+import 'message::info'
 import 'platform::install'
 import 'platform::name'
 import 'prompt::yes_or_no'
@@ -43,7 +45,7 @@ if setup::missing $profile; then
   done
 
   if ! value::empty "${required[@]}"; then
-    echo "[$profile] requires (${required[@]}); do you want to set them up (Yes / No)?"
+    message::info "$profile" "requires (${required[*]}); do you want to set them up (Yes / No)?"
     case $(prompt::yes_or_no) in
     Yes)
       echo
@@ -72,13 +74,13 @@ if setup::missing $profile; then
 
   setup::done $profile
 else
-  echo "[$profile] already set up"
+  message::info "$profile" 'already set up'
 fi
 
 if ! value::empty "${recommended[@]}"; then
   for recommended_profile in ${recommended[@]}; do
     if setup::missing $recommended_profile; then
-      echo "[$profile] do you want to install $recommended_profile (Yes / No)? "
+      message::info "$profile" "do you want to install $recommended_profile (Yes / No)?"
       if [[ $(prompt::yes_or_no) == Yes ]]; then
         echo
         ./setup.sh $recommended_profile

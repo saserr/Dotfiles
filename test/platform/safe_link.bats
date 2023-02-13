@@ -5,6 +5,9 @@ setup() {
   load ../helpers/assert/wrong_usage
 
   import 'platform::safe_link'
+  import 'message::error'
+  import 'message::info'
+  import 'text::ends_with'
 
   from="$BATS_TEST_TMPDIR/from"
   [ ! -e "$from" ] # $from does not exist
@@ -37,7 +40,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to"
 
   [ $status -eq 0 ]
-  [ "$output" = "[test] $to will be linked to $from" ]
+  [ "$output" = "$(message::info 'test' "$to will be linked to $from")" ]
   [ -L "$to" ] # $to is a symlink
   [ "$(cat "$to")" = 'foo' ]
 }
@@ -49,8 +52,8 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to" <<<"$eof"
 
-  [ "${lines[0]}" = "[test] $to will be linked to $from" ]
-  [ "${lines[1]}" = "[test] $to exists; do you want to replace it (Yes / No)?" ]
+  [ "${lines[0]}" = "$(message::info 'test' "$to will be linked to $from")" ]
+  [ "${lines[1]}" = "$(message::info 'test' "$to exists; do you want to replace it (Yes / No)?")" ]
   [ "${lines[2]}" = '1) Yes' ]
   [ "${lines[3]}" = '2) No' ]
 }
@@ -62,7 +65,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<'1'
 
   [ $status -eq 0 ]
-  [ "${lines[4]}" = "#? [test] old $to will be moved to $to.old" ]
+  text::ends_with "${lines[4]}" "$(message::info 'test' "old $to will be moved to $to.old")"
   [ -f "$to.old" ] # $to.old is a file
   [ "$(cat "$to.old")" = 'bar' ]
 }
@@ -86,7 +89,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to"
 
   [ $status -eq 1 ]
-  [ "${lines[1]}" = "[test] both $to and $to.old already exist; aborting!" ]
+  [ "${lines[1]}" = "$(message::error 'test' "both $to and $to.old already exist; aborting!")" ]
   [ -f "$to" ] # $to is still a file
   [ "$(cat "$to")" = 'bar' ]
   [ -f "$to.old" ] # $to.old is a file
@@ -100,7 +103,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<'2'
 
   [ $status -eq 1 ]
-  [ "${lines[4]}" = "#? [test] $to will not be linked" ]
+  text::ends_with "${lines[4]}" "$(message::info 'test' "$to will not be linked")"
   [ -f "$to" ] # $to is still a file
   [ "$(cat "$to")" = 'bar' ]
   [ ! -e "$to.old" ] # $to.old does not exist
@@ -110,8 +113,8 @@ setup() {
   run platform::safe_link 'test' "$from" "$to"
 
   [ $status -eq 1 ]
-  [ "${lines[0]}" = "[test] $to will be linked to $from" ]
-  [ "${lines[1]}" = "[test] $from does not exist; aborting!" ]
+  [ "${lines[0]}" = "$(message::info 'test' "$to will be linked to $from")" ]
+  [ "${lines[1]}" = "$(message::error 'test' "$from does not exist; aborting!")" ]
   [ ! -e "$from" ] # $from does not exist
   [ ! -e "$to" ]   # $to does not exist
 }
