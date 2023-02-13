@@ -22,7 +22,7 @@ jobs:
       with:
         image: bats/bats:latest
         options: -v ${{ github.workspace }}:/code
-        run: find test/ -type f -name '*.bats' -not -regex 'test/helpers/.*' -exec bash -c 'bats "$@"' {} +
+        run: find test/ -type f -name '*.bats' -not -regex 'test/helpers/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
 
   lint:
     name: Lint

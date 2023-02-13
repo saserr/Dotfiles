@@ -8,5 +8,5 @@ if [ "$#" -ge 1 ]; then
   bats "$@"
 else
   export -f bats
-  find test/ -type f -name '*.bats' -not -regex 'test/helpers/.*' -exec bash -c 'bats "$@"' {} +
+  find test/ -type f -name '*.bats' -not -regex 'test/helpers/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
 fi
