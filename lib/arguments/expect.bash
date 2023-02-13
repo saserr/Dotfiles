@@ -20,7 +20,7 @@ arguments::expect::__print_error() {
     function="$0"
   fi
 
-  printf '[%s]: wrong number of arguments' "$function"
+  printf '[%s] wrong number of arguments' "$function"
   if [ $((stack_position + 1)) -lt ${#BASH_SOURCE[@]} ]; then
     local file="${BASH_SOURCE[$((stack_position + 1))]}"
     local line="${BASH_LINENO[$stack_position]}"
@@ -29,7 +29,7 @@ arguments::expect::__print_error() {
   echo
 
   local padding
-  padding="$(printf " %.0s" $(seq 1 $((${#function} + 3))))"
+  padding="$(printf " %.0s" $(seq 1 $((${#function} + 2))))"
 
   echo "$padding actual: $actual"
 

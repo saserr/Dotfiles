@@ -7,6 +7,7 @@ setup() {
   import 'arguments::expect'
   import 'text::contains'
   import 'text::ends_with'
+  import 'text::starts_with'
 }
 
 @test "fails without arguments" {
@@ -106,21 +107,28 @@ setup() {
 
   run foo
 
-  text::contains "${lines[0]}" 'foo'
-  text::contains "${lines[0]}" 'wrong number of arguments'
+  text::starts_with "${lines[0]}" '[foo] wrong number of arguments'
 }
 
 @test "failure message mentions the actual number of arguments" {
-  run arguments::expect 1 'foo' 'bar'
+  foo() {
+    arguments::expect 1 'foo' 'bar'
+  }
 
-  text::ends_with "${lines[1]}" 'actual: 1'
+  run foo
+
+  [ "${lines[1]}" = '      actual: 1' ]
 }
 
 @test "failure message mentions expected arguments" {
-  run arguments::expect 0 'foo'
+  foo() {
+    arguments::expect 0 'foo'
+  }
 
-  text::ends_with "${lines[2]}" 'expected: 1'
-  text::ends_with "${lines[3]}" 'arguments: foo'
+  run foo
+
+  [ "${lines[2]}" = '      expected: 1' ]
+  [ "${lines[3]}" = '      arguments: foo' ]
 }
 
 @test "failure message mentions optional arguments" {
