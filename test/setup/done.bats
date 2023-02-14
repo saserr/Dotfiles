@@ -16,7 +16,7 @@ teardown() {
 @test "fails without arguments" {
   run setup::done
 
-  assert::wrong_usage 'setup::done' 'profile'
+  assert::wrong_usage 'setup::done' 'recipe'
 }
 
 @test "creates a file under ~/.setup/ with value 1" {

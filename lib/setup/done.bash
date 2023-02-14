@@ -1,10 +1,10 @@
 import 'arguments::expect'
 
 setup::done() {
-  arguments::expect $# 'profile'
+  arguments::expect $# 'recipe'
 
-  local profile=$1
+  local recipe=$1
 
   mkdir -p ~/.setup/
-  echo "1" >"$HOME/.setup/$profile"
+  echo "1" >"$HOME/.setup/$recipe"
 }

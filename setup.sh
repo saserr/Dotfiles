@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-profile=$1
+recipe=$1
 
 source lib/import.bash
 
 import 'message::error'
 import 'path::exists'
 
-if ! path::exists $profile/profile; then
-  message::error "$profile" 'does not exits'
+if ! path::exists "$recipe/recipe"; then
+  message::error "$recipe" 'does not exits'
   exit 1
 fi
 
@@ -22,35 +22,36 @@ import 'setup::missing'
 import 'text::header'
 import 'value::empty'
 
-source $profile/profile
+# shellcheck source=/dev/null
+source "$recipe/recipe"
 
-if setup::missing $profile; then
-  maybe_required=($required)
+if setup::missing "$recipe"; then
+  maybe_required=("${required[@]}")
 
   case "$(platform::name)" in
   mac)
-    maybe_required+=($mac_required)
+    maybe_required+=("${mac_required[@]}")
     ;;
   debian)
-    maybe_required+=($debian_required)
+    maybe_required+=("${debian_required[@]}")
     ;;
   esac
 
   required=()
 
-  for maybe_required_profile in ${maybe_required[@]}; do
-    if setup::missing $maybe_required_profile; then
-      required+=($maybe_required_profile)
+  for maybe_required_recipe in "${maybe_required[@]}"; do
+    if setup::missing "$maybe_required_recipe"; then
+      required+=("$maybe_required_recipe")
     fi
   done
 
-  if ! value::empty "${required[@]}"; then
-    message::info "$profile" "requires (${required[*]}); do you want to set them up (Yes / No)?"
+  if [ ${#required[@]} -gt 0 ]; then
+    message::info "$recipe" "requires (${required[*]}); do you want to set them up (Yes / No)?"
     case $(prompt::yes_or_no) in
     Yes)
       echo
-      for required_profile in ${required[@]}; do
-        ./setup.sh $required_profile || exit 1
+      for required_recipe in "${required[@]}"; do
+        ./setup.sh "$required_recipe" || exit 1
         echo
       done
       ;;
@@ -60,30 +61,30 @@ if setup::missing $profile; then
     esac
   fi
 
-  text::header "Setting up $profile"
+  text::header "Setting up $recipe"
 
   if value::empty "$program"; then
-    program="$profile"
+    program="$recipe"
   fi
 
-  platform::install $program || exit 1
+  platform::install "$recipe" || exit 1
 
   if function::exists configure; then
     configure || exit 1
   fi
 
-  setup::done $profile
+  setup::done "$recipe"
 else
-  message::info "$profile" 'already set up'
+  message::info "$recipe" 'already set up'
 fi
 
-if ! value::empty "${recommended[@]}"; then
-  for recommended_profile in ${recommended[@]}; do
-    if setup::missing $recommended_profile; then
-      message::info "$profile" "do you want to install $recommended_profile (Yes / No)?"
+if [ ${#recommended[@]} -gt 0 ]; then
+  for recommended_recipe in "${recommended[@]}"; do
+    if setup::missing "$recommended_recipe"; then
+      message::info "$recipe" "do you want to install $recommended_recipe (Yes / No)?"
       if [[ $(prompt::yes_or_no) == Yes ]]; then
         echo
-        ./setup.sh $recommended_profile
+        ./setup.sh "$recommended_recipe"
       fi
     fi
   done

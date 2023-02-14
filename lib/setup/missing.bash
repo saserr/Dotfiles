@@ -2,9 +2,9 @@ import 'arguments::expect'
 import 'path::exists'
 
 setup::missing() {
-  arguments::expect $# 'profile'
+  arguments::expect $# 'recipe'
 
-  local profile=$1
+  local recipe=$1
 
-  ! path::exists "$HOME/.setup/$profile"
+  ! path::exists "$HOME/.setup/$recipe"
 }
