@@ -7,7 +7,9 @@ setup() {
   import 'platform::safe_link'
   import 'message::error'
   import 'message::info'
+  import 'message::question'
   import 'text::ends_with'
+  import 'text::starts_with'
 
   from="$BATS_TEST_TMPDIR/from"
   [ ! -e "$from" ] # $from does not exist
@@ -37,7 +39,7 @@ setup() {
 @test "makes a symlink from \$from to \$to if \$to does not exist" {
   echo 'foo' >"$from"
 
-  run platform::safe_link 'test' "$from" "$to"
+  run platform::safe_link 'test' "$from" "$to" <<<''
 
   [ $status -eq 0 ]
   [ "$output" = "$(message::info 'test' "$to will be linked to $from")" ]
@@ -52,20 +54,19 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to" <<<"$eof"
 
+  [ $status -eq 1 ]
   [ "${lines[0]}" = "$(message::info 'test' "$to will be linked to $from")" ]
-  [ "${lines[1]}" = "$(message::info 'test' "$to exists; do you want to replace it (Yes / No)?")" ]
-  [ "${lines[2]}" = '1) Yes' ]
-  [ "${lines[3]}" = '2) No' ]
+  text::starts_with "${lines[1]}" "$(message::question 'test' "$to exists; do you want to replace it?") [Y/n]"
 }
 
 @test "moves \$to to \$to.old if \$to exists and a positive answer is given at the prompt" {
   echo 'foo' >"$from"
   echo 'bar' >"$to"
 
-  run platform::safe_link 'test' "$from" "$to" <<<'1'
+  run platform::safe_link 'test' "$from" "$to" <<<'y'
 
   [ $status -eq 0 ]
-  text::ends_with "${lines[4]}" "$(message::info 'test' "old $to will be moved to $to.old")"
+  text::ends_with "${lines[1]}" "$(message::info 'test' "old $to will be moved to $to.old")"
   [ -f "$to.old" ] # $to.old is a file
   [ "$(cat "$to.old")" = 'bar' ]
 }
@@ -74,7 +75,7 @@ setup() {
   echo 'foo' >"$from"
   echo 'bar' >"$to"
 
-  run platform::safe_link 'test' "$from" "$to" <<<'1'
+  run platform::safe_link 'test' "$from" "$to" <<<'y'
 
   [ $status -eq 0 ]
   [ -L "$to" ] # $to is a symlink
@@ -100,10 +101,10 @@ setup() {
   echo 'foo' >"$from"
   echo 'bar' >"$to"
 
-  run platform::safe_link 'test' "$from" "$to" <<<'2'
+  run platform::safe_link 'test' "$from" "$to" <<<'n'
 
   [ $status -eq 1 ]
-  text::ends_with "${lines[4]}" "$(message::info 'test' "$to will not be linked")"
+  text::ends_with "${lines[1]}" "$(message::info 'test' "$to will not be linked")"
   [ -f "$to" ] # $to is still a file
   [ "$(cat "$to")" = 'bar' ]
   [ ! -e "$to.old" ] # $to.old does not exist

@@ -24,14 +24,12 @@ platform::safe_link() {
       return 1
     fi
 
-    message::info "$name" "$to exists; do you want to replace it (Yes / No)?"
-    # shellcheck disable=SC2119
-    case $(prompt::yes_or_no) in
+    case "$(prompt::yes_or_no "$name" "$to exists; do you want to replace it?" 'Yes')" in
     Yes)
       message::info "$name" "old $to will be moved to $to.old"
       mv "$to" "$to.old"
       ;;
-    No)
+    *)
       message::info "$name" "$to will not be linked"
       return 1
       ;;

@@ -68,7 +68,7 @@ arguments::expect() {
     local vararg=1
     local optional=1
     local required=1
-    __arguments::expect::abort 0 $# '$#' '[name]' '...' 1>&2
+    __arguments::expect::abort 0 $# '$#' '[name]' '...'
   fi
 
   [ "$1" -eq $(($# - 1)) ] && return 0
@@ -97,6 +97,6 @@ arguments::expect() {
 
   if [ "$actual" -lt "$required" ] ||
     { [ "$vararg" -eq 0 ] && [ "$actual" -gt $((required + optional)) ]; }; then
-    __arguments::expect::abort 1 "$actual" "${names[@]}" 1>&2
+    __arguments::expect::abort 1 "$actual" "${names[@]}"
   fi
 }

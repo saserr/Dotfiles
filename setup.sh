@@ -46,8 +46,7 @@ if setup::missing "$recipe"; then
   done
 
   if [ ${#required[@]} -gt 0 ]; then
-    message::info "$recipe" "requires (${required[*]}); do you want to set them up (Yes / No)?"
-    case $(prompt::yes_or_no) in
+    case "$(prompt::yes_or_no "$recipe" "requires (${required[*]}); do you want to set them up?" 'Yes')" in
     Yes)
       echo
       for required_recipe in "${required[@]}"; do
@@ -81,8 +80,7 @@ fi
 if [ ${#recommended[@]} -gt 0 ]; then
   for recommended_recipe in "${recommended[@]}"; do
     if setup::missing "$recommended_recipe"; then
-      message::info "$recipe" "do you want to install $recommended_recipe (Yes / No)?"
-      if [[ $(prompt::yes_or_no) == Yes ]]; then
+      if [ "$(prompt::yes_or_no "$recipe" "do you want to install $recommended_recipe")" = 'Yes' ]; then
         echo
         ./setup.sh "$recommended_recipe"
       fi
