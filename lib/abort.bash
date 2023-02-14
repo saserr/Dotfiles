@@ -15,11 +15,12 @@ abort() {
     fi
   fi
 
-  if type -t 'message::error' &>/dev/null; then
-    message::error "$tag" "${messages[@]}" 1>&2
+  if type -t 'log::error' &>/dev/null; then
+    log::error "$tag" "${messages[@]}" 1>&2
   else
     echo "[$tag] ${messages[0]}" 1>&2
     messages=("${messages[@]:1}")
+    local message
     for message in "${messages[@]}"; do
       echo "    $message" 1>&2
     done

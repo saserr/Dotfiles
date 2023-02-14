@@ -1,7 +1,10 @@
+import 'arguments::expect'
 import 'text::contains'
 import 'text::ends_with'
 
 assert::wrong_usage() {
+  arguments::expect $# 'function' '[argument]' '...'
+
   local function=$1
   local arguments=("${@:2}")
 

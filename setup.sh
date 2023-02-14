@@ -4,16 +4,15 @@ recipe=$1
 
 source lib/import.bash
 
-import 'message::error'
+import 'log'
 import 'path::exists'
 
 if ! path::exists "$recipe/recipe"; then
-  message::error "$recipe" 'does not exits'
+  log::error "$recipe" 'does not exits'
   exit 1
 fi
 
 import 'function::exists'
-import 'message::info'
 import 'platform::install'
 import 'platform::name'
 import 'prompt::yes_or_no'
@@ -74,7 +73,7 @@ if setup::missing "$recipe"; then
 
   setup::done "$recipe"
 else
-  message::info "$recipe" 'already set up'
+  log::info "$recipe" 'already set up'
 fi
 
 if [ ${#recommended[@]} -gt 0 ]; then

@@ -1,6 +1,6 @@
 import 'arguments::error'
 import 'arguments::expect'
-import 'message::question'
+import 'log'
 import 'value::empty'
 
 prompt::yes_or_no() {
@@ -29,7 +29,7 @@ prompt::yes_or_no() {
   fi
 
   while true; do
-    printf '%s' "$(message::question "$tag" "$question")" 1>&2
+    printf '%s' "$(log '0;34' "$tag" "$question")" 1>&2
     read -r answer || return 1
     case "$answer" in
     [yY] | [yY][eE][sS])

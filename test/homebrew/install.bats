@@ -6,8 +6,7 @@ setup() {
   load ../helpers/mocks/stub
 
   import 'homebrew::install'
-  import 'message::error'
-  import 'message::info'
+  import 'log'
 }
 
 @test "fails without arguments" {
@@ -25,7 +24,7 @@ setup() {
 
   unstub brew
   [ "$status" -eq 0 ]
-  [ "$output" = "$(message::info 'homebrew' 'installing foo ...')" ]
+  [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
 }
 
 @test "succeeds if formula is already installed" {
@@ -35,7 +34,7 @@ setup() {
 
   unstub brew
   [ "$status" -eq 0 ]
-  [ "$output" = "$(message::info 'homebrew' 'foo already installed ...')" ]
+  [ "$output" = "$(log::info 'homebrew' 'foo already installed ...')" ]
 }
 
 @test "fails if brew update fails" {
@@ -46,7 +45,7 @@ setup() {
 
   unstub brew
   [ "$status" -eq 1 ]
-  [ "${lines[1]}" = "$(message::error 'homebrew' 'failed to install foo')" ]
+  [ "${lines[1]}" = "$(log::error 'homebrew' 'failed to install foo')" ]
 }
 
 @test "fails if brew install fails" {
@@ -58,7 +57,7 @@ setup() {
 
   unstub brew
   [ "$status" -eq 1 ]
-  [ "${lines[1]}" = "$(message::error 'homebrew' 'failed to install foo')" ]
+  [ "${lines[1]}" = "$(log::error 'homebrew' 'failed to install foo')" ]
 }
 
 @test "uses package as name when only one argument is passed" {
@@ -70,5 +69,5 @@ setup() {
 
   unstub brew
   [ "$status" -eq 0 ]
-  [ "$output" = "$(message::info 'homebrew' 'installing foo ...')" ]
+  [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
 }

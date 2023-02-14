@@ -1,6 +1,5 @@
 import 'arguments::expect'
-import 'message::error'
-import 'message::info'
+import 'log'
 
 homebrew::install() {
   arguments::expect $# '[name]' 'formula'
@@ -14,14 +13,14 @@ homebrew::install() {
   fi
 
   if [ "$(brew list "$formula")" ]; then
-    message::info 'homebrew' "$name already installed ..."
+    log::info 'homebrew' "$name already installed ..."
     return 0
   fi
 
-  message::info 'homebrew' "installing $name ..."
+  log::info 'homebrew' "installing $name ..."
 
   if ! { brew update && brew install "$formula"; }; then
-    message::error 'homebrew' "failed to install $name"
+    log::error 'homebrew' "failed to install $name"
     return 1
   fi
 }

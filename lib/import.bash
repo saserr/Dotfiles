@@ -21,13 +21,13 @@ if ! type -t 'import' &>/dev/null; then
     source "$file" >/dev/null 2>&1 && type -t "$function" &>/dev/null
   }
 
-  if ! __import::local 'message::error'; then
-    echo "[import] can't load the 'message::error' function" 1>&2
+  if ! __import::local 'log' || ! type -t 'log::error' &>/dev/null; then
+    echo "[import] can't load the 'log::error' function" 1>&2
     exit 2
   fi
 
   if ! __import::local 'abort'; then
-    message::error 'import' "can't load the 'abort' function" 1>&2
+    log::error 'import' "can't load the 'abort' function" 1>&2
     exit 2
   fi
 

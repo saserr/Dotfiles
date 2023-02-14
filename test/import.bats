@@ -43,7 +43,7 @@
 
   ! type -t 'foo'
   [ "$status" -eq 2 ]
-  [[ "${lines[0]}" == *"import"* ]]
+  [[ "${lines[0]}" == *'import'* ]]
   [[ "${lines[0]}" == *"can't load the 'foo' function"* ]]
 }
 
@@ -80,6 +80,6 @@
   run import 'foo'
 
   [ "$status" -eq 2 ]
-  [[ "${lines[0]}" == *"import"* ]]
+  [[ "${lines[0]}" == *'import'* ]]
   [[ "${lines[0]}" == *"the 'foo' function is missing in $LIB_DIR/foo.bash" ]]
 }

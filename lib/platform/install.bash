@@ -1,7 +1,7 @@
 import 'apt::install'
 import 'arguments::expect'
 import 'homebrew::install'
-import 'message::error'
+import 'log'
 import 'platform::name'
 import 'value::empty'
 
@@ -34,6 +34,6 @@ platform::install() {
     ;;
   esac
 
-  message::error "$platform" "don't know how to install $program"
+  log::error "$platform" "don't know how to install $program"
   return 1
 }

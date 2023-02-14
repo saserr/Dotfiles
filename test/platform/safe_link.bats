@@ -5,9 +5,7 @@ setup() {
   load ../helpers/assert/wrong_usage
 
   import 'platform::safe_link'
-  import 'message::error'
-  import 'message::info'
-  import 'message::question'
+  import 'log'
   import 'text::ends_with'
   import 'text::starts_with'
 
@@ -42,7 +40,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   [ $status -eq 0 ]
-  [ "$output" = "$(message::info 'test' "$to will be linked to $from")" ]
+  [ "$output" = "$(log::info 'test' "$to will be linked to $from")" ]
   [ -L "$to" ] # $to is a symlink
   [ "$(cat "$to")" = 'foo' ]
 }
@@ -55,8 +53,9 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<"$eof"
 
   [ $status -eq 1 ]
-  [ "${lines[0]}" = "$(message::info 'test' "$to will be linked to $from")" ]
-  text::starts_with "${lines[1]}" "$(message::question 'test' "$to exists; do you want to replace it?") [Y/n]"
+  [ "${lines[0]}" = "$(log::info 'test' "$to will be linked to $from")" ]
+  text::contains "${lines[1]}" 'test'
+  text::contains "${lines[1]}" "$to exists; do you want to replace it? [Y/n]"
 }
 
 @test "moves \$to to \$to.old if \$to exists and a positive answer is given at the prompt" {
@@ -66,7 +65,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<'y'
 
   [ $status -eq 0 ]
-  text::ends_with "${lines[1]}" "$(message::info 'test' "old $to will be moved to $to.old")"
+  text::ends_with "${lines[1]}" "$(log::info 'test' "old $to will be moved to $to.old")"
   [ -f "$to.old" ] # $to.old is a file
   [ "$(cat "$to.old")" = 'bar' ]
 }
@@ -90,7 +89,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to"
 
   [ $status -eq 1 ]
-  [ "${lines[1]}" = "$(message::error 'test' "both $to and $to.old already exist; aborting!")" ]
+  [ "${lines[1]}" = "$(log::error 'test' "both $to and $to.old already exist; aborting!")" ]
   [ -f "$to" ] # $to is still a file
   [ "$(cat "$to")" = 'bar' ]
   [ -f "$to.old" ] # $to.old is a file
@@ -104,7 +103,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<'n'
 
   [ $status -eq 1 ]
-  text::ends_with "${lines[1]}" "$(message::info 'test' "$to will not be linked")"
+  text::ends_with "${lines[1]}" "$(log::info 'test' "$to will not be linked")"
   [ -f "$to" ] # $to is still a file
   [ "$(cat "$to")" = 'bar' ]
   [ ! -e "$to.old" ] # $to.old does not exist
@@ -114,8 +113,8 @@ setup() {
   run platform::safe_link 'test' "$from" "$to"
 
   [ $status -eq 1 ]
-  [ "${lines[0]}" = "$(message::info 'test' "$to will be linked to $from")" ]
-  [ "${lines[1]}" = "$(message::error 'test' "$from does not exist; aborting!")" ]
+  [ "${lines[0]}" = "$(log::info 'test' "$to will be linked to $from")" ]
+  [ "${lines[1]}" = "$(log::error 'test' "$from does not exist; aborting!")" ]
   [ ! -e "$from" ] # $from does not exist
   [ ! -e "$to" ]   # $to does not exist
 }

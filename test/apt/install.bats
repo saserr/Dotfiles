@@ -6,9 +6,7 @@ setup() {
   load ../helpers/mocks/stub
 
   import 'apt::install'
-  import 'message::error'
-  import 'message::info'
-  import 'message::warning'
+  import 'log'
 }
 
 @test "fails without arguments" {
@@ -29,7 +27,7 @@ setup() {
   unstub id
   unstub dpkg
   [ "$status" -eq 0 ]
-  [ "$output" = "$(message::info 'apt' 'installing foo ...')" ]
+  [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }
 
 @test "installs package unless status is installed" {
@@ -44,7 +42,7 @@ setup() {
   unstub id
   unstub dpkg
   [ "$status" -eq 0 ]
-  [ "$output" = "$(message::info 'apt' 'installing foo ...')" ]
+  [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }
 
 @test "installs package with sudo if the current user is not root" {
@@ -61,7 +59,7 @@ setup() {
   unstub id
   unstub dpkg
   [ "$status" -eq 0 ]
-  [ "${lines[1]}" = "$(message::warning 'apt' 'running as non-root; sudo is needed ...')" ]
+  [ "${lines[1]}" = "$(log::warn 'apt' 'running as non-root; sudo is needed ...')" ]
 }
 
 @test "succeeds if package is already installed" {
@@ -71,7 +69,7 @@ setup() {
 
   unstub dpkg
   [ "$status" -eq 0 ]
-  [ "$output" = "$(message::info 'apt' 'foo already installed ...')" ]
+  [ "$output" = "$(log::info 'apt' 'foo already installed ...')" ]
 }
 
 @test "fails if apt update fails" {
@@ -85,7 +83,7 @@ setup() {
   unstub id
   unstub dpkg
   [ "$status" -eq 1 ]
-  [ "${lines[1]}" = "$(message::error 'apt' 'failed to install foo')" ]
+  [ "${lines[1]}" = "$(log::error 'apt' 'failed to install foo')" ]
 }
 
 @test "fails if apt install fails" {
@@ -100,7 +98,7 @@ setup() {
   unstub id
   unstub dpkg
   [ "$status" -eq 1 ]
-  [ "${lines[1]}" = "$(message::error 'apt' 'failed to install foo')" ]
+  [ "${lines[1]}" = "$(log::error 'apt' 'failed to install foo')" ]
 }
 
 @test "uses package as name when only one argument is passed" {
@@ -115,5 +113,5 @@ setup() {
   unstub id
   unstub dpkg
   [ "$status" -eq 0 ]
-  [ "$output" = "$(message::info 'apt' 'installing foo ...')" ]
+  [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }

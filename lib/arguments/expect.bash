@@ -55,6 +55,7 @@ __arguments::expect::abort() {
   else
     echo "[$function] ${messages[0]}" 1>&2
     messages=("${messages[@]:1}")
+    local message
     for message in "${messages[@]}"; do
       echo "    $message" 1>&2
     done
@@ -80,7 +81,7 @@ arguments::expect() {
   local vararg=0
   local optional=0
   local required=0
-  local name=''
+  local name
   for name in "${names[@]}"; do
     case $name in
     '...')
