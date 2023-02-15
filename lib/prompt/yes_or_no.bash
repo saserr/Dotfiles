@@ -1,6 +1,7 @@
 import 'arguments::error'
 import 'arguments::expect'
 import 'log'
+import 'prompt::question'
 import 'value::empty'
 
 prompt::yes_or_no() {
@@ -29,8 +30,8 @@ prompt::yes_or_no() {
   fi
 
   while true; do
-    printf '%s' "$(log '0;34' "$tag" "$question")" 1>&2
-    read -r answer || return 1
+    local answer
+    answer="$(prompt::question "$tag" "$question")" || return 1
     case "$answer" in
     [yY] | [yY][eE][sS])
       echo 'Yes'

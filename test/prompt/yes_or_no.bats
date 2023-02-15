@@ -36,7 +36,8 @@ setup() {
 @test "prompts the question" {
   run prompt::yes_or_no 'foo' 'bar' <<<''
 
-  text::starts_with "$output" "$(log '0;34' 'foo' 'bar') [y/n]"
+  text::contains "$output" 'foo'
+  text::contains "$output" 'bar [y/n]'
 }
 
 @test "returns Yes if the answer is y" {
