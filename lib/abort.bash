@@ -1,30 +1,12 @@
-# Do not import any other functions because the import function depens on abort.
+import 'arguments::expect'
+import 'log'
 
 abort() {
-  if { type -t 'arguments::expect' &>/dev/null && arguments::expect $# 'tag' 'message' '...'; } ||
-    [ $# -gt 1 ]; then
-    local tag=$1
-    local messages=("${@:2}")
-  else
-    local tag='abort'
-    local messages=('requires tag and one or more messages as arguments')
-    if [ ${#BASH_SOURCE[@]} -gt 1 ]; then
-      local file="${BASH_SOURCE[1]}"
-      local line="${BASH_LINENO[0]}"
-      messages+=("at $file (line: $line)")
-    fi
-  fi
+  arguments::expect $# 'tag' 'message' '...'
 
-  if type -t 'log::error' &>/dev/null; then
-    log::error "$tag" "${messages[@]}" 1>&2
-  else
-    echo "[$tag] ${messages[0]}" 1>&2
-    messages=("${messages[@]:1}")
-    local message
-    for message in "${messages[@]}"; do
-      echo "    $message" 1>&2
-    done
-  fi
+  local tag=$1
+  local messages=("${@:2}")
 
+  log::error "$tag" "${messages[@]}" 1>&2
   exit 2
 }

@@ -43,8 +43,8 @@
 
   ! type -t 'foo'
   [ "$status" -eq 2 ]
-  [[ "${lines[0]}" == *'import'* ]]
-  [[ "${lines[0]}" == *"can't load the 'foo' function"* ]]
+  [[ "${lines[1]}" == *'import'* ]]
+  [[ "${lines[1]}" == *"can't load the 'foo' function"* ]]
 }
 
 @test "exists if an unknown function is imported" {

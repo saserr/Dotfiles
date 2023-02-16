@@ -1,71 +1,95 @@
-# Do not depend on any other source files because all other files depend on this
-# one.
-
 if ! type -t 'import' &>/dev/null; then
   __import_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-  __lib_dir="${LIB_DIR:-$__import_dir}"
 
-  __import::local() {
-    if [ $# -ne 1 ]; then
-      return 1
+  __import::abort() {
+    if { type -t 'arguments::expect' &>/dev/null && arguments::expect $# 'message'; } ||
+      [ $# -gt 0 ]; then
+      local messages=("$1")
+      if [ ${#BASH_SOURCE[@]} -gt 2 ]; then
+        local file="${BASH_SOURCE[2]}"
+        local line="${BASH_LINENO[1]}"
+        messages+=("at $file (line: $line)")
+      fi
+    else
+      local messages=("requires a message as an argument")
+      if [ ${#BASH_SOURCE[@]} -gt 1 ]; then
+        local file="${BASH_SOURCE[1]}"
+        local line="${BASH_LINENO[0]}"
+        messages+=("at $file (line: $line)")
+      fi
+    fi
+
+    if type -t 'abort' &>/dev/null; then
+      abort 'import' "${messages[@]}"
+    elif type -t 'log::error' &>/dev/null; then
+      log::error 'import' "can't load the 'abort' function" 1>&2
+    else
+      echo "[import] ${messages[0]}" 1>&2
+      if [ "${#messages[@]}" -gt 1 ]; then
+        local message
+        local messages=("${messages[@]:1}")
+        for message in "${messages[@]}"; do
+          echo echo "         $message" 1>&2
+        done
+      fi
+    fi
+
+    exit 2
+  }
+
+  __import::not_loaded() {
+    local caller="${FUNCNAME[1]}"
+
+    echo "[$caller] is being loaded; do not call" 1>&2
+
+    if [ ${#BASH_SOURCE[@]} -gt 1 ]; then
+      local identation
+      identation="$(printf " %.0s" $(seq 1 $((${#caller} + 2))))"
+      local file="${BASH_SOURCE[1]}"
+      local line="${BASH_LINENO[0]}"
+      echo "$identation at $file (line: $line)" 1>&2
+    fi
+
+    exit 2
+  }
+
+  import() {
+    if type -t 'arguments::expect' &>/dev/null; then
+      arguments::expect $# 'function'
+    elif [ $# -ne 1 ]; then
+      __import::abort "requires a function name as an argument"
     fi
 
     local function=$1
     if type -t "$function" &>/dev/null; then
       return 0
+    fi
+
+    if ! eval "${function}() { __import::not_loaded; };"; then
+      __import::abort "failed to load the '$function' function"
     fi
 
     local file
     file="$__import_dir/${function//::/\/}.bash"
     # shellcheck source=/dev/null
-    source "$file" >/dev/null 2>&1 && type -t "$function" &>/dev/null
-  }
-
-  if ! __import::local 'log' || ! type -t 'log::error' &>/dev/null; then
-    echo "[import] can't load the 'log::error' function" 1>&2
-    exit 2
-  fi
-
-  if ! __import::local 'abort'; then
-    log::error 'import' "can't load the 'abort' function" 1>&2
-    exit 2
-  fi
-
-  if ! __import::local 'arguments::expect'; then
-    abort 'import' "can't load the 'arguments::expect' function"
-  fi
-
-  __import::abort() {
-    arguments::expect $# 'message'
-
-    local tag='import'
-    local messages=("$1")
-    if [ ${#BASH_SOURCE[@]} -gt 2 ]; then
-      local file="${BASH_SOURCE[2]}"
-      local line="${BASH_LINENO[1]}"
-      messages+=("at $file (line: $line)")
-    fi
-
-    abort "$tag" "${messages[@]}"
-  }
-
-  import() {
-    arguments::expect $# 'function'
-
-    local function=$1
-    if type -t "$function" &>/dev/null; then
-      return 0
-    fi
-
-    local file
-    file="$__lib_dir/${function//::/\/}.bash"
-    # shellcheck source=/dev/null
-    if ! source "$file" >/dev/null 2>&1; then
+    if ! source "$file"; then
       __import::abort "can't load the '$function' function from $file"
     fi
 
-    if ! type -t "$function" &>/dev/null; then
+    if ! type -t "$function" &>/dev/null ||
+      [[ "$(declare -fp "$function" 2>&1)" == *'__import::not_loaded'* ]]; then
       __import::abort "the '$function' function is missing in $file"
     fi
   }
+
+  import 'arguments::expect'
+
+  import 'log'
+  if ! type -t 'log::error' &>/dev/null; then
+    __import::abort "can't load the 'log::error' function"
+  fi
+
+  import 'abort'
+
+  __import_dir="${LIB_DIR:-$__import_dir}"
 fi
