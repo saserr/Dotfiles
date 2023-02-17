@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
-recipe=$1
-
 source lib/import.bash
+
+import 'arguments::expect'
+arguments::expect $# 'recipe'
+
+recipe=$1
 
 import 'log'
 import 'path::exists'
