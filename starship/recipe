@@ -11,18 +11,19 @@ homebrew_formula='starship'
 
 debian_required=(curl)
 
-debian_install() {
+debian::install() {
   echo "[starship] installing ..."
   curl -sS https://starship.rs/install.sh | sh
 }
 
 configure() {
-  local login_shell="$(platform::login_shell)"
+  local login_shell
+  login_shell="$(platform::login_shell)" || return 1
   case $login_shell in
   'zsh')
     echo '[starship] enabling in zsh'
 
-    local zshrc=''
+    local zshrc
     if setup::missing zsh; then
       zshrc=~/.zshrc
     else
@@ -32,13 +33,17 @@ configure() {
     if ! file::empty $zshrc; then
       file::append $zshrc ''
     fi
-    file::append $zshrc '# enable https://starship.rs'
-    file::append $zshrc 'eval "$(starship init zsh)"'
+    file::append "$zshrc" '# enable https://starship.rs'
+    # shellcheck disable=SC2016
+    # this eval is intentionally not evaluated here, hence single-quote string
+    file::append "$zshrc" 'eval "$(starship init zsh)"'
     ;;
   'bash')
     echo '[starship] enabling in bash'
-    file::append $zshrc '# enable https://starship.rs'
-    file::append $zshrc 'eval "$(starship init bash)"'
+    file::append "$zshrc" '# enable https://starship.rs'
+    # shellcheck disable=SC2016
+    # this eval is intentionally not evaluated here, hence single-quote string
+    file::append "$zshrc" 'eval "$(starship init bash)"'
     ;;
   *)
     echo "[starship] don't know how to enable for $login_shell"

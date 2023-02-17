@@ -18,7 +18,7 @@ variable::expect() {
   done
 
   if [ "${#missing[@]}" -gt 0 ]; then
-    local messages=("expected variable variables: ${missing[*]}")
+    local messages=("expected nonempty variables: ${missing[*]}")
     if location="$(caller::location 2)"; then
       messages+=("at $location")
     fi

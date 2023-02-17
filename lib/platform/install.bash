@@ -1,5 +1,5 @@
-import 'apt::install'
 import 'arguments::expect'
+import 'debian::install'
 import 'homebrew::install'
 import 'log'
 import 'platform::name'
@@ -21,14 +21,8 @@ platform::install() {
     fi
     ;;
   'debian')
-    if function::exists debian_install; then
-      debian_install
-    else
-      if ! value::empty "${apt_package:+ok}"; then
-        apt::install "${recipe:?}" "$apt_package"
-        return
-      fi
-    fi
+    debian::install
+    return
     ;;
   esac
 

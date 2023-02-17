@@ -46,7 +46,7 @@ setup() {
   run variable::expect 'foo'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is an empty array" {
@@ -56,7 +56,7 @@ setup() {
 
   run variable::expect 'foo'
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only declared" {
@@ -67,7 +67,7 @@ setup() {
   run variable::expect 'foo'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only declared as an indexed array" {
@@ -78,7 +78,7 @@ setup() {
   run variable::expect 'foo'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only declared as an associative array" {
@@ -89,7 +89,7 @@ setup() {
   run variable::expect 'foo'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only localy declared" {
@@ -100,7 +100,7 @@ setup() {
   run variable::expect 'foo'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only readonly declared" {
@@ -111,7 +111,7 @@ setup() {
   run variable::expect 'foo'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is not declared" {
@@ -120,7 +120,7 @@ setup() {
   run variable::expect 'foo'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if any variable is not declared" {
@@ -131,7 +131,7 @@ setup() {
   run variable::expect 'foo' 'baz'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: baz"
+  text::ends_with "${lines[0]}" "expected nonempty variables: baz"
 }
 
 @test "fails if multiple variables are not declared" {
@@ -140,7 +140,7 @@ setup() {
   run variable::expect 'foo' 'bar'
 
   [ "$status" -eq 2 ]
-  text::ends_with "${lines[0]}" "expected variable variables: foo bar"
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo bar"
 }
 
 @test "exits when it fails" {
