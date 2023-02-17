@@ -72,11 +72,7 @@ if setup::missing "$recipe"; then
 
   text::header "Setting up $recipe"
 
-  if value::empty "$program"; then
-    program="$recipe"
-  fi
-
-  platform::install "$recipe" || exit 1
+  platform::install || exit 1
 
   if function::exists configure; then
     configure || exit 1
