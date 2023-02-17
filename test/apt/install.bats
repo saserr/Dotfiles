@@ -3,6 +3,9 @@
 setup() {
   source 'lib/import.bash'
   import 'apt::install'
+
+  # return that package is not installed
+  apt::missing() { return 0; }
 }
 
 @test "fails without arguments" {
@@ -10,14 +13,24 @@ setup() {
 
   run apt::install
 
-  assert::wrong_usage 'apt::install' '[name]' 'package'
+  assert::wrong_usage 'apt::install' '[name]' 'package' '...'
+}
+
+@test "checks if package is installed" {
+  apt::missing() {
+    args=("$@")
+    return 1
+  }
+
+  apt::install 'foo' 'bar'
+
+  [ "${args[0]}" = 'bar' ]
 }
 
 @test "installs package if not installed" {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub dpkg '-s bar : exit 1'
   stub id '-u : echo 0'
   stub apt 'update : '
   stub apt ' -y install bar : '
@@ -26,25 +39,39 @@ setup() {
 
   unstub apt
   unstub id
-  unstub dpkg
   [ "$status" -eq 0 ]
   [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }
 
-@test "installs package unless status is installed" {
+@test "installs multiple packages" {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub dpkg '-s bar : echo "Status: not installed"'
   stub id '-u : echo 0'
   stub apt 'update : '
-  stub apt ' -y install bar : '
+  stub apt ' -y install bar baz : '
 
-  run apt::install 'foo' 'bar'
+  run apt::install 'foo' 'bar' 'baz'
 
   unstub apt
   unstub id
-  unstub dpkg
+  [ "$status" -eq 0 ]
+  [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
+}
+
+@test "installs only missing packages" {
+  load ../helpers/mocks/stub
+
+  apt::missing() { [ $1 != 'bar' ]; }
+
+  stub id '-u : echo 0'
+  stub apt 'update : '
+  stub apt ' -y install baz : '
+
+  run apt::install 'foo' 'bar' 'baz'
+
+  unstub apt
+  unstub id
   [ "$status" -eq 0 ]
   [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }
@@ -53,9 +80,8 @@ setup() {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub dpkg '-s bar : exit 1'
   stub id '-u : echo 1000'
-  stub sudo 'bash -c \* : $3 '
+  stub sudo 'bash -c \* : bash -c "$3" '
   stub apt 'update : '
   stub apt ' -y install bar : '
 
@@ -64,20 +90,17 @@ setup() {
   unstub apt
   unstub sudo
   unstub id
-  unstub dpkg
   [ "$status" -eq 0 ]
   [ "${lines[1]}" = "$(log::warn 'apt' 'running as non-root; sudo is needed ...')" ]
 }
 
 @test "succeeds if package is already installed" {
-  load ../helpers/mocks/stub
   import 'log'
 
-  stub dpkg '-s bar : echo "Status: install ok installed"'
+  apt::missing() { return 1; }
 
   run apt::install 'foo' 'bar'
 
-  unstub dpkg
   [ "$status" -eq 0 ]
   [ "$output" = "$(log::info 'apt' 'foo already installed ...')" ]
 }
@@ -86,7 +109,6 @@ setup() {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub dpkg '-s bar : exit 1'
   stub id '-u : echo 0'
   stub apt 'update : exit 1'
 
@@ -94,7 +116,6 @@ setup() {
 
   unstub apt
   unstub id
-  unstub dpkg
   [ "$status" -eq 1 ]
   [ "${lines[1]}" = "$(log::error 'apt' 'failed to install foo')" ]
 }
@@ -103,7 +124,6 @@ setup() {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub dpkg '-s bar : exit 1'
   stub id '-u : echo 0'
   stub apt 'update : '
   stub apt ' -y install bar : exit 1'
@@ -112,7 +132,6 @@ setup() {
 
   unstub apt
   unstub id
-  unstub dpkg
   [ "$status" -eq 1 ]
   [ "${lines[1]}" = "$(log::error 'apt' 'failed to install foo')" ]
 }
@@ -121,7 +140,6 @@ setup() {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub dpkg '-s foo : exit 1'
   stub id '-u : echo 0'
   stub apt 'update : '
   stub apt ' -y install foo : '
@@ -130,7 +148,6 @@ setup() {
 
   unstub apt
   unstub id
-  unstub dpkg
   [ "$status" -eq 0 ]
   [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }

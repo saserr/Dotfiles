@@ -1,24 +1,32 @@
+import 'apt::missing'
 import 'arguments::expect'
 import 'log'
 
 apt::install() {
-  arguments::expect $# '[name]' 'package'
+  arguments::expect $# '[name]' 'package' '...'
 
   if [ $# -eq 1 ]; then
     local name=$1
-    local package=$1
+    local packages=("$1")
   else
     local name=$1
-    local package=$2
+    local packages=("${@:2}")
   fi
 
-  if dpkg -s "$package" 2>&1 | grep -q 'Status: install ok installed'; then
+  local missing=()
+  for package in "${packages[@]}"; do
+    if apt::missing "$package"; then
+      missing+=("$package")
+    fi
+  done
+
+  if [ "${#missing[@]}" -eq 0 ]; then
     log::info 'apt' "$name already installed ..."
     return 0
   fi
 
   __apt_install() {
-    if ! { apt update && apt -y install "$package"; }; then
+    if ! { apt update && apt -y install "${missing[@]}"; }; then
       log::error 'apt' "failed to install $name"
       return 1
     fi
@@ -30,8 +38,8 @@ apt::install() {
   if [ "$(id -u)" -ne 0 ]; then
     log::warn 'apt' 'running as non-root; sudo is needed ...'
     export -f __apt_install
-    export name package
-    sudo bash -c "__apt_install"
+    export name
+    sudo bash -c "$(declare -p missing); __apt_install"
   else
     __apt_install
   fi
