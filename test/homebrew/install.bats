@@ -3,6 +3,9 @@
 setup() {
   source 'lib/import.bash'
   import 'homebrew::install'
+
+  # return that formula is not installed
+  homebrew::missing() { return 0; }
 }
 
 @test "fails without arguments" {
@@ -10,14 +13,24 @@ setup() {
 
   run homebrew::install
 
-  assert::wrong_usage 'homebrew::install' '[name]' 'formula'
+  assert::wrong_usage 'homebrew::install' '[name]' 'formula' '...'
+}
+
+@test "checks if formula is installed" {
+  homebrew::missing() {
+    args=("$@")
+    return 1
+  }
+
+  homebrew::install 'foo' 'bar'
+
+  [ "${args[0]}" = 'bar' ]
 }
 
 @test "installs formula if not installed" {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub brew 'list bar : exit 1'
   stub brew 'update : '
   stub brew 'install bar : '
 
@@ -28,15 +41,41 @@ setup() {
   [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
 }
 
-@test "succeeds if formula is already installed" {
+@test "installs multiple formulas" {
   load ../helpers/mocks/stub
+
+  stub brew 'update : '
+  stub brew 'install bar baz : '
+
+  run homebrew::install 'foo' 'bar' 'baz'
+
+  unstub brew
+  [ "$status" -eq 0 ]
+  [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
+}
+
+@test "installs only missing formulas" {
+  load ../helpers/mocks/stub
+
+  homebrew::missing() { [ $1 != 'bar' ]; }
+
+  stub brew 'update : '
+  stub brew 'install baz : '
+
+  run homebrew::install 'foo' 'bar' 'baz'
+
+  unstub brew
+  [ "$status" -eq 0 ]
+  [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
+}
+
+@test "succeeds if formula is already installed" {
   import 'log'
 
-  stub brew 'list bar : echo "/usr/bin/bar"; exit 0 '
+  homebrew::missing() { return 1; }
 
   run homebrew::install 'foo' 'bar'
 
-  unstub brew
   [ "$status" -eq 0 ]
   [ "$output" = "$(log::info 'homebrew' 'foo already installed ...')" ]
 }
@@ -45,7 +84,6 @@ setup() {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub brew 'list bar : exit 1'
   stub brew 'update : exit 1'
 
   run homebrew::install 'foo' 'bar'
@@ -59,7 +97,6 @@ setup() {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub brew 'list bar : exit 1'
   stub brew 'update : '
   stub brew 'install bar : exit 1'
 
@@ -70,11 +107,10 @@ setup() {
   [ "${lines[1]}" = "$(log::error 'homebrew' 'failed to install foo')" ]
 }
 
-@test "uses package as name when only one argument is passed" {
+@test "uses formula as name when only one argument is passed" {
   load ../helpers/mocks/stub
   import 'log'
 
-  stub brew 'list foo : exit 1'
   stub brew 'update : '
   stub brew 'install foo : '
 
