@@ -1,9 +1,8 @@
 import 'arguments::expect'
 import 'debian::install'
-import 'homebrew::install'
 import 'log'
+import 'mac::install'
 import 'platform::name'
-import 'value::empty'
 import 'variable::expect'
 
 platform::install() {
@@ -15,10 +14,8 @@ platform::install() {
 
   case $platform in
   'mac')
-    if ! value::empty "${homebrew_formula:+ok}"; then
-      homebrew::install "${recipe:?}" "$homebrew_formula"
-      return
-    fi
+    mac::install
+    return
     ;;
   'debian')
     debian::install
