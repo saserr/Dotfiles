@@ -22,14 +22,14 @@ if ! type -t 'import' &>/dev/null; then
     if type -t 'abort' &>/dev/null; then
       abort 'import' "${messages[@]}"
     elif type -t 'log::error' &>/dev/null; then
-      log::error 'import' "can't load the 'abort' function" 1>&2
+      log::error 'import' "${messages[@]}" 1>&2
     else
       echo "[import] ${messages[0]}" 1>&2
       if [ "${#messages[@]}" -gt 1 ]; then
         local message
         local messages=("${messages[@]:1}")
         for message in "${messages[@]}"; do
-          echo echo "         $message" 1>&2
+          echo "         $message" 1>&2
         done
       fi
     fi

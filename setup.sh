@@ -16,9 +16,9 @@ if ! path::exists "$recipe/recipe"; then
 fi
 
 import 'function::exists'
-import 'platform::install'
 import 'platform::name'
 import 'prompt::yes_or_no'
+import 'recipe::install'
 import 'setup::done'
 import 'setup::missing'
 import 'text::header'
@@ -72,7 +72,7 @@ if setup::missing "$recipe"; then
 
   text::header "Setting up $recipe"
 
-  platform::install || exit 1
+  recipe::install || exit 1
 
   if function::exists configure; then
     configure || exit 1

@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-import 'command::exists'
 import 'file::append'
 import 'file::empty'
-import 'platform::install'
 import 'platform::login_shell'
-import 'setup::done'
 
 homebrew_formula='starship'
 
