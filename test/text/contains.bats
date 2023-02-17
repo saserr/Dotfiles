@@ -2,18 +2,20 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'text::contains'
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run text::contains
 
   assert::wrong_usage 'text::contains' 'text' 'infix'
 }
 
 @test "fails with only one argument" {
+  load ../helpers/assert/wrong_usage
+
   run text::contains 'foo'
 
   assert::wrong_usage 'text::contains' 'text' 'infix'

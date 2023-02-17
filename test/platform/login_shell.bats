@@ -2,7 +2,6 @@
 
 setup() {
   source 'lib/import.bash'
-
   import 'platform::login_shell'
 }
 

@@ -2,12 +2,7 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'platform::safe_link'
-  import 'log'
-  import 'text::ends_with'
-  import 'text::starts_with'
 
   from="$BATS_TEST_TMPDIR/from"
   [ ! -e "$from" ] # $from does not exist
@@ -17,24 +12,32 @@ setup() {
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run platform::safe_link
 
   assert::wrong_usage 'platform::safe_link' 'name' 'from' 'to'
 }
 
 @test "fails with only one argument" {
+  load ../helpers/assert/wrong_usage
+
   run platform::safe_link 'test'
 
   assert::wrong_usage 'platform::safe_link' 'name' 'from' 'to'
 }
 
 @test "fails with only two arguments" {
+  load ../helpers/assert/wrong_usage
+
   run platform::safe_link 'test' "$from"
 
   assert::wrong_usage 'platform::safe_link' 'name' 'from' 'to'
 }
 
 @test "makes a symlink from \$from to \$to if \$to does not exist" {
+  import 'log'
+
   echo 'foo' >"$from"
 
   run platform::safe_link 'test' "$from" "$to" <<<''
@@ -46,6 +49,9 @@ setup() {
 }
 
 @test "asks if \$to should be replaced if \$to exists" {
+  import 'log'
+  import 'text::contains'
+
   echo 'foo' >"$from"
   echo 'bar' >"$to"
   eof=$'\x04'
@@ -59,6 +65,9 @@ setup() {
 }
 
 @test "moves \$to to \$to.old if \$to exists and a positive answer is given at the prompt" {
+  import 'log'
+  import 'text::ends_with'
+
   echo 'foo' >"$from"
   echo 'bar' >"$to"
 
@@ -82,6 +91,8 @@ setup() {
 }
 
 @test "fails and leaves things unchanged if \$to.old exists" {
+  import 'log'
+
   echo 'foo' >"$from"
   echo 'bar' >"$to"
   echo 'baz' >"$to.old"
@@ -97,6 +108,9 @@ setup() {
 }
 
 @test "fails and leaves things unchanged if \$to exists and a negative answer is given at the prompt" {
+  import 'log'
+  import 'text::ends_with'
+
   echo 'foo' >"$from"
   echo 'bar' >"$to"
 
@@ -110,6 +124,8 @@ setup() {
 }
 
 @test "fails and leaves things unchanged if \$from does not exist" {
+  import 'log'
+
   run platform::safe_link 'test' "$from" "$to"
 
   [ $status -eq 1 ]

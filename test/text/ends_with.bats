@@ -2,18 +2,20 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'text::ends_with'
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run text::ends_with
 
   assert::wrong_usage 'text::ends_with' 'text' 'suffix'
 }
 
 @test "fails with only one argument" {
+  load ../helpers/assert/wrong_usage
+
   run text::ends_with 'foo'
 
   assert::wrong_usage 'text::ends_with' 'text' 'suffix'

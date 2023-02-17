@@ -2,8 +2,6 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'setup::done'
 
   [ ! -e "$HOME/.setup/test" ] # $HOME/.setup/test does not exist
@@ -14,6 +12,8 @@ teardown() {
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run setup::done
 
   assert::wrong_usage 'setup::done' 'recipe'

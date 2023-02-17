@@ -2,8 +2,6 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'file::contains'
 
   test_file="$BATS_TEST_TMPDIR/test"
@@ -11,12 +9,16 @@ setup() {
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run file::contains
 
   assert::wrong_usage 'file::contains' 'file' 'text'
 }
 
 @test "fails with only one argument" {
+  load ../helpers/assert/wrong_usage
+
   run file::contains "$test_file"
 
   assert::wrong_usage 'file::contains' 'file' 'text'

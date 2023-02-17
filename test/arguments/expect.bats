@@ -2,21 +2,20 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'arguments::expect'
-  import 'text::contains'
-  import 'text::ends_with'
-  import 'text::starts_with'
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run arguments::expect
 
   assert::wrong_usage 'arguments::expect' '$#' '[name]' '...'
 }
 
 @test "fails when first argument is not an integer" {
+  load ../helpers/assert/wrong_usage
+
   run arguments::expect 'foo'
 
   assert::wrong_usage 'arguments::expect' '$#' '[name]' '...'
@@ -115,6 +114,8 @@ setup() {
 }
 
 @test "the failure message contains the function name and the reason" {
+  import 'text::contains'
+
   foo() {
     arguments::expect 1
   }
@@ -147,6 +148,8 @@ setup() {
 }
 
 @test "the failure message contains optional arguments" {
+  import 'text::ends_with'
+
   run arguments::expect 0 'foo' '[bar]'
 
   text::ends_with "${lines[2]}" 'expected: 1 (+ 1 optional)'
@@ -154,6 +157,8 @@ setup() {
 }
 
 @test "the failure message contains vararg" {
+  import 'text::ends_with'
+
   run arguments::expect 0 'foo' '...'
 
   text::ends_with "${lines[2]}" 'expected: 1 (or more)'
@@ -161,6 +166,8 @@ setup() {
 }
 
 @test "the failure message only contains vararg even if there is an optional argument" {
+  import 'text::ends_with'
+
   run arguments::expect 0 'foo' '[bar]' '...'
 
   text::ends_with "${lines[2]}" 'expected: 1 (or more)'
@@ -174,6 +181,8 @@ setup() {
 }
 
 @test "the failure message contains the shell if it is invoked outside of a function" {
+  import 'text::contains'
+
   run bash -c 'source lib/arguments/expect.bash && arguments::expect 1'
 
   text::contains "${lines[0]}" 'bash'
@@ -181,6 +190,8 @@ setup() {
 }
 
 @test "the failure message contains the script name if it is invoked outside of a function" {
+  import 'text::contains'
+
   local foo="$BATS_TEST_TMPDIR/foo"
   echo '#!/usr/bin/env bash' >>"$foo"
   echo 'source lib/arguments/expect.bash && arguments::expect 1' >>"$foo"

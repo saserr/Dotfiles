@@ -2,25 +2,28 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
-  import 'log'
   import 'text::repeat'
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run text::repeat
 
   assert::wrong_usage 'text::repeat' 'times' 'text'
 }
 
 @test "fails with only one argument" {
+  load ../helpers/assert/wrong_usage
+
   run text::repeat 2
 
   assert::wrong_usage 'text::repeat' 'times' 'text'
 }
 
 @test "fails when first argument is not an integer" {
+  import 'log'
+
   run text::repeat 'foo' 'bar'
 
   [ "${lines[0]}" = "$(log::error 'text::repeat' 'the first argument is not an integer')" ]

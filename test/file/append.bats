@@ -2,8 +2,6 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'file::append'
 
   test_file="$BATS_TEST_TMPDIR/test"
@@ -11,6 +9,8 @@ setup() {
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run file::append
 
   assert::wrong_usage 'file::append' 'file' '[text]'

@@ -2,8 +2,6 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'file::empty'
 
   test_file="$BATS_TEST_TMPDIR/test"
@@ -11,6 +9,8 @@ setup() {
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run file::empty
 
   assert::wrong_usage 'file::empty' 'file'

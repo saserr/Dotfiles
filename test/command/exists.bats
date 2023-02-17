@@ -2,12 +2,12 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'command::exists'
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run command::exists
 
   assert::wrong_usage 'command::exists' 'name'

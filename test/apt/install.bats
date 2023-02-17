@@ -2,20 +2,21 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage.bash
-  load ../helpers/mocks/stub
-
   import 'apt::install'
-  import 'log'
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage.bash
+
   run apt::install
 
   assert::wrong_usage 'apt::install' '[name]' 'package'
 }
 
 @test "installs package if not installed" {
+  load ../helpers/mocks/stub
+  import 'log'
+
   stub dpkg '-s bar : exit 1'
   stub id '-u : echo 0'
   stub apt 'update : '
@@ -31,6 +32,9 @@ setup() {
 }
 
 @test "installs package unless status is installed" {
+  load ../helpers/mocks/stub
+  import 'log'
+
   stub dpkg '-s bar : echo "Status: not installed"'
   stub id '-u : echo 0'
   stub apt 'update : '
@@ -46,6 +50,9 @@ setup() {
 }
 
 @test "installs package with sudo if the current user is not root" {
+  load ../helpers/mocks/stub
+  import 'log'
+
   stub dpkg '-s bar : exit 1'
   stub id '-u : echo 1000'
   stub sudo 'bash -c \* : $3 '
@@ -63,6 +70,9 @@ setup() {
 }
 
 @test "succeeds if package is already installed" {
+  load ../helpers/mocks/stub
+  import 'log'
+
   stub dpkg '-s bar : echo "Status: install ok installed"'
 
   run apt::install 'foo' 'bar'
@@ -73,6 +83,9 @@ setup() {
 }
 
 @test "fails if apt update fails" {
+  load ../helpers/mocks/stub
+  import 'log'
+
   stub dpkg '-s bar : exit 1'
   stub id '-u : echo 0'
   stub apt 'update : exit 1'
@@ -87,6 +100,9 @@ setup() {
 }
 
 @test "fails if apt install fails" {
+  load ../helpers/mocks/stub
+  import 'log'
+
   stub dpkg '-s bar : exit 1'
   stub id '-u : echo 0'
   stub apt 'update : '
@@ -102,6 +118,9 @@ setup() {
 }
 
 @test "uses package as name when only one argument is passed" {
+  load ../helpers/mocks/stub
+  import 'log'
+
   stub dpkg '-s foo : exit 1'
   stub id '-u : echo 0'
   stub apt 'update : '

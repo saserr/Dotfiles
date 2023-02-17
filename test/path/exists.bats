@@ -2,8 +2,6 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'path::exists'
 
   test_path="$BATS_TEST_TMPDIR/test"
@@ -11,6 +9,8 @@ setup() {
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run path::exists
 
   assert::wrong_usage 'path::exists' 'path'

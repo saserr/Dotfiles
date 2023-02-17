@@ -2,25 +2,28 @@
 
 setup() {
   source 'lib/import.bash'
-  load helpers/assert/wrong_usage
-
   import 'abort'
-  import 'text::contains'
 }
 
 @test "fails without arguments" {
+  load helpers/assert/wrong_usage
+
   run abort
 
   assert::wrong_usage 'abort' 'tag' 'message' '...'
 }
 
 @test "fails with only one argument" {
+  load helpers/assert/wrong_usage
+
   run abort 'foo'
 
   assert::wrong_usage 'abort' 'tag' 'message' '...'
 }
 
 @test "the output contains the tag" {
+  import 'text::contains'
+
   run abort 'foo' 'bar'
 
   [ "$status" -eq 2 ]
@@ -28,6 +31,8 @@ setup() {
 }
 
 @test "the output contains the message" {
+  import 'text::contains'
+
   run abort 'foo' 'bar'
 
   [ "$status" -eq 2 ]

@@ -2,7 +2,6 @@
 
 setup() {
   source 'lib/import.bash'
-
   import 'text::header'
 }
 

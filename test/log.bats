@@ -2,26 +2,28 @@
 
 setup() {
   source 'lib/import.bash'
-  load helpers/assert/wrong_usage
-
   import 'log'
-  import 'text::contains'
-  import 'text::ends_with'
 }
 
 @test "fails without arguments" {
+  load helpers/assert/wrong_usage
+
   run log
 
   assert::wrong_usage 'log' 'color' 'tag' 'message' '...'
 }
 
 @test "fails with only the color argument" {
+  load helpers/assert/wrong_usage
+
   run log '0'
 
   assert::wrong_usage 'log' 'color' 'tag' 'message' '...'
 }
 
 @test "fails with only the color and tag arguments" {
+  load helpers/assert/wrong_usage
+
   run log '0' 'foo'
 
   assert::wrong_usage 'log' 'color' 'tag' 'message' '...'

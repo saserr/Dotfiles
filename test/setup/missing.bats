@@ -2,12 +2,12 @@
 
 setup() {
   source 'lib/import.bash'
-  load ../helpers/assert/wrong_usage
-
   import 'setup::missing'
 }
 
 @test "fails without arguments" {
+  load ../helpers/assert/wrong_usage
+
   run setup::missing
 
   assert::wrong_usage 'setup::missing' 'recipe'
