@@ -22,20 +22,28 @@ import 'prompt::yes_or_no'
 import 'setup::done'
 import 'setup::missing'
 import 'text::header'
-import 'value::empty'
+import 'variable::is_array'
 
 # shellcheck source=/dev/null
 source "$recipe/recipe"
 
 if setup::missing "$recipe"; then
-  maybe_required=("${required[@]}")
+  if variable::is_array 'required'; then
+    maybe_required=("${required[@]}")
+  else
+    maybe_required=()
+  fi
 
   case "$(platform::name)" in
-  mac)
-    maybe_required+=("${mac_required[@]}")
+  'mac')
+    if variable::is_array 'mac_required'; then
+      maybe_required+=("${mac_required[@]}")
+    fi
     ;;
-  debian)
-    maybe_required+=("${debian_required[@]}")
+  'debian')
+    if variable::is_array 'debian_required'; then
+      maybe_required+=("${debian_required[@]}")
+    fi
     ;;
   esac
 
@@ -79,8 +87,8 @@ else
   log::info "$recipe" 'already set up'
 fi
 
-if [ ${#recommended[@]} -gt 0 ]; then
-  for recommended_recipe in "${recommended[@]}"; do
+if variable::is_array 'recommended'; then
+  for recommended_recipe in "${recommended[@]:?}"; do
     if setup::missing "$recommended_recipe"; then
       if [ "$(prompt::yes_or_no "$recipe" "do you want to install $recommended_recipe")" = 'Yes' ]; then
         echo

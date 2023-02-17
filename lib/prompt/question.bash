@@ -1,7 +1,6 @@
 import 'arguments::error'
 import 'arguments::expect'
 import 'log'
-import 'value::empty'
 
 prompt::question() {
   arguments::expect $# 'tag' 'message'
