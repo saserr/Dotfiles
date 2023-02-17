@@ -16,10 +16,17 @@ setup() {
   assert::wrong_usage 'arguments::expect' '$#' '[name]' '...'
 }
 
+@test "fails when first argument is not an integer" {
+  run arguments::expect 'foo'
+
+  assert::wrong_usage 'arguments::expect' '$#' '[name]' '...'
+}
+
 @test "succeeds when no arguments are expected and there were none" {
   run arguments::expect 0
 
   [ "$status" -eq 0 ]
+  [ "$output" = '' ]
 }
 
 @test "fails when no arguments are expected but there was one" {
@@ -38,6 +45,7 @@ setup() {
   run arguments::expect 1 'foo'
 
   [ "$status" -eq 0 ]
+  [ "$output" = '' ]
 }
 
 @test "fails when an argument is expected but there was more than one" {
@@ -62,18 +70,21 @@ setup() {
   run arguments::expect 2 'foo' 'bar'
 
   [ "$status" -eq 0 ]
+  [ "$output" = '' ]
 }
 
 @test "succeeds when an optional argument is expected and there were none" {
   run arguments::expect 0 '[foo]'
 
   [ "$status" -eq 0 ]
+  [ "$output" = '' ]
 }
 
 @test "succeeds when an optional argument is expected and there was one" {
   run arguments::expect 1 '[foo]'
 
   [ "$status" -eq 0 ]
+  [ "$output" = '' ]
 }
 
 @test "fails when an optional argument is expected but there was more than one" {
@@ -86,21 +97,24 @@ setup() {
   run arguments::expect 0 '...'
 
   [ "$status" -eq 0 ]
+  [ "$output" = '' ]
 }
 
 @test "succeeds when vararg is expected and there was one" {
   run arguments::expect 1 '...'
 
   [ "$status" -eq 0 ]
+  [ "$output" = '' ]
 }
 
 @test "succeeds when vararg is expected but there was more than one" {
   run arguments::expect 2 '...'
 
   [ "$status" -eq 0 ]
+  [ "$output" = '' ]
 }
 
-@test "failure message mentions the function name and the reason" {
+@test "the failure message contains the function name and the reason" {
   foo() {
     arguments::expect 1
   }
@@ -111,7 +125,7 @@ setup() {
   text::contains "${lines[0]}" 'wrong number of arguments'
 }
 
-@test "failure message mentions the actual number of arguments" {
+@test "the failure message contains the actual number of arguments" {
   foo() {
     arguments::expect 1 'foo' 'bar'
   }
@@ -121,7 +135,7 @@ setup() {
   [ "${lines[1]}" = '      actual: 1' ]
 }
 
-@test "failure message mentions expected arguments" {
+@test "the failure message contains expected arguments" {
   foo() {
     arguments::expect 0 'foo'
   }
@@ -132,41 +146,41 @@ setup() {
   [ "${lines[3]}" = '      arguments: foo' ]
 }
 
-@test "failure message mentions optional arguments" {
+@test "the failure message contains optional arguments" {
   run arguments::expect 0 'foo' '[bar]'
 
   text::ends_with "${lines[2]}" 'expected: 1 (+ 1 optional)'
   text::ends_with "${lines[3]}" 'arguments: foo [bar]'
 }
 
-@test "failure message mentions vararg" {
+@test "the failure message contains vararg" {
   run arguments::expect 0 'foo' '...'
 
   text::ends_with "${lines[2]}" 'expected: 1 (or more)'
   text::ends_with "${lines[3]}" 'arguments: foo ...'
 }
 
-@test "failure message only mentions vararg even if there is an optional argument" {
+@test "the failure message only contains vararg even if there is an optional argument" {
   run arguments::expect 0 'foo' '[bar]' '...'
 
   text::ends_with "${lines[2]}" 'expected: 1 (or more)'
   text::ends_with "${lines[3]}" 'arguments: foo [bar] ...'
 }
 
-@test "failure message does not mention arguments when none are expected" {
+@test "the failure message does not contain arguments when none are expected" {
   run arguments::expect 1
 
   [ "${lines[3]}" = '' ]
 }
 
-@test "failure message mentions the shell if it is invoked outside of a function" {
+@test "the failure message contains the shell if it is invoked outside of a function" {
   run bash -c 'source lib/arguments/expect.bash && arguments::expect 1'
 
   text::contains "${lines[0]}" 'bash'
   text::contains "${lines[0]}" 'wrong number of arguments'
 }
 
-@test "failure message mentions the script name if it is invoked outside of a function" {
+@test "the failure message contains the script name if it is invoked outside of a function" {
   local foo="$BATS_TEST_TMPDIR/foo"
   echo '#!/usr/bin/env bash' >>"$foo"
   echo 'source lib/arguments/expect.bash && arguments::expect 1' >>"$foo"

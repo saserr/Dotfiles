@@ -4,6 +4,7 @@ setup() {
   source 'lib/import.bash'
   load ../helpers/assert/wrong_usage
 
+  import 'log'
   import 'text::repeat'
 }
 
@@ -17,6 +18,12 @@ setup() {
   run text::repeat 2
 
   assert::wrong_usage 'text::repeat' 'times' 'text'
+}
+
+@test "fails when first argument is not an integer" {
+  run text::repeat 'foo' 'bar'
+
+  [ "${lines[0]}" = "$(log::error 'text::repeat' 'the first argument is not an integer')" ]
 }
 
 @test "repeat string -1 times" {

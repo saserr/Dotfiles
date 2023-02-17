@@ -51,7 +51,7 @@ setup() {
 
   run "$foo"
 
-  text::contains "${lines[0]}" "$BATS_TEST_TMPDIR/foo"
+  text::contains "${lines[0]}" "$foo"
   text::contains "${lines[0]}" 'bar'
 }
 

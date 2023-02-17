@@ -4,12 +4,12 @@
 __arguments::expect::abort() {
   # check if this function has the correct number of arguments
   if [ $# -lt 2 ]; then
-    local stack_position=0
-    local actual=$#
+    local -i stack_position=0
+    local -i actual=$#
     local names=('stack_position' 'actual' '[name]' '...')
   else
-    local stack_position=$(($1 + 1)) # add 1 to skip this function on the stack
-    local actual=$2
+    local -i stack_position=$(($1 + 1)) # add 1 to skip this function on the stack
+    local -i actual=$2
     local names=("${@:3}")
   fi
 
@@ -64,34 +64,36 @@ __arguments::expect::abort() {
 }
 
 arguments::expect() {
-  # check if this function has the correct number of arguments
-  if [ $# -lt 1 ]; then
-    local vararg=1
-    local optional=1
-    local required=1
+  local -i actual=$1
+
+  # check if this function has the correct number of arguments and that the
+  # first argument is an integer
+  if [ $# -lt 1 ] || [ "$actual" != "$1" ]; then
+    local -i vararg=1
+    local -i optional=1
+    local -i required=1
     __arguments::expect::abort 0 $# '$#' '[name]' '...'
   fi
 
-  [ "$1" -eq $(($# - 1)) ] && return 0
+  [ "$actual" -eq $(($# - 1)) ] && return 0
 
-  local actual=$1
   local names=("${@:2}")
 
   # count number of required and optional arguments and if there is a vararg
-  local vararg=0
-  local optional=0
-  local required=0
+  local -i vararg=0
+  local -i optional=0
+  local -i required=0
   local name
   for name in "${names[@]}"; do
     case $name in
     '...')
       vararg=1
       ;;
-    '['*)
-      optional=$((optional + 1))
+    '['*']')
+      optional=$optional+1
       ;;
     *)
-      required=$((required + 1))
+      required=$required+1
       ;;
     esac
   done

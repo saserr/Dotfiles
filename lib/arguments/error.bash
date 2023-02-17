@@ -1,23 +1,16 @@
 import 'abort'
 import 'arguments::expect'
+import 'caller::location'
+import 'caller::name'
 
 arguments::error() {
   arguments::expect $# 'message' '...'
 
   local messages=("$@")
-  if [ ${#BASH_SOURCE[@]} -gt 2 ]; then
-    local file="${BASH_SOURCE[2]}"
-    local line="${BASH_LINENO[1]}"
-    messages+=("at $file (line: $line)")
+  local location
+  if location="$(caller::location 2)"; then
+    messages+=("at $location")
   fi
 
-  local function
-  # skip the last element of the FUNCNAME array which is 'main'
-  if [ ${#FUNCNAME[@]} -gt 2 ]; then
-    function="${FUNCNAME[1]}"
-  else
-    function="$0"
-  fi
-
-  abort "$function" "${messages[@]}"
+  abort "$(caller::name)" "${messages[@]}"
 }

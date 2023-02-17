@@ -1,9 +1,11 @@
+import 'arguments::integer'
 import 'arguments::expect'
 
 text::repeat() {
   arguments::expect $# 'times' 'text'
+  arguments::integer 'first' "$1"
 
-  local times=$1
+  local -i times=$1
   local text=$2
 
   if [ "$times" -gt 0 ]; then
