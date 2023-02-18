@@ -4,18 +4,13 @@ source lib/import.bash
 
 import 'arguments::expect'
 arguments::expect $# 'recipe'
-
 recipe=$1
 
-import 'log'
-import 'file::exists'
-
-if ! file::exists "$recipe/recipe"; then
-  log::error "$recipe" 'does not exits'
-  exit 1
-fi
+import 'recipe::load'
+recipe::load || exit 1
 
 import 'function::exists'
+import 'log'
 import 'platform::name'
 import 'prompt::yes_or_no'
 import 'recipe::install'
@@ -23,9 +18,6 @@ import 'setup::done'
 import 'setup::missing'
 import 'text::header'
 import 'variable::is_array'
-
-# shellcheck source=/dev/null
-source "$recipe/recipe"
 
 if setup::missing "$recipe"; then
   if variable::is_array 'required'; then
@@ -35,16 +27,16 @@ if setup::missing "$recipe"; then
   fi
 
   case "$(platform::name)" in
-  'mac')
-    if variable::is_array 'mac_required'; then
-      maybe_required+=("${mac_required[@]}")
-    fi
-    ;;
-  'debian')
-    if variable::is_array 'debian_required'; then
-      maybe_required+=("${debian_required[@]}")
-    fi
-    ;;
+    'mac')
+      if variable::is_array 'mac_required'; then
+        maybe_required+=("${mac_required[@]}")
+      fi
+      ;;
+    'debian')
+      if variable::is_array 'debian_required'; then
+        maybe_required+=("${debian_required[@]}")
+      fi
+      ;;
   esac
 
   required=()
@@ -57,16 +49,16 @@ if setup::missing "$recipe"; then
 
   if ((${#required[@]})); then
     case "$(prompt::yes_or_no "$recipe" "requires (${required[*]}); do you want to set them up?" 'Yes')" in
-    Yes)
-      echo
-      for required_recipe in "${required[@]}"; do
-        ./setup.sh "$required_recipe" || exit 1
+      Yes)
         echo
-      done
-      ;;
-    No)
-      exit 1
-      ;;
+        for required_recipe in "${required[@]}"; do
+          ./setup.sh "$required_recipe" || exit 1
+          echo
+        done
+        ;;
+      No)
+        exit 1
+        ;;
     esac
   fi
 
@@ -74,7 +66,7 @@ if setup::missing "$recipe"; then
 
   recipe::install || exit 1
 
-  if function::exists configure; then
+  if function::exists 'configure'; then
     configure || exit 1
   fi
 
