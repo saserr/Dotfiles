@@ -5,5 +5,5 @@ function::exists() {
 
   local name=$1
 
-  [[ "$(type -t "$name")" == 'function' ]]
+  declare -F "$name" >/dev/null 2>&1
 }

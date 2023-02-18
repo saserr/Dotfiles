@@ -5,5 +5,5 @@ value::empty() {
 
   local value=$1
 
-  [[ -z "$value" ]]
+  [[ ! "$value" ]]
 }

@@ -16,6 +16,6 @@ variable::nonempty() {
     ((${#array[@]}))
   else
     declare -n variable="$name"
-    [[ -n "${variable:+ok}" ]]
+    [[ "$variable" ]]
   fi
 }
