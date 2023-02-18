@@ -50,7 +50,7 @@ __arguments::expect::abort() {
     messages+=("arguments: ${names[*]}")
   fi
 
-  if type -t 'abort' &>/dev/null; then
+  if type -t 'abort' >/dev/null 2>&1; then
     abort "$function" "${messages[@]}"
   else
     echo "[$function] ${messages[0]}" 1>&2

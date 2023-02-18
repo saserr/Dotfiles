@@ -5,5 +5,5 @@ variable::exists() {
 
   local name=$1
 
-  declare -p "$name" &>/dev/null
+  declare -p "$name" >/dev/null 2>&1
 }

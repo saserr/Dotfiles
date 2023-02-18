@@ -1,8 +1,8 @@
-if ! type -t 'import' &>/dev/null; then
-  __import_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+if ! type -t 'import' >/dev/null 2>&1; then
+  __import_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
   __import::abort() {
-    if { type -t 'arguments::expect' &>/dev/null && arguments::expect $# 'message'; } ||
+    if { type -t 'arguments::expect' >/dev/null 2>&1 && arguments::expect $# 'message'; } ||
       [ $# -gt 0 ]; then
       local messages=("$1")
       if [ ${#BASH_SOURCE[@]} -gt 2 ]; then
@@ -19,9 +19,9 @@ if ! type -t 'import' &>/dev/null; then
       fi
     fi
 
-    if type -t 'abort' &>/dev/null; then
+    if type -t 'abort' >/dev/null 2>&1; then
       abort 'import' "${messages[@]}"
-    elif type -t 'log::error' &>/dev/null; then
+    elif type -t 'log::error' >/dev/null 2>&1; then
       log::error 'import' "${messages[@]}" 1>&2
     else
       echo "[import] ${messages[0]}" 1>&2
@@ -54,14 +54,14 @@ if ! type -t 'import' &>/dev/null; then
   }
 
   import() {
-    if type -t 'arguments::expect' &>/dev/null; then
+    if type -t 'arguments::expect' >/dev/null 2>&1; then
       arguments::expect $# 'function'
     elif [ $# -ne 1 ]; then
       __import::abort "requires a function name as an argument"
     fi
 
     local function=$1
-    if type -t "$function" &>/dev/null; then
+    if type -t "$function" >/dev/null 2>&1; then
       return 0
     fi
 
@@ -76,7 +76,7 @@ if ! type -t 'import' &>/dev/null; then
       __import::abort "can't load the '$function' function from $file"
     fi
 
-    if ! type -t "$function" &>/dev/null ||
+    if ! type -t "$function" >/dev/null 2>&1 ||
       [[ "$(declare -fp "$function" 2>&1)" == *'__import::not_loaded'* ]]; then
       __import::abort "the '$function' function is missing in $file"
     fi
@@ -85,7 +85,7 @@ if ! type -t 'import' &>/dev/null; then
   import 'arguments::expect'
 
   import 'log'
-  if ! type -t 'log::error' &>/dev/null; then
+  if ! type -t 'log::error' >/dev/null 2>&1; then
     __import::abort "can't load the 'log::error' function"
   fi
 
