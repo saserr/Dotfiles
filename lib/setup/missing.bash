@@ -1,10 +1,10 @@
 import 'arguments::expect'
-import 'path::exists'
+import 'file::exists'
 
 setup::missing() {
   arguments::expect $# 'recipe'
 
   local recipe=$1
 
-  ! path::exists "$HOME/.setup/$recipe"
+  ! file::exists "$HOME/.setup/$recipe"
 }

@@ -8,9 +8,9 @@ arguments::expect $# 'recipe'
 recipe=$1
 
 import 'log'
-import 'path::exists'
+import 'file::exists'
 
-if ! path::exists "$recipe/recipe"; then
+if ! file::exists "$recipe/recipe"; then
   log::error "$recipe" 'does not exits'
   exit 1
 fi
