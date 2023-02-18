@@ -14,8 +14,8 @@ setup() {
   debian::install
 
   ((${#args[@]} == 2))
-  [ "${args[0]}" = 'foo' ]
-  [ "${args[1]}" = 'bar' ]
+  [[ "${args[0]}" == 'foo' ]]
+  [[ "${args[1]}" == 'bar' ]]
 }
 
 @test "installs \$program using apt" {
@@ -27,8 +27,8 @@ setup() {
   debian::install
 
   ((${#args[@]} == 2))
-  [ "${args[0]}" = 'foo' ]
-  [ "${args[1]}" = 'bar' ]
+  [[ "${args[0]}" == 'foo' ]]
+  [[ "${args[1]}" == 'bar' ]]
 }
 
 @test "preferes \$apt_package over \$program" {
@@ -41,8 +41,8 @@ setup() {
   debian::install
 
   ((${#args[@]} == 2))
-  [ "${args[0]}" = 'foo' ]
-  [ "${args[1]}" = 'bar' ]
+  [[ "${args[0]}" == 'foo' ]]
+  [[ "${args[1]}" == 'bar' ]]
 }
 
 @test "fails if both \$apt_package and \$program are missing" {
@@ -53,7 +53,7 @@ setup() {
   run debian::install
 
   ((status == 1))
-  [ "$output" = "$(log::error 'debian' "don't know how to install foo")" ]
+  [[ "$output" == "$(log::error 'debian' "don't know how to install foo")" ]]
 }
 
 @test "fails if \$recipe is missing" {
@@ -65,5 +65,5 @@ setup() {
   run debian::install
 
   ((status == 2))
-  [ "${lines[0]}" = "$(log::error 'debian::install' "expected nonempty variables: recipe")" ]
+  [[ "${lines[0]}" == "$(log::error 'debian::install' "expected nonempty variables: recipe")" ]]
 }

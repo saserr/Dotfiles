@@ -4,7 +4,7 @@ setup() {
   source 'lib/import.bash'
   import 'setup::done'
 
-  [ ! -e "$HOME/.setup/test" ] # $HOME/.setup/test does not exist
+  [[ ! -e "$HOME/.setup/test" ]] # $HOME/.setup/test does not exist
 }
 
 teardown() {
@@ -22,6 +22,6 @@ teardown() {
 @test "creates a file under ~/.setup/ with value 1" {
   setup::done 'test'
 
-  [ -f "$HOME/.setup/test" ] # $HOME/.setup/test is a file
-  [ "$(cat "$HOME/.setup/test")" = '1' ]
+  [[ -f "$HOME/.setup/test" ]] # $HOME/.setup/test is a file
+  [[ "$(cat "$HOME/.setup/test")" == '1' ]]
 }

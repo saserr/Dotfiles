@@ -8,7 +8,7 @@ setup() {
 @test "returns 'mac' if the current platform is Darwin" {
   uname() { echo 'Darwin'; }
 
-  [ "$(platform::name)" = 'mac' ]
+  [[ "$(platform::name)" == 'mac' ]]
 
   unset -f uname
 }
@@ -19,7 +19,7 @@ setup() {
   mv /etc/os-release /etc/os-release.tmp
   echo "ID=foo" >/etc/os-release
 
-  [ "$(platform::name)" = 'foo' ]
+  [[ "$(platform::name)" == 'foo' ]]
 
   # cleanup
   unset -f uname

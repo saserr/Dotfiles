@@ -5,5 +5,5 @@ file::empty() {
 
   local file=$1
 
-  [ ! -s "$file" ]
+  [[ ! -s "$file" ]]
 }

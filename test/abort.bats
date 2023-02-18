@@ -43,7 +43,7 @@ setup() {
   run abort 'foo' 'bar' 'baz'
 
   ((status == 2))
-  [ "${lines[1]}" = '      baz' ]
+  [[ "${lines[1]}" == '      baz' ]]
 }
 
 @test "exits" {
@@ -55,5 +55,5 @@ setup() {
 
   run fail
 
-  [ "$output" = 'foo' ]
+  [[ "$output" == 'foo' ]]
 }

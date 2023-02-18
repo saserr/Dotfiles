@@ -5,10 +5,10 @@ setup() {
   import 'platform::safe_link'
 
   from="$BATS_TEST_TMPDIR/from"
-  [ ! -e "$from" ] # $from does not exist
+  [[ ! -e "$from" ]] # $from does not exist
 
   to="$BATS_TEST_TMPDIR/to"
-  [ ! -e "$to" ] # $to does not exist
+  [[ ! -e "$to" ]] # $to does not exist
 }
 
 @test "fails without arguments" {
@@ -43,9 +43,9 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 0))
-  [ "$output" = "$(log::info 'test' "$to will be linked to $from")" ]
-  [ -L "$to" ] # $to is a symlink
-  [ "$(cat "$to")" = 'foo' ]
+  [[ "$output" == "$(log::info 'test' "$to will be linked to $from")" ]]
+  [[ -L "$to" ]] # $to is a symlink
+  [[ "$(cat "$to")" == 'foo' ]]
 }
 
 @test "asks if \$to should be replaced if \$to exists" {
@@ -59,7 +59,7 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<"$eof"
 
   ((status == 1))
-  [ "${lines[0]}" = "$(log::info 'test' "$to will be linked to $from")" ]
+  [[ "${lines[0]}" == "$(log::info 'test' "$to will be linked to $from")" ]]
   text::contains "${lines[1]}" 'test'
   text::contains "${lines[1]}" "$to exists; do you want to replace it? [Y/n]"
 }
@@ -75,8 +75,8 @@ setup() {
 
   ((status == 0))
   text::ends_with "${lines[1]}" "$(log::info 'test' "old $to will be moved to $to.old")"
-  [ -f "$to.old" ] # $to.old is a file
-  [ "$(cat "$to.old")" = 'bar' ]
+  [[ -f "$to.old" ]] # $to.old is a file
+  [[ "$(cat "$to.old")" == 'bar' ]]
 }
 
 @test "makes a symlink from \$from to \$to if \$to exists and a positive answer is given at the prompt" {
@@ -86,8 +86,8 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<'y'
 
   ((status == 0))
-  [ -L "$to" ] # $to is a symlink
-  [ "$(cat "$to")" = 'foo' ]
+  [[ -L "$to" ]] # $to is a symlink
+  [[ "$(cat "$to")" == 'foo' ]]
 }
 
 @test "fails and leaves things unchanged if \$to.old exists" {
@@ -100,11 +100,11 @@ setup() {
   run platform::safe_link 'test' "$from" "$to"
 
   ((status == 1))
-  [ "${lines[1]}" = "$(log::error 'test' "both $to and $to.old already exist; aborting!")" ]
-  [ -f "$to" ] # $to is still a file
-  [ "$(cat "$to")" = 'bar' ]
-  [ -f "$to.old" ] # $to.old is a file
-  [ "$(cat "$to.old")" = 'baz' ]
+  [[ "${lines[1]}" == "$(log::error 'test' "both $to and $to.old already exist; aborting!")" ]]
+  [[ -f "$to" ]] # $to is still a file
+  [[ "$(cat "$to")" == 'bar' ]]
+  [[ -f "$to.old" ]] # $to.old is a file
+  [[ "$(cat "$to.old")" == 'baz' ]]
 }
 
 @test "fails and leaves things unchanged if \$to exists and a negative answer is given at the prompt" {
@@ -118,9 +118,9 @@ setup() {
 
   ((status == 1))
   text::ends_with "${lines[1]}" "$(log::info 'test' "$to will not be linked")"
-  [ -f "$to" ] # $to is still a file
-  [ "$(cat "$to")" = 'bar' ]
-  [ ! -e "$to.old" ] # $to.old does not exist
+  [[ -f "$to" ]] # $to is still a file
+  [[ "$(cat "$to")" == 'bar' ]]
+  [[ ! -e "$to.old" ]] # $to.old does not exist
 }
 
 @test "fails and leaves things unchanged if \$from does not exist" {
@@ -129,8 +129,8 @@ setup() {
   run platform::safe_link 'test' "$from" "$to"
 
   ((status == 1))
-  [ "${lines[0]}" = "$(log::info 'test' "$to will be linked to $from")" ]
-  [ "${lines[1]}" = "$(log::error 'test' "$from does not exist; aborting!")" ]
-  [ ! -e "$from" ] # $from does not exist
-  [ ! -e "$to" ]   # $to does not exist
+  [[ "${lines[0]}" == "$(log::info 'test' "$to will be linked to $from")" ]]
+  [[ "${lines[1]}" == "$(log::error 'test' "$from does not exist; aborting!")" ]]
+  [[ ! -e "$from" ]] # $from does not exist
+  [[ ! -e "$to" ]]   # $to does not exist
 }

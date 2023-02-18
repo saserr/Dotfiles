@@ -13,7 +13,7 @@
   run "$foo"
 
   ((status == 0))
-  [ "$output" = "$foo (line: 5)" ]
+  [[ "$output" == "$foo (line: 5)" ]]
 }
 
 @test "returns the location of the calling function when level is 1" {
@@ -29,7 +29,7 @@
   run "$foo"
 
   ((status == 0))
-  [ "$output" = "$foo (line: 4)" ]
+  [[ "$output" == "$foo (line: 4)" ]]
 }
 
 @test "returns the location of the caller's calling function when level is 2" {
@@ -45,14 +45,14 @@
   run "$foo"
 
   ((status == 0))
-  [ "$output" = "$foo (line: 6)" ]
+  [[ "$output" == "$foo (line: 6)" ]]
 }
 
 @test "fails if it is invoked directly in the shell" {
   run bash -c "source lib/import.bash && import 'caller::location' && caller::location 0"
 
   ((status == 1))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "fails if it level is invalid" {
@@ -66,5 +66,5 @@
   run "$foo"
 
   ((status == 1))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }

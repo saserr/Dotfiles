@@ -86,7 +86,7 @@ fi
 if variable::is_array 'recommended'; then
   for recommended_recipe in "${recommended[@]:?}"; do
     if setup::missing "$recommended_recipe"; then
-      if [ "$(prompt::yes_or_no "$recipe" "do you want to install $recommended_recipe")" = 'Yes' ]; then
+      if [[ "$(prompt::yes_or_no "$recipe" "do you want to install $recommended_recipe")" == 'Yes' ]]; then
         echo
         ./setup.sh "$recommended_recipe"
       fi

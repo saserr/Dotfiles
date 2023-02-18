@@ -25,7 +25,7 @@ setup() {
   run arguments::expect 0
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "fails when no arguments are expected but there was one" {
@@ -44,7 +44,7 @@ setup() {
   run arguments::expect 1 'foo'
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "fails when an argument is expected but there was more than one" {
@@ -69,21 +69,21 @@ setup() {
   run arguments::expect 2 'foo' 'bar'
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "succeeds when an optional argument is expected and there were none" {
   run arguments::expect 0 '[foo]'
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "succeeds when an optional argument is expected and there was one" {
   run arguments::expect 1 '[foo]'
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "fails when an optional argument is expected but there was more than one" {
@@ -96,21 +96,21 @@ setup() {
   run arguments::expect 0 '...'
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "succeeds when vararg is expected and there was one" {
   run arguments::expect 1 '...'
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "succeeds when vararg is expected but there was more than one" {
   run arguments::expect 2 '...'
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "the failure message contains the function name and the reason" {
@@ -133,7 +133,7 @@ setup() {
 
   run foo
 
-  [ "${lines[1]}" = '      actual: 1' ]
+  [[ "${lines[1]}" == '      actual: 1' ]]
 }
 
 @test "the failure message contains expected arguments" {
@@ -143,8 +143,8 @@ setup() {
 
   run foo
 
-  [ "${lines[2]}" = '      expected: 1' ]
-  [ "${lines[3]}" = '      arguments: foo' ]
+  [[ "${lines[2]}" == '      expected: 1' ]]
+  [[ "${lines[3]}" == '      arguments: foo' ]]
 }
 
 @test "the failure message contains optional arguments" {
@@ -177,7 +177,7 @@ setup() {
 @test "the failure message does not contain arguments when none are expected" {
   run arguments::expect 1
 
-  [ "${lines[3]}" = '' ]
+  [[ "${lines[3]}" == '' ]]
 }
 
 @test "the failure message contains the shell if it is invoked outside of a function" {
@@ -212,5 +212,5 @@ setup() {
 
   run fail
 
-  [ "$output" = 'foo' ]
+  [[ "$output" == 'foo' ]]
 }

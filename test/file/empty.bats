@@ -5,7 +5,7 @@ setup() {
   import 'file::empty'
 
   test_file="$BATS_TEST_TMPDIR/test"
-  [ ! -e "$test_file" ] # $test_file does not exist
+  [[ ! -e "$test_file" ]] # $test_file does not exist
 }
 
 @test "fails without arguments" {

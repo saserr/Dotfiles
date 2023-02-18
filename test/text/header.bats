@@ -6,13 +6,13 @@ setup() {
 }
 
 @test "without arguments" {
-  [ "$(text::header)" = '**********' ]
+  [[ "$(text::header)" == '**********' ]]
 }
 
 @test "with an empty message" {
-  [ "$(text::header '')" = '**********' ]
+  [[ "$(text::header '')" == '**********' ]]
 }
 
 @test "with a non-empty message" {
-  [ "$(text::header 'foo')" = $'*******\n* foo *\n*******' ]
+  [[ "$(text::header 'foo')" == $'*******\n* foo *\n*******' ]]
 }

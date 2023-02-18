@@ -5,5 +5,5 @@ path::exists() {
 
   local path=$1
 
-  [ -e "$path" ]
+  [[ -e "$path" ]]
 }

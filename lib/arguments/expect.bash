@@ -68,7 +68,7 @@ arguments::expect() {
 
   # check if this function has the correct number of arguments and that the
   # first argument is an integer
-  if (($# < 1)) || [ "$actual" != "$1" ]; then
+  if (($# < 1)) || [[ "$actual" != "$1" ]]; then
     local -i vararg=1
     local -i optional=1
     local -i required=1

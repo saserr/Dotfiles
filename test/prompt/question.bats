@@ -26,7 +26,7 @@ setup() {
 
   run prompt::question 'foo' 'bar' <<<''
 
-  [ "$output" = "$(log '0;34' 'foo' 'bar')" ]
+  [[ "$output" == "$(log '0;34' 'foo' 'bar')" ]]
 }
 
 @test "echos the answer" {

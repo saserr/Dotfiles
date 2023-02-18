@@ -9,7 +9,7 @@ arguments::integer() {
   local name=$1
   local -i value=$2
 
-  if [ "$value" != "$2" ]; then
+  if [[ "$value" != "$2" ]]; then
     local messages=("the $name argument is not an integer")
     local location
     if location="$(caller::location 2)"; then

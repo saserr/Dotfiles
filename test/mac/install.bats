@@ -14,8 +14,8 @@ setup() {
   mac::install
 
   ((${#args[@]} == 2))
-  [ "${args[0]}" = 'foo' ]
-  [ "${args[1]}" = 'bar' ]
+  [[ "${args[0]}" == 'foo' ]]
+  [[ "${args[1]}" == 'bar' ]]
 }
 
 @test "installs \$program using apt" {
@@ -27,8 +27,8 @@ setup() {
   mac::install
 
   ((${#args[@]} == 2))
-  [ "${args[0]}" = 'foo' ]
-  [ "${args[1]}" = 'bar' ]
+  [[ "${args[0]}" == 'foo' ]]
+  [[ "${args[1]}" == 'bar' ]]
 }
 
 @test "preferes \$homebrew_formula over \$program" {
@@ -41,8 +41,8 @@ setup() {
   mac::install
 
   ((${#args[@]} == 2))
-  [ "${args[0]}" = 'foo' ]
-  [ "${args[1]}" = 'bar' ]
+  [[ "${args[0]}" == 'foo' ]]
+  [[ "${args[1]}" == 'bar' ]]
 }
 
 @test "fails if both \$homebrew_formula and \$program are missing" {
@@ -53,7 +53,7 @@ setup() {
   run mac::install
 
   ((status == 1))
-  [ "$output" = "$(log::error 'mac' "don't know how to install foo")" ]
+  [[ "$output" == "$(log::error 'mac' "don't know how to install foo")" ]]
 }
 
 @test "fails if \$recipe is missing" {
@@ -65,5 +65,5 @@ setup() {
   run mac::install
 
   ((status == 2))
-  [ "${lines[0]}" = "$(log::error 'mac::install' "expected nonempty variables: recipe")" ]
+  [[ "${lines[0]}" == "$(log::error 'mac::install' "expected nonempty variables: recipe")" ]]
 }

@@ -5,5 +5,5 @@ function::exists() {
 
   local name=$1
 
-  [ "$(type -t "$name")" = 'function' ]
+  [[ "$(type -t "$name")" == 'function' ]]
 }

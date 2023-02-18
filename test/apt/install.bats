@@ -24,7 +24,7 @@ setup() {
 
   apt::install 'foo' 'bar'
 
-  [ "${args[0]}" = 'bar' ]
+  [[ "${args[0]}" == 'bar' ]]
 }
 
 @test "installs package if not installed" {
@@ -40,7 +40,7 @@ setup() {
   unstub apt
   unstub id
   ((status == 0))
-  [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
+  [[ "$output" == "$(log::info 'apt' 'installing foo ...')" ]]
 }
 
 @test "installs multiple packages" {
@@ -56,13 +56,13 @@ setup() {
   unstub apt
   unstub id
   ((status == 0))
-  [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
+  [[ "$output" == "$(log::info 'apt' 'installing foo ...')" ]]
 }
 
 @test "installs only missing packages" {
   load ../helpers/mocks/stub
 
-  apt::missing() { [ $1 != 'bar' ]; }
+  apt::missing() { [[ "$1" != 'bar' ]]; }
 
   stub id '-u : echo 0'
   stub apt 'update : '
@@ -73,7 +73,7 @@ setup() {
   unstub apt
   unstub id
   ((status == 0))
-  [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
+  [[ "$output" == "$(log::info 'apt' 'installing foo ...')" ]]
 }
 
 @test "installs package with sudo if the current user is not root" {
@@ -91,7 +91,7 @@ setup() {
   unstub sudo
   unstub id
   ((status == 0))
-  [ "${lines[1]}" = "$(log::warn 'apt' 'running as non-root; sudo is needed ...')" ]
+  [[ "${lines[1]}" == "$(log::warn 'apt' 'running as non-root; sudo is needed ...')" ]]
 }
 
 @test "succeeds if package is already installed" {
@@ -102,7 +102,7 @@ setup() {
   run apt::install 'foo' 'bar'
 
   ((status == 0))
-  [ "$output" = "$(log::info 'apt' 'foo already installed ...')" ]
+  [[ "$output" == "$(log::info 'apt' 'foo already installed ...')" ]]
 }
 
 @test "fails if apt update fails" {
@@ -117,7 +117,7 @@ setup() {
   unstub apt
   unstub id
   ((status == 1))
-  [ "${lines[1]}" = "$(log::error 'apt' 'failed to install foo')" ]
+  [[ "${lines[1]}" == "$(log::error 'apt' 'failed to install foo')" ]]
 }
 
 @test "fails if apt install fails" {
@@ -133,7 +133,7 @@ setup() {
   unstub apt
   unstub id
   ((status == 1))
-  [ "${lines[1]}" = "$(log::error 'apt' 'failed to install foo')" ]
+  [[ "${lines[1]}" == "$(log::error 'apt' 'failed to install foo')" ]]
 }
 
 @test "uses package as name when only one argument is passed" {
@@ -149,5 +149,5 @@ setup() {
   unstub apt
   unstub id
   ((status == 0))
-  [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
+  [[ "$output" == "$(log::info 'apt' 'installing foo ...')" ]]
 }

@@ -24,7 +24,7 @@ setup() {
 
   homebrew::install 'foo' 'bar'
 
-  [ "${args[0]}" = 'bar' ]
+  [[ "${args[0]}" == 'bar' ]]
 }
 
 @test "installs formula if not installed" {
@@ -38,7 +38,7 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
+  [[ "$output" == "$(log::info 'homebrew' 'installing foo ...')" ]]
 }
 
 @test "installs multiple formulas" {
@@ -51,13 +51,13 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
+  [[ "$output" == "$(log::info 'homebrew' 'installing foo ...')" ]]
 }
 
 @test "installs only missing formulas" {
   load ../helpers/mocks/stub
 
-  homebrew::missing() { [ $1 != 'bar' ]; }
+  homebrew::missing() { [[ "$1" != 'bar' ]]; }
 
   stub brew 'update : '
   stub brew 'install baz : '
@@ -66,7 +66,7 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
+  [[ "$output" == "$(log::info 'homebrew' 'installing foo ...')" ]]
 }
 
 @test "succeeds if formula is already installed" {
@@ -77,7 +77,7 @@ setup() {
   run homebrew::install 'foo' 'bar'
 
   ((status == 0))
-  [ "$output" = "$(log::info 'homebrew' 'foo already installed ...')" ]
+  [[ "$output" == "$(log::info 'homebrew' 'foo already installed ...')" ]]
 }
 
 @test "fails if brew update fails" {
@@ -90,7 +90,7 @@ setup() {
 
   unstub brew
   ((status == 1))
-  [ "${lines[1]}" = "$(log::error 'homebrew' 'failed to install foo')" ]
+  [[ "${lines[1]}" == "$(log::error 'homebrew' 'failed to install foo')" ]]
 }
 
 @test "fails if brew install fails" {
@@ -104,7 +104,7 @@ setup() {
 
   unstub brew
   ((status == 1))
-  [ "${lines[1]}" = "$(log::error 'homebrew' 'failed to install foo')" ]
+  [[ "${lines[1]}" == "$(log::error 'homebrew' 'failed to install foo')" ]]
 }
 
 @test "uses formula as name when only one argument is passed" {
@@ -118,5 +118,5 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
+  [[ "$output" == "$(log::info 'homebrew' 'installing foo ...')" ]]
 }

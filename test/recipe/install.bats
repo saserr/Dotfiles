@@ -38,5 +38,5 @@ setup() {
   run recipe::install
 
   ((status == 1))
-  [ "$output" = "$(log::error 'windows' "don't know how to install foo")" ]
+  [[ "$output" == "$(log::error 'windows' "don't know how to install foo")" ]]
 }

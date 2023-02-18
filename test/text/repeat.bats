@@ -26,25 +26,25 @@ setup() {
 
   run text::repeat 'foo' 'bar'
 
-  [ "${lines[0]}" = "$(log::error 'text::repeat' 'the first argument is not an integer')" ]
+  [[ "${lines[0]}" == "$(log::error 'text::repeat' 'the first argument is not an integer')" ]]
 }
 
 @test "repeat string -1 times" {
-  [ "$(text::repeat -1 'foo')" = '' ]
+  [[ "$(text::repeat -1 'foo')" == '' ]]
 }
 
 @test "repeat string 0 times" {
-  [ "$(text::repeat 0 'foo')" = '' ]
+  [[ "$(text::repeat 0 'foo')" == '' ]]
 }
 
 @test "repeat string 1 time" {
-  [ "$(text::repeat 1 'foo')" = 'foo' ]
+  [[ "$(text::repeat 1 'foo')" == 'foo' ]]
 }
 
 @test "repeat string 2 times" {
-  [ "$(text::repeat 2 'foo')" = 'foofoo' ]
+  [[ "$(text::repeat 2 'foo')" == 'foofoo' ]]
 }
 
 @test "repeat empty text" {
-  [ "$(text::repeat 2 '')" = '' ]
+  [[ "$(text::repeat 2 '')" == '' ]]
 }

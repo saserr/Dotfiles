@@ -5,7 +5,7 @@
 
   source 'lib/import.bash'
 
-  [ "$(type -t 'import')" = 'function' ]
+  [[ "$(type -t 'import')" == 'function' ]]
 }
 
 @test "fails without arguments" {
@@ -22,7 +22,7 @@
   source 'lib/import.bash'
   import 'arguments::expect'
 
-  [ "$(type -t 'arguments::expect')" = 'function' ]
+  [[ "$(type -t 'arguments::expect')" == 'function' ]]
 }
 
 @test "doesn't do anything if function already exists" {
@@ -34,7 +34,7 @@
   import 'platform::name'
 
   # check that the above function is still the one declared as platform::name
-  [ "$(type 'platform::name')" = "$expected" ]
+  [[ "$(type 'platform::name')" == "$expected" ]]
 }
 
 @test "fails if an unknown function is imported" {
@@ -69,7 +69,7 @@
   source 'lib/import.bash'
   import 'foo'
 
-  [ "$(type -t 'foo')" = 'function' ]
+  [[ "$(type -t 'foo')" == 'function' ]]
 }
 
 @test "validates that correct function has been imported" {

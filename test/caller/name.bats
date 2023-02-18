@@ -11,13 +11,13 @@ setup() {
 
   run foo
 
-  [ "$output" = 'foo' ]
+  [[ "$output" == 'foo' ]]
 }
 
 @test "returns the shell name if it is invoked directly in the shell" {
   run bash -c "source lib/import.bash && import 'caller::name' && caller::name"
 
-  [ "$output" = 'bash' ]
+  [[ "$output" == 'bash' ]]
 }
 
 @test "returns the script name if it is invoked directly in the script" {
@@ -28,5 +28,5 @@ setup() {
 
   run "$foo"
 
-  [ "$output" = "$foo" ]
+  [[ "$output" == "$foo" ]]
 }

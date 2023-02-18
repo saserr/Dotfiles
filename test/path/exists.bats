@@ -5,7 +5,7 @@ setup() {
   import 'path::exists'
 
   test_path="$BATS_TEST_TMPDIR/test"
-  [ ! -e "$test_path" ] # $test_path does not exist
+  [[ ! -e "$test_path" ]] # $test_path does not exist
 }
 
 @test "fails without arguments" {

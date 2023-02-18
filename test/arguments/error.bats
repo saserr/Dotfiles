@@ -33,7 +33,7 @@ setup() {
 
   run foo
 
-  [ "${lines[1]}" = '      baz' ]
+  [[ "${lines[1]}" == '      baz' ]]
 }
 
 @test "the output contains the shell if it is invoked outside of a function" {
@@ -69,5 +69,5 @@ setup() {
   run fail
 
   ((status == 2))
-  [ "$output" = 'foo' ]
+  [[ "$output" == 'foo' ]]
 }

@@ -152,5 +152,5 @@ setup() {
 
   run fail
 
-  [ "$output" = 'foo' ]
+  [[ "$output" == 'foo' ]]
 }

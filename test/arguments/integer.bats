@@ -23,7 +23,7 @@ setup() {
   run arguments::integer 'foo' 42
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "fails if the value is not an integer" {
@@ -78,5 +78,5 @@ setup() {
   run fail
 
   ((status == 2))
-  [ "$output" = 'foo' ]
+  [[ "$output" == 'foo' ]]
 }

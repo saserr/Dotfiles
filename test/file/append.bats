@@ -5,7 +5,7 @@ setup() {
   import 'file::append'
 
   test_file="$BATS_TEST_TMPDIR/test"
-  [ ! -e "$test_file" ] # $test_file does not exist
+  [[ ! -e "$test_file" ]] # $test_file does not exist
 }
 
 @test "fails without arguments" {
@@ -21,7 +21,7 @@ setup() {
 
   file::append "$test_file"
 
-  [ "$(cat -e "$test_file")" = '$' ]
+  [[ "$(cat -e "$test_file")" == '$' ]]
 }
 
 @test "append to an empty file" {
@@ -29,7 +29,7 @@ setup() {
 
   file::append "$test_file" 'foo'
 
-  [ "$(cat "$test_file")" = 'foo' ]
+  [[ "$(cat "$test_file")" == 'foo' ]]
 }
 
 @test "append to a non-empty file" {
@@ -37,11 +37,11 @@ setup() {
 
   file::append "$test_file" 'bar'
 
-  [ "$(cat "$test_file")" = $'foo\nbar' ]
+  [[ "$(cat "$test_file")" == $'foo\nbar' ]]
 }
 
 @test "append to a non-existent file" {
   file::append "$test_file" 'foo'
 
-  [ "$(cat "$test_file")" = 'foo' ]
+  [[ "$(cat "$test_file")" == 'foo' ]]
 }

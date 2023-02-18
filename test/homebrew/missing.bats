@@ -22,8 +22,8 @@ setup() {
   homebrew::missing 'foo'
 
   ((${#args[@]} == 2))
-  [ "${args[0]}" = 'list' ]
-  [ "${args[1]}" = 'foo' ]
+  [[ "${args[0]}" == 'list' ]]
+  [[ "${args[1]}" == 'foo' ]]
 }
 
 @test "succeeds if formula is not installed" {
@@ -32,7 +32,7 @@ setup() {
   run homebrew::missing 'foo'
 
   ((status == 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
 
 @test "fails if formula is installed" {
@@ -41,5 +41,5 @@ setup() {
   run homebrew::missing 'foo'
 
   ((status != 0))
-  [ "$output" = '' ]
+  [[ "$output" == '' ]]
 }
