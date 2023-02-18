@@ -26,6 +26,7 @@ setup() {
 
   run text::repeat 'foo' 'bar'
 
+  ((status == 2))
   [[ "${lines[0]}" == "$(log::error 'text::repeat' 'the first argument is not an integer')" ]]
 }
 

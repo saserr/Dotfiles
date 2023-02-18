@@ -55,6 +55,7 @@ setup() {
   foo=()
 
   run variable::expect 'foo'
+
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
@@ -152,5 +153,6 @@ setup() {
 
   run fail
 
+  ((status == 2))
   [[ "$output" == 'foo' ]]
 }

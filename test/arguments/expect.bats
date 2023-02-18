@@ -212,5 +212,6 @@ setup() {
 
   run fail
 
+  ((status == 2))
   [[ "$output" == 'foo' ]]
 }

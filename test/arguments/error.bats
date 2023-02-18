@@ -22,6 +22,7 @@ setup() {
 
   run foo
 
+  ((status == 2))
   text::contains "${lines[0]}" 'foo'
   text::contains "${lines[0]}" 'bar'
 }
@@ -33,6 +34,7 @@ setup() {
 
   run foo
 
+  ((status == 2))
   [[ "${lines[1]}" == '      baz' ]]
 }
 
@@ -41,6 +43,7 @@ setup() {
 
   run bash -c "source lib/import.bash && import 'arguments::error' && arguments::error 'foo'"
 
+  ((status == 2))
   text::contains "${lines[0]}" 'bash'
   text::contains "${lines[0]}" 'foo'
 }
@@ -55,6 +58,7 @@ setup() {
 
   run "$foo"
 
+  ((status == 2))
   text::contains "${lines[0]}" "$foo"
   text::contains "${lines[0]}" 'bar'
 }

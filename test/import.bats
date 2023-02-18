@@ -47,18 +47,18 @@
   [[ "${lines[1]}" == *"can't load the 'foo' function"* ]]
 }
 
-@test "exists if an unknown function is imported" {
+@test "exits if an unknown function is imported" {
   fail() {
     echo 'foo'
-    import 'bar'
+    import 'bar' 2>/dev/null
     echo 'baz'
   }
 
   source 'lib/import.bash'
   run fail
 
-  # check that output does not contain 'baz'
-  [[ "$output" != *'baz'* ]]
+  ((status == 2))
+  [[ "$output" == 'foo' ]]
 }
 
 @test "uses \$LIB_DIR for the location of function files" {
