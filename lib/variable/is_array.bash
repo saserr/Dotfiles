@@ -8,6 +8,6 @@ variable::is_array() {
   local declaration
   declaration="$(declare -p "$name" 2>&1)" || return 1
 
-  text::starts_with "$declaration" 'declare -a' ||
-    text::starts_with "$declaration" 'declare -A'
+  text::starts_with "$declaration" 'declare -a' \
+    || text::starts_with "$declaration" 'declare -A'
 }

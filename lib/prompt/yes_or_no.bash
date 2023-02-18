@@ -15,17 +15,17 @@ prompt::yes_or_no() {
     question="$question [y/n] "
   else
     case $3 in
-    Yes)
-      question="$question [Y/n] "
-      default='Yes'
-      ;;
-    No)
-      question="$question [y/N] "
-      default='No'
-      ;;
-    *)
-      arguments::error 'wrong default value' "actual: $3" 'expected: Yes|No'
-      ;;
+      Yes)
+        question="$question [Y/n] "
+        default='Yes'
+        ;;
+      No)
+        question="$question [y/N] "
+        default='No'
+        ;;
+      *)
+        arguments::error 'wrong default value' "actual: $3" 'expected: Yes|No'
+        ;;
     esac
   fi
 
@@ -33,20 +33,20 @@ prompt::yes_or_no() {
     local answer
     answer="$(prompt::question "$tag" "$question")" || return 1
     case "$answer" in
-    [yY] | [yY][eE][sS])
-      echo 'Yes'
-      break
-      ;;
-    [nN] | [nN][oO])
-      echo 'No'
-      break
-      ;;
-    '')
-      if ! value::empty "$default"; then
-        echo "$default"
+      [yY] | [yY][eE][sS])
+        echo 'Yes'
         break
-      fi
-      ;;
+        ;;
+      [nN] | [nN][oO])
+        echo 'No'
+        break
+        ;;
+      '')
+        if ! value::empty "$default"; then
+          echo "$default"
+          break
+        fi
+        ;;
     esac
   done
 }

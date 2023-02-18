@@ -22,7 +22,7 @@ jobs:
       with:
         image: bats/bats:latest
         options: -v ${{ github.workspace }}:/code
-        run: find test/ -type f -name '*.bats' -not -regex 'test/helpers/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
+        run: find test/ -type f -name '*.bats' -not -regex 'test/helpers/mocks/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
 
   lint:
     name: Lint
@@ -40,3 +40,10 @@ jobs:
         scandir: './lib'
         additional_files: setup.sh test.sh
         check_together: 'yes'
+
+    - name: shfmt
+      uses: addnab/docker-run-action@v3
+      with:
+        image: mvdan/shfmt:v3-alpine
+        options: -v ${{ github.workspace }}:/code
+        run: shfmt -i 2 -ci -bn -d /code/lib/

@@ -75,8 +75,8 @@ if ! type -t 'import' >/dev/null 2>&1; then
       __import::abort "can't load the '$function' function from $file"
     fi
 
-    if ! type -t "$function" >/dev/null 2>&1 ||
-      [[ "$(declare -fp "$function" 2>&1)" == *'__import::not_loaded'* ]]; then
+    if ! type -t "$function" >/dev/null 2>&1 \
+      || [[ "$(declare -fp "$function" 2>&1)" == *'__import::not_loaded'* ]]; then
       __import::abort "the '$function' function is missing in $file"
     fi
   }

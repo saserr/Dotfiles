@@ -86,20 +86,20 @@ arguments::expect() {
   local name
   for name in "${names[@]}"; do
     case $name in
-    '...')
-      vararg=1
-      ;;
-    '['*']')
-      optional=$optional+1
-      ;;
-    *)
-      required=$required+1
-      ;;
+      '...')
+        vararg=1
+        ;;
+      '['*']')
+        optional=$optional+1
+        ;;
+      *)
+        required=$required+1
+        ;;
     esac
   done
 
-  if ((actual < required)) ||
-    { ((vararg == 0)) && ((actual > (required + optional))); }; then
+  if ((actual < required)) \
+    || { ((vararg == 0)) && ((actual > (required + optional))); }; then
     __arguments::expect::abort 1 "$actual" "${names[@]}"
   fi
 }
