@@ -21,7 +21,7 @@ setup() {
 
   homebrew::missing 'foo'
 
-  [ "${#args[@]}" -eq 2 ]
+  ((${#args[@]} == 2))
   [ "${args[0]}" = 'list' ]
   [ "${args[1]}" = 'foo' ]
 }
@@ -31,7 +31,7 @@ setup() {
 
   run homebrew::missing 'foo'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
@@ -40,6 +40,6 @@ setup() {
 
   run homebrew::missing 'foo'
 
-  [ "$status" -ne 0 ]
+  ((status != 0))
   [ "$output" = '' ]
 }

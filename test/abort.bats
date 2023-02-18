@@ -26,7 +26,7 @@ setup() {
 
   run abort 'foo' 'bar'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::contains "$output" 'foo'
 }
 
@@ -35,14 +35,14 @@ setup() {
 
   run abort 'foo' 'bar'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::contains "$output" 'bar'
 }
 
 @test "the output contains the additional messages" {
   run abort 'foo' 'bar' 'baz'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   [ "${lines[1]}" = '      baz' ]
 }
 

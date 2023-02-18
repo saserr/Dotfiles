@@ -37,7 +37,7 @@ setup() {
   run homebrew::install 'foo' 'bar'
 
   unstub brew
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
 }
 
@@ -50,7 +50,7 @@ setup() {
   run homebrew::install 'foo' 'bar' 'baz'
 
   unstub brew
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
 }
 
@@ -65,7 +65,7 @@ setup() {
   run homebrew::install 'foo' 'bar' 'baz'
 
   unstub brew
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
 }
 
@@ -76,7 +76,7 @@ setup() {
 
   run homebrew::install 'foo' 'bar'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'homebrew' 'foo already installed ...')" ]
 }
 
@@ -89,7 +89,7 @@ setup() {
   run homebrew::install 'foo' 'bar'
 
   unstub brew
-  [ "$status" -eq 1 ]
+  ((status == 1))
   [ "${lines[1]}" = "$(log::error 'homebrew' 'failed to install foo')" ]
 }
 
@@ -103,7 +103,7 @@ setup() {
   run homebrew::install 'foo' 'bar'
 
   unstub brew
-  [ "$status" -eq 1 ]
+  ((status == 1))
   [ "${lines[1]}" = "$(log::error 'homebrew' 'failed to install foo')" ]
 }
 
@@ -117,6 +117,6 @@ setup() {
   run homebrew::install 'foo'
 
   unstub brew
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'homebrew' 'installing foo ...')" ]
 }

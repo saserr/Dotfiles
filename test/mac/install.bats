@@ -13,7 +13,7 @@ setup() {
 
   mac::install
 
-  [ "${#args[@]}" -eq 2 ]
+  ((${#args[@]} == 2))
   [ "${args[0]}" = 'foo' ]
   [ "${args[1]}" = 'bar' ]
 }
@@ -26,7 +26,7 @@ setup() {
 
   mac::install
 
-  [ "${#args[@]}" -eq 2 ]
+  ((${#args[@]} == 2))
   [ "${args[0]}" = 'foo' ]
   [ "${args[1]}" = 'bar' ]
 }
@@ -40,7 +40,7 @@ setup() {
 
   mac::install
 
-  [ "${#args[@]}" -eq 2 ]
+  ((${#args[@]} == 2))
   [ "${args[0]}" = 'foo' ]
   [ "${args[1]}" = 'bar' ]
 }
@@ -52,7 +52,7 @@ setup() {
 
   run mac::install
 
-  [ "$status" -eq 1 ]
+  ((status == 1))
   [ "$output" = "$(log::error 'mac' "don't know how to install foo")" ]
 }
 
@@ -64,6 +64,6 @@ setup() {
 
   run mac::install
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   [ "${lines[0]}" = "$(log::error 'mac::install' "expected nonempty variables: recipe")" ]
 }

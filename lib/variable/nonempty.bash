@@ -13,7 +13,7 @@ variable::nonempty() {
 
   if variable::is_array "$name"; then
     declare -n array="$name"
-    [ "${#array[@]}" -gt 0 ]
+    ((${#array[@]}))
   else
     declare -n variable="$name"
     [ -n "${variable:+ok}" ]

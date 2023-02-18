@@ -39,7 +39,7 @@ setup() {
 
   unstub apt
   unstub id
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }
 
@@ -55,7 +55,7 @@ setup() {
 
   unstub apt
   unstub id
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }
 
@@ -72,7 +72,7 @@ setup() {
 
   unstub apt
   unstub id
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }
 
@@ -90,7 +90,7 @@ setup() {
   unstub apt
   unstub sudo
   unstub id
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "${lines[1]}" = "$(log::warn 'apt' 'running as non-root; sudo is needed ...')" ]
 }
 
@@ -101,7 +101,7 @@ setup() {
 
   run apt::install 'foo' 'bar'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'apt' 'foo already installed ...')" ]
 }
 
@@ -116,7 +116,7 @@ setup() {
 
   unstub apt
   unstub id
-  [ "$status" -eq 1 ]
+  ((status == 1))
   [ "${lines[1]}" = "$(log::error 'apt' 'failed to install foo')" ]
 }
 
@@ -132,7 +132,7 @@ setup() {
 
   unstub apt
   unstub id
-  [ "$status" -eq 1 ]
+  ((status == 1))
   [ "${lines[1]}" = "$(log::error 'apt' 'failed to install foo')" ]
 }
 
@@ -148,6 +148,6 @@ setup() {
 
   unstub apt
   unstub id
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'apt' 'installing foo ...')" ]
 }

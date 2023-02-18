@@ -24,92 +24,92 @@ setup() {
 @test "succeeds when no arguments are expected and there were none" {
   run arguments::expect 0
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
 @test "fails when no arguments are expected but there was one" {
   run arguments::expect 1
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
 }
 
 @test "fails when an argument is expected but there were none" {
   run arguments::expect 0 'bar'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
 }
 
 @test "succeeds when an argument is expected and there was one" {
   run arguments::expect 1 'foo'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
 @test "fails when an argument is expected but there was more than one" {
   run arguments::expect 2 'bar'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
 }
 
 @test "fails when two arguments are expected but there were none" {
   run arguments::expect 0 'bar' 'baz'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
 }
 
 @test "fails when two arguments are expected but there is only one" {
   run arguments::expect 1 'bar' 'baz'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
 }
 
 @test "succeeds when two arguments are expected and there were two" {
   run arguments::expect 2 'foo' 'bar'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
 @test "succeeds when an optional argument is expected and there were none" {
   run arguments::expect 0 '[foo]'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
 @test "succeeds when an optional argument is expected and there was one" {
   run arguments::expect 1 '[foo]'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
 @test "fails when an optional argument is expected but there was more than one" {
   run arguments::expect 2 '[bar]'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
 }
 
 @test "succeeds when vararg is expected and there were none" {
   run arguments::expect 0 '...'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
 @test "succeeds when vararg is expected and there was one" {
   run arguments::expect 1 '...'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
 @test "succeeds when vararg is expected but there was more than one" {
   run arguments::expect 2 '...'
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 

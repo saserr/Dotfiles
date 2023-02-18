@@ -8,7 +8,7 @@ text::repeat() {
   local -i times=$1
   local text=$2
 
-  if [ "$times" -gt 0 ]; then
+  if ((times > 0)); then
     printf "$text%.0s" $(seq 1 "$times")
   fi
 }

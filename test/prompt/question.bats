@@ -34,6 +34,6 @@ setup() {
 
   run prompt::question 'foo' 'bar' <<<'baz'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "$output" 'baz'
 }

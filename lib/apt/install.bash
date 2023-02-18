@@ -5,7 +5,7 @@ import 'log'
 apt::install() {
   arguments::expect $# '[name]' 'package' '...'
 
-  if [ $# -eq 1 ]; then
+  if (($# == 1)); then
     local name=$1
     local packages=("$1")
   else
@@ -20,7 +20,7 @@ apt::install() {
     fi
   done
 
-  if [ "${#missing[@]}" -eq 0 ]; then
+  if ((${#missing[@]} == 0)); then
     log::info 'apt' "$name already installed ..."
     return 0
   fi
@@ -35,7 +35,7 @@ apt::install() {
   }
 
   log::info 'apt' "installing $name ..."
-  if [ "$(id -u)" -ne 0 ]; then
+  if (($(id -u) != 0)); then
     log::warn 'apt' 'running as non-root; sudo is needed ...'
     export -f __apt_install
     export name

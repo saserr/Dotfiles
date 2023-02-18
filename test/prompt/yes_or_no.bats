@@ -27,7 +27,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' 'baz'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::contains "${lines[0]}" 'prompt::yes_or_no'
   text::contains "${lines[0]}" 'wrong default value'
   text::ends_with "${lines[1]}" 'actual: baz'
@@ -48,7 +48,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' <<<'y'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "$output" 'Yes'
 }
 
@@ -57,7 +57,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' <<<'yes'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "$output" 'Yes'
 }
 
@@ -66,7 +66,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' 'Yes' <<<$'\n'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "$output" 'Yes'
 }
 
@@ -75,7 +75,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' <<<'n'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "$output" 'No'
 }
 
@@ -84,7 +84,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' <<<'no'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "$output" 'No'
 }
 
@@ -93,7 +93,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' 'No' <<<$'\n'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "$output" 'No'
 }
 
@@ -102,7 +102,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' <<<$'a\nb\nc\ny'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "$output" 'Yes'
 }
 
@@ -111,7 +111,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' <<<$'\n'
 
-  [ $status -eq 1 ]
+  ((status == 1))
   ! text::contains "$output" 'Yes'
   ! text::contains "$output" 'No'
 }
@@ -121,7 +121,7 @@ setup() {
 
   run prompt::yes_or_no 'foo' 'bar' <<<'a'
 
-  [ $status -eq 1 ]
+  ((status == 1))
   ! text::contains "$output" 'Yes'
   ! text::contains "$output" 'No'
 }

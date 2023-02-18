@@ -3,7 +3,7 @@
 
 __arguments::expect::abort() {
   # check if this function has the correct number of arguments
-  if [ $# -lt 2 ]; then
+  if (($# < 2)); then
     local -i stack_position=0
     local -i actual=$#
     local names=('stack_position' 'actual' '[name]' '...')
@@ -15,7 +15,7 @@ __arguments::expect::abort() {
 
   local function
   # skip the last element of the FUNCNAME array which is 'main'
-  if [ $((stack_position + 1)) -lt ${#FUNCNAME[@]} ]; then
+  if (((stack_position + 1) < ${#FUNCNAME[@]})); then
     function="${FUNCNAME[$stack_position]}"
   else
     function="$0"
@@ -23,7 +23,7 @@ __arguments::expect::abort() {
 
   local messages=()
   local message='wrong number of arguments'
-  if [ $((stack_position + 1)) -lt ${#BASH_SOURCE[@]} ]; then
+  if (((stack_position + 1) < ${#BASH_SOURCE[@]})); then
     local file="${BASH_SOURCE[$((stack_position + 1))]}"
     local line="${BASH_LINENO[$stack_position]}"
     message+=" at $file (line: $line)"
@@ -33,10 +33,10 @@ __arguments::expect::abort() {
   messages+=("actual: $actual")
 
   message='expected: '
-  if [ "${vararg:?}" -ne 0 ]; then
+  if ((vararg)); then
     message+="${required:?} (or more)"
-  elif [ "${optional:?}" -gt 0 ]; then
-    if [ "${required:?}" -gt 0 ]; then
+  elif ((optional)); then
+    if ((required)); then
       message+="${required:?} (+ ${optional:?} optional)"
     else
       message+="${optional:?} optional"
@@ -46,7 +46,7 @@ __arguments::expect::abort() {
   fi
   messages+=("$message")
 
-  if [ ${#names[@]} -gt 0 ]; then
+  if ((${#names[@]})); then
     messages+=("arguments: ${names[*]}")
   fi
 
@@ -68,14 +68,14 @@ arguments::expect() {
 
   # check if this function has the correct number of arguments and that the
   # first argument is an integer
-  if [ $# -lt 1 ] || [ "$actual" != "$1" ]; then
+  if (($# < 1)) || [ "$actual" != "$1" ]; then
     local -i vararg=1
     local -i optional=1
     local -i required=1
     __arguments::expect::abort 0 $# '$#' '[name]' '...'
   fi
 
-  [ "$actual" -eq $(($# - 1)) ] && return 0
+  ((actual == ($# - 1))) && return 0
 
   local names=("${@:2}")
 
@@ -98,8 +98,8 @@ arguments::expect() {
     esac
   done
 
-  if [ "$actual" -lt "$required" ] ||
-    { [ "$vararg" -eq 0 ] && [ "$actual" -gt $((required + optional)) ]; }; then
+  if ((actual < required)) ||
+    { ((vararg == 0)) && ((actual > (required + optional))); }; then
     __arguments::expect::abort 1 "$actual" "${names[@]}"
   fi
 }

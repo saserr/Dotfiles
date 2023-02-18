@@ -13,7 +13,7 @@ setup() {
 
   recipe::install
 
-  [ "$called" -eq 1 ]
+  ((called == 1))
 }
 
 @test "uses debian::install on debian platform" {
@@ -25,7 +25,7 @@ setup() {
 
   recipe::install
 
-  [ "$called" -eq 1 ]
+  ((called == 1))
 }
 
 @test "fails on any other platform" {
@@ -37,6 +37,6 @@ setup() {
 
   run recipe::install
 
-  [ "$status" -eq 1 ]
+  ((status == 1))
   [ "$output" = "$(log::error 'windows' "don't know how to install foo")" ]
 }

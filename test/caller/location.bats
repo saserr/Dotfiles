@@ -12,7 +12,7 @@
 
   run "$foo"
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$foo (line: 5)" ]
 }
 
@@ -28,7 +28,7 @@
 
   run "$foo"
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$foo (line: 4)" ]
 }
 
@@ -44,14 +44,14 @@
 
   run "$foo"
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = "$foo (line: 6)" ]
 }
 
 @test "fails if it is invoked directly in the shell" {
   run bash -c "source lib/import.bash && import 'caller::location' && caller::location 0"
 
-  [ "$status" -eq 1 ]
+  ((status == 1))
   [ "$output" = '' ]
 }
 
@@ -65,6 +65,6 @@
 
   run "$foo"
 
-  [ "$status" -eq 1 ]
+  ((status == 1))
   [ "$output" = '' ]
 }

@@ -42,7 +42,7 @@
   run import 'foo'
 
   ! type -t 'foo'
-  [ "$status" -eq 2 ]
+  ((status == 2))
   [[ "${lines[1]}" == *'import'* ]]
   [[ "${lines[1]}" == *"can't load the 'foo' function"* ]]
 }
@@ -79,7 +79,7 @@
   source 'lib/import.bash'
   run import 'foo'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   [[ "${lines[0]}" == *'import'* ]]
   [[ "${lines[0]}" == *"the 'foo' function is missing in $LIB_DIR/foo.bash" ]]
 }

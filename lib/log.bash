@@ -25,7 +25,7 @@ log() {
   local end_color='\033[0m'
   echo -e "${color}[$tag]$end_color ${messages[0]}"
 
-  if [ "${#messages[@]}" -gt 1 ]; then
+  if ((${#messages[@]} > 1)); then
     local identation
     identation="$(printf " %.0s" $(seq 1 $((${#tag} + 2))))"
 

@@ -4,7 +4,7 @@ bats() {
   docker run -it -v "${PWD}:/code" --rm bats/bats:latest "$@"
 }
 
-if [ "$#" -ge 1 ]; then
+if (($#)); then
   bats "$@"
 else
   export -f bats

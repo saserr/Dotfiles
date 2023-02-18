@@ -42,7 +42,7 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to" <<<''
 
-  [ $status -eq 0 ]
+  ((status == 0))
   [ "$output" = "$(log::info 'test' "$to will be linked to $from")" ]
   [ -L "$to" ] # $to is a symlink
   [ "$(cat "$to")" = 'foo' ]
@@ -58,7 +58,7 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to" <<<"$eof"
 
-  [ $status -eq 1 ]
+  ((status == 1))
   [ "${lines[0]}" = "$(log::info 'test' "$to will be linked to $from")" ]
   text::contains "${lines[1]}" 'test'
   text::contains "${lines[1]}" "$to exists; do you want to replace it? [Y/n]"
@@ -73,7 +73,7 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to" <<<'y'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   text::ends_with "${lines[1]}" "$(log::info 'test' "old $to will be moved to $to.old")"
   [ -f "$to.old" ] # $to.old is a file
   [ "$(cat "$to.old")" = 'bar' ]
@@ -85,7 +85,7 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to" <<<'y'
 
-  [ $status -eq 0 ]
+  ((status == 0))
   [ -L "$to" ] # $to is a symlink
   [ "$(cat "$to")" = 'foo' ]
 }
@@ -99,7 +99,7 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to"
 
-  [ $status -eq 1 ]
+  ((status == 1))
   [ "${lines[1]}" = "$(log::error 'test' "both $to and $to.old already exist; aborting!")" ]
   [ -f "$to" ] # $to is still a file
   [ "$(cat "$to")" = 'bar' ]
@@ -116,7 +116,7 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to" <<<'n'
 
-  [ $status -eq 1 ]
+  ((status == 1))
   text::ends_with "${lines[1]}" "$(log::info 'test' "$to will not be linked")"
   [ -f "$to" ] # $to is still a file
   [ "$(cat "$to")" = 'bar' ]
@@ -128,7 +128,7 @@ setup() {
 
   run platform::safe_link 'test' "$from" "$to"
 
-  [ $status -eq 1 ]
+  ((status == 1))
   [ "${lines[0]}" = "$(log::info 'test' "$to will be linked to $from")" ]
   [ "${lines[1]}" = "$(log::error 'test' "$from does not exist; aborting!")" ]
   [ ! -e "$from" ] # $from does not exist

@@ -8,7 +8,7 @@ caller::location() {
 
   local -i level=$1
 
-  if [ "${#BASH_SOURCE[@]}" -gt $((level + 1)) ]; then
+  if ((${#BASH_SOURCE[@]} > (level + 1))); then
     local file="${BASH_SOURCE[$level + 1]}"
     local line="${BASH_LINENO[$level]}"
     echo "$file (line: $line)"

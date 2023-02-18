@@ -22,14 +22,14 @@ setup() {
 @test "succeeds if value is an integer" {
   run arguments::integer 'foo' 42
 
-  [ "$status" -eq 0 ]
+  ((status == 0))
   [ "$output" = '' ]
 }
 
 @test "fails if the value is not an integer" {
   run arguments::integer 'foo' 'bar'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
 }
 
 @test "the failure message contains the function name and the variable name" {
@@ -77,6 +77,6 @@ setup() {
 
   run fail
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   [ "$output" = 'foo' ]
 }

@@ -11,7 +11,7 @@ prompt::yes_or_no() {
   local question=$2
   local default=''
 
-  if [ $# -eq 2 ]; then
+  if (($# == 2)); then
     question="$question [y/n] "
   else
     case $3 in

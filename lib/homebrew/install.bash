@@ -4,7 +4,7 @@ import 'log'
 homebrew::install() {
   arguments::expect $# '[name]' 'formula' '...'
 
-  if [ $# -eq 1 ]; then
+  if (($# == 1)); then
     local name=$1
     local formulas=("$1")
   else
@@ -19,7 +19,7 @@ homebrew::install() {
     fi
   done
 
-  if [ "${#missing[@]}" -eq 0 ]; then
+  if ((${#missing[@]} == 0)); then
     log::info 'homebrew' "$name already installed ..."
     return 0
   fi

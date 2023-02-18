@@ -2,17 +2,16 @@ if ! type -t 'import' >/dev/null 2>&1; then
   __import_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
   __import::abort() {
-    if { type -t 'arguments::expect' >/dev/null 2>&1 && arguments::expect $# 'message'; } ||
-      [ $# -gt 0 ]; then
+    if { type -t 'arguments::expect' >/dev/null 2>&1 && arguments::expect $# 'message'; } || (($#)); then
       local messages=("$1")
-      if [ ${#BASH_SOURCE[@]} -gt 2 ]; then
+      if ((${#BASH_SOURCE[@]} > 2)); then
         local file="${BASH_SOURCE[2]}"
         local line="${BASH_LINENO[1]}"
         messages+=("at $file (line: $line)")
       fi
     else
       local messages=("requires a message as an argument")
-      if [ ${#BASH_SOURCE[@]} -gt 1 ]; then
+      if ((${#BASH_SOURCE[@]} > 1)); then
         local file="${BASH_SOURCE[1]}"
         local line="${BASH_LINENO[0]}"
         messages+=("at $file (line: $line)")
@@ -25,7 +24,7 @@ if ! type -t 'import' >/dev/null 2>&1; then
       log::error 'import' "${messages[@]}" 1>&2
     else
       echo "[import] ${messages[0]}" 1>&2
-      if [ "${#messages[@]}" -gt 1 ]; then
+      if ((${#messages[@]} > 1)); then
         local message
         local messages=("${messages[@]:1}")
         for message in "${messages[@]}"; do
@@ -42,7 +41,7 @@ if ! type -t 'import' >/dev/null 2>&1; then
 
     echo "[$caller] is being loaded; do not call" 1>&2
 
-    if [ ${#BASH_SOURCE[@]} -gt 1 ]; then
+    if ((${#BASH_SOURCE[@]} > 1)); then
       local identation
       identation="$(printf " %.0s" $(seq 1 $((${#caller} + 2))))"
       local file="${BASH_SOURCE[1]}"
@@ -56,7 +55,7 @@ if ! type -t 'import' >/dev/null 2>&1; then
   import() {
     if type -t 'arguments::expect' >/dev/null 2>&1; then
       arguments::expect $# 'function'
-    elif [ $# -ne 1 ]; then
+    elif (($# != 1)); then
       __import::abort "requires a function name as an argument"
     fi
 

@@ -68,6 +68,6 @@ setup() {
 
   run fail
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   [ "$output" = 'foo' ]
 }

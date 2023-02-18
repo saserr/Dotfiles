@@ -45,7 +45,7 @@ setup() {
 
   run variable::expect 'foo'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -55,7 +55,7 @@ setup() {
   foo=()
 
   run variable::expect 'foo'
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -66,7 +66,7 @@ setup() {
 
   run variable::expect 'foo'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -77,7 +77,7 @@ setup() {
 
   run variable::expect 'foo'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -88,7 +88,7 @@ setup() {
 
   run variable::expect 'foo'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -99,7 +99,7 @@ setup() {
 
   run variable::expect 'foo'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -110,7 +110,7 @@ setup() {
 
   run variable::expect 'foo'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -119,7 +119,7 @@ setup() {
 
   run variable::expect 'foo'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -130,7 +130,7 @@ setup() {
 
   run variable::expect 'foo' 'baz'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: baz"
 }
 
@@ -139,7 +139,7 @@ setup() {
 
   run variable::expect 'foo' 'bar'
 
-  [ "$status" -eq 2 ]
+  ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo bar"
 }
 

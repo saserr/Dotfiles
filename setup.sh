@@ -55,7 +55,7 @@ if setup::missing "$recipe"; then
     fi
   done
 
-  if [ ${#required[@]} -gt 0 ]; then
+  if ((${#required[@]})); then
     case "$(prompt::yes_or_no "$recipe" "requires (${required[*]}); do you want to set them up?" 'Yes')" in
     Yes)
       echo
