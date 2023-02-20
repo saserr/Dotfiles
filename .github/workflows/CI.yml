@@ -25,7 +25,7 @@ jobs:
         run: find test/ -type f -name '*.bats' -not -regex 'test/helpers/mocks/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
 
   test-macos:
-    name: Test (Mac OS' builtin bash)
+    name: Test (Mac OS builtin bash)
     runs-on: macos-latest
 
     steps:
