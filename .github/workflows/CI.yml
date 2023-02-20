@@ -24,6 +24,27 @@ jobs:
         options: -v ${{ github.workspace }}:/code
         run: find test/ -type f -name '*.bats' -not -regex 'test/helpers/mocks/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
 
+  test-macos:
+    name: Test (Mac OS' builtin bash)
+    runs-on: macos-latest
+
+    steps:
+    - name: Check bash version
+      run: /usr/bin/env bash -c '[[ "$BASH_VERSION" < '4' ]]'
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install coreutils findutils parallel bats-core
+
+    - name: Bats
+      run: gfind test/ -type f -name '*.bats' -not -regex 'test/helpers/mocks/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
