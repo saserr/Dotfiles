@@ -1,6 +1,4 @@
 import 'arguments::expect'
-import 'log'
-import 'file::exists'
 import 'variable::expect'
 
 recipe::file() {

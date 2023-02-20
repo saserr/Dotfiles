@@ -17,7 +17,7 @@ case "$(platform::name)" in
     ;;
   *)
     import 'arguments::expect'
-    import 'log'
+    import 'log::error'
     import 'variable::expect'
 
     recipe::install() {

@@ -10,7 +10,7 @@ import 'recipe::load'
 recipe::load || exit 1
 
 import 'function::exists'
-import 'log'
+import 'log::info'
 import 'platform::name'
 import 'prompt::yes_or_no'
 import 'recipe::install'

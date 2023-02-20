@@ -82,12 +82,7 @@ if ! type -t 'import' >/dev/null 2>&1; then
   }
 
   import 'arguments::expect'
-
-  import 'log'
-  if ! type -t 'log::error' >/dev/null 2>&1; then
-    __import::abort "can't load the 'log::error' function"
-  fi
-
+  import 'log::error'
   import 'abort'
 
   __import_dir="${LIB_DIR:-$__import_dir}"

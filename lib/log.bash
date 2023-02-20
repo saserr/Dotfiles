@@ -1,20 +1,5 @@
 import 'arguments::expect'
 
-log::info() {
-  # green
-  log '0;32' "$@"
-}
-
-log::warn() {
-  # bold yellow
-  log '1;33' "$@"
-}
-
-log::error() {
-  # bold red
-  log '1;31' "$@"
-}
-
 log() {
   arguments::expect $# 'color' 'tag' 'message' '...'
 

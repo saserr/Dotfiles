@@ -22,7 +22,7 @@ setup() {
 }
 
 @test "fails when first argument is not an integer" {
-  import 'log'
+  import 'log::error'
 
   run text::repeat 'foo' 'bar'
 

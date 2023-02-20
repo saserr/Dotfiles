@@ -1,5 +1,7 @@
 import 'arguments::expect'
-import 'log'
+import 'homebrew::missing'
+import 'log::error'
+import 'log::info'
 
 homebrew::install() {
   arguments::expect $# '[name]' 'formula' '...'

@@ -1,7 +1,8 @@
 import 'abort'
 import 'arguments::expect'
+import 'caller::location'
 import 'file::exists'
-import 'log'
+import 'log::error'
 import 'recipe::file'
 import 'variable::expect'
 

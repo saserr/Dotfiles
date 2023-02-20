@@ -29,7 +29,7 @@ setup() {
 
 @test "installs formula if not installed" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::info'
 
   stub brew 'update : '
   stub brew 'install bar : '
@@ -43,6 +43,7 @@ setup() {
 
 @test "installs multiple formulas" {
   load ../helpers/mocks/stub
+  import 'log::info'
 
   stub brew 'update : '
   stub brew 'install bar baz : '
@@ -56,6 +57,7 @@ setup() {
 
 @test "installs only missing formulas" {
   load ../helpers/mocks/stub
+  import 'log::info'
 
   homebrew::missing() { [[ "$1" != 'bar' ]]; }
 
@@ -70,7 +72,7 @@ setup() {
 }
 
 @test "succeeds if formula is already installed" {
-  import 'log'
+  import 'log::info'
 
   homebrew::missing() { return 1; }
 
@@ -82,7 +84,7 @@ setup() {
 
 @test "fails if brew update fails" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::error'
 
   stub brew 'update : exit 1'
 
@@ -95,7 +97,7 @@ setup() {
 
 @test "fails if brew install fails" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::error'
 
   stub brew 'update : '
   stub brew 'install bar : exit 1'
@@ -109,7 +111,7 @@ setup() {
 
 @test "uses formula as name when only one argument is passed" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::info'
 
   stub brew 'update : '
   stub brew 'install foo : '

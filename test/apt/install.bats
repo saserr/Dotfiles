@@ -29,7 +29,7 @@ setup() {
 
 @test "installs package if not installed" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::info'
 
   stub id '-u : echo 0'
   stub apt 'update : '
@@ -45,7 +45,7 @@ setup() {
 
 @test "installs multiple packages" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::info'
 
   stub id '-u : echo 0'
   stub apt 'update : '
@@ -78,7 +78,7 @@ setup() {
 
 @test "installs package with sudo if the current user is not root" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::warn'
 
   stub id '-u : echo 1000'
   stub sudo 'bash -c \* : bash -c "$3" '
@@ -95,7 +95,7 @@ setup() {
 }
 
 @test "succeeds if package is already installed" {
-  import 'log'
+  import 'log::info'
 
   apt::missing() { return 1; }
 
@@ -107,7 +107,7 @@ setup() {
 
 @test "fails if apt update fails" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::error'
 
   stub id '-u : echo 0'
   stub apt 'update : exit 1'
@@ -122,7 +122,7 @@ setup() {
 
 @test "fails if apt install fails" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::error'
 
   stub id '-u : echo 0'
   stub apt 'update : '
@@ -138,7 +138,7 @@ setup() {
 
 @test "uses package as name when only one argument is passed" {
   load ../helpers/mocks/stub
-  import 'log'
+  import 'log::info'
 
   stub id '-u : echo 0'
   stub apt 'update : '

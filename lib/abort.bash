@@ -1,5 +1,5 @@
 import 'arguments::expect'
-import 'log'
+import 'log::error'
 
 abort() {
   arguments::expect $# 'tag' 'message' '...'

@@ -36,7 +36,7 @@ setup() {
 }
 
 @test "makes a symlink from \$from to \$to if \$to does not exist" {
-  import 'log'
+  import 'log::info'
 
   echo 'foo' >"$from"
 
@@ -49,7 +49,7 @@ setup() {
 }
 
 @test "asks if \$to should be replaced if \$to exists" {
-  import 'log'
+  import 'log::info'
   import 'text::contains'
 
   echo 'foo' >"$from"
@@ -65,7 +65,7 @@ setup() {
 }
 
 @test "moves \$to to \$to.old if \$to exists and a positive answer is given at the prompt" {
-  import 'log'
+  import 'log::info'
   import 'text::ends_with'
 
   echo 'foo' >"$from"
@@ -91,7 +91,7 @@ setup() {
 }
 
 @test "fails and leaves things unchanged if \$to.old exists" {
-  import 'log'
+  import 'log::error'
 
   echo 'foo' >"$from"
   echo 'bar' >"$to"
@@ -108,7 +108,7 @@ setup() {
 }
 
 @test "fails and leaves things unchanged if \$to exists and a negative answer is given at the prompt" {
-  import 'log'
+  import 'log::info'
   import 'text::ends_with'
 
   echo 'foo' >"$from"
@@ -124,7 +124,8 @@ setup() {
 }
 
 @test "fails and leaves things unchanged if \$from does not exist" {
-  import 'log'
+  import 'log::error'
+  import 'log::info'
 
   run platform::safe_link 'test' "$from" "$to"
 

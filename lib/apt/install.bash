@@ -1,6 +1,8 @@
 import 'apt::missing'
 import 'arguments::expect'
-import 'log'
+import 'log::error'
+import 'log::info'
+import 'log::warn'
 
 apt::install() {
   arguments::expect $# '[name]' 'package' '...'

@@ -1,5 +1,6 @@
 import 'arguments::expect'
-import 'log'
+import 'log::error'
+import 'log::info'
 import 'path::exists'
 import 'prompt::yes_or_no'
 

@@ -1,6 +1,5 @@
 import 'arguments::error'
 import 'arguments::expect'
-import 'log'
 import 'prompt::question'
 import 'value::empty'
 
