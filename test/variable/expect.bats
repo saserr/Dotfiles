@@ -67,7 +67,7 @@ setup() {
 @test "fails if variable is only declared" {
   import 'text::ends_with'
 
-  declare -g foo
+  declare foo
 
   run variable::expect 'foo'
 
@@ -78,7 +78,7 @@ setup() {
 @test "fails if variable is only declared as an indexed array" {
   import 'text::ends_with'
 
-  declare -ga foo
+  declare -a foo
 
   run variable::expect 'foo'
 
@@ -93,7 +93,22 @@ setup() {
 
   import 'text::ends_with'
 
-  declare -gA foo
+  declare -A foo
+
+  run variable::expect 'foo'
+
+  ((status == 2))
+  text::ends_with "${lines[0]}" "expected nonempty variables: foo"
+}
+
+@test "fails if variable is only globally declared" {
+  if [[ "$BASH_VERSION" < '4.2' ]]; then
+    skip "'declare -g' is unsupported"
+  fi
+
+  import 'text::ends_with'
+
+  declare -g foo
 
   run variable::expect 'foo'
 

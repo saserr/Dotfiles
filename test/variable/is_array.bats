@@ -31,16 +31,17 @@ setup() {
   variable::is_array 'foo'
 }
 
-@test "succeeds if variable is globaly declared as an indexed array" {
-  declare -ga foo
+@test "succeeds if variable is declared as an indexed array" {
+  declare -a foo
 
   variable::is_array 'foo'
 }
+@test "succeeds if variable is declared as an associative array" {
   if [[ "$BASH_VERSION" < '4' ]]; then
     skip 'associative arrays are unsupported'
   fi
 
-  declare -gA foo
+  declare -A foo
 
   variable::is_array 'foo'
 }
@@ -67,19 +68,23 @@ setup() {
   ! variable::is_array 'foo'
 }
 
-@test "fails if variable is globally declared" {
+@test "fails if variable is only globally declared" {
+  if [[ "$BASH_VERSION" < '4.2' ]]; then
+    skip "'declare -g' is unsupported"
+  fi
+
   declare -g foo
 
   ! variable::is_array 'foo'
 }
 
-@test "fails if variable is localy declared" {
+@test "fails if variable is only localy declared" {
   local foo
 
   ! variable::is_array 'foo'
 }
 
-@test "fails if variable is readonly declared" {
+@test "fails if variable is only readonly declared" {
   readonly foo
 
   ! variable::is_array 'foo'

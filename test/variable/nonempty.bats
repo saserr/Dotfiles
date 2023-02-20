@@ -55,13 +55,13 @@ setup() {
 }
 
 @test "fails if variable is only declared" {
-  declare -g foo
+  declare foo
 
   ! variable::nonempty 'foo'
 }
 
 @test "fails if variable is only declared as an indexed array" {
-  declare -ga foo
+  declare -a foo
 
   ! variable::nonempty 'foo'
 }
@@ -71,7 +71,17 @@ setup() {
     skip 'associative arrays are unsupported'
   fi
 
-  declare -gA foo
+  declare -A foo
+
+  ! variable::nonempty 'foo'
+}
+
+@test "fails if variable is only globally declared" {
+  if [[ "$BASH_VERSION" < '4.2' ]]; then
+    skip "'declare -g' is unsupported"
+  fi
+
+  declare -g foo
 
   ! variable::nonempty 'foo'
 }
