@@ -32,6 +32,10 @@ setup() {
 }
 
 @test "succeeds if variable is a non-empty associative array" {
+  if [[ "$BASH_VERSION" < '4' ]]; then
+    skip 'associative arrays are unsupported'
+  fi
+
   declare -A foo
   foo['bar']='baz'
 
@@ -83,6 +87,10 @@ setup() {
 }
 
 @test "fails if variable is only declared as an associative array" {
+  if [[ "$BASH_VERSION" < '4' ]]; then
+    skip 'associative arrays are unsupported'
+  fi
+
   import 'text::ends_with'
 
   declare -gA foo

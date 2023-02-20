@@ -36,7 +36,10 @@ setup() {
 
   variable::is_array 'foo'
 }
-@test "succeeds if variable is globaly declared as an associative array" {
+  if [[ "$BASH_VERSION" < '4' ]]; then
+    skip 'associative arrays are unsupported'
+  fi
+
   declare -gA foo
 
   variable::is_array 'foo'
@@ -49,6 +52,10 @@ setup() {
 }
 
 @test "succeeds if variable is localy declared as an associative array" {
+  if [[ "$BASH_VERSION" < '4' ]]; then
+    skip 'associative arrays are unsupported'
+  fi
+
   local -A foo
 
   variable::is_array 'foo'
