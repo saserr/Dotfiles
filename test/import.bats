@@ -1,11 +1,11 @@
 #!/usr/bin/env bats
 
 @test "declares the 'import' function" {
-  ! type -t 'import'
+  ! declare -F 'import'
 
   source 'lib/import.bash'
 
-  [[ "$(type -t 'import')" == 'function' ]]
+  declare -F 'import'
 }
 
 @test "fails without arguments" {
@@ -17,12 +17,12 @@
 }
 
 @test "imports a missing function" {
-  ! type -t 'arguments::expect'
+  ! declare -F 'arguments::expect'
 
   source 'lib/import.bash'
   import 'arguments::expect'
 
-  [[ "$(type -t 'arguments::expect')" == 'function' ]]
+  declare -F 'arguments::expect'
 }
 
 @test "doesn't do anything if function already exists" {
@@ -41,7 +41,7 @@
   source 'lib/import.bash'
   run import 'foo'
 
-  ! type -t 'foo'
+  ! declare -F 'foo'
   ((status == 2))
   [[ "${lines[1]}" == *'import'* ]]
   [[ "${lines[1]}" == *"can't load the 'foo' function"* ]]
@@ -64,12 +64,12 @@
 @test "uses \$LIB_DIR for the location of function files" {
   LIB_DIR="$BATS_TEST_TMPDIR"
   echo 'foo() { echo "bar"; }' >"$LIB_DIR/foo.bash"
-  ! type -t 'foo'
+  ! declare -F 'foo'
 
   source 'lib/import.bash'
   import 'foo'
 
-  [[ "$(type -t 'foo')" == 'function' ]]
+  declare -F 'foo'
 }
 
 @test "validates that correct function has been imported" {
