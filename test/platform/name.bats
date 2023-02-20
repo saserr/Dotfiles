@@ -14,6 +14,10 @@ setup() {
 }
 
 @test "returns the result of platform::linux::os_release if the current platform is Linux" {
+  if [[ "$(uname -s)" != 'Linux' ]]; then
+    skip 'linux-only test'
+  fi
+
   # setup
   uname() { echo 'Linux'; }
   mv /etc/os-release /etc/os-release.tmp
