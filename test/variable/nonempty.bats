@@ -32,7 +32,7 @@ setup() {
 }
 
 @test "succeeds if variable is a non-empty associative array" {
-  if [[ "$BASH_VERSION" < '4' ]]; then
+  if ((${BASH_VERSINFO[0]} < 4)); then
     skip 'associative arrays are unsupported'
   fi
 
@@ -67,7 +67,7 @@ setup() {
 }
 
 @test "fails if variable is only declared as an associative array" {
-  if [[ "$BASH_VERSION" < '4' ]]; then
+  if ((${BASH_VERSINFO[0]} < 4)); then
     skip 'associative arrays are unsupported'
   fi
 
@@ -77,7 +77,8 @@ setup() {
 }
 
 @test "fails if variable is only globally declared" {
-  if [[ "$BASH_VERSION" < '4.2' ]]; then
+  if ((${BASH_VERSINFO[0]} < 4)) \
+    || (((${BASH_VERSINFO[0]} == 4) && (${BASH_VERSINFO[1]} < 2))); then
     skip "'declare -g' is unsupported"
   fi
 
