@@ -85,6 +85,7 @@ setup() {
 }
 
 @test "fails if variable is only readonly declared" {
+  local foo
   readonly foo
 
   ! variable::is_array 'foo'

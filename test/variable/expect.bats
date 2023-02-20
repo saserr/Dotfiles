@@ -130,6 +130,7 @@ setup() {
 @test "fails if variable is only readonly declared" {
   import 'text::ends_with'
 
+  local foo
   readonly foo
 
   run variable::expect 'foo'

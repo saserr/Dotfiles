@@ -93,6 +93,7 @@ setup() {
 }
 
 @test "fails if variable is only readonly declared" {
+  local foo
   readonly foo
 
   ! variable::nonempty 'foo'
