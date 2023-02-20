@@ -69,7 +69,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     fi
 
     local file
-    file="$__import_dir/${function//::/\/}.bash"
+    file="$__import_dir/${function//:://}.bash"
     # shellcheck source=/dev/null
     if ! source "$file"; then
       __import::abort "can't load the '$function' function from $file"
