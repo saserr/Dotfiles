@@ -36,11 +36,15 @@ recipe::configure() {
       file::append "$zshrc" 'eval "$(starship init zsh)"'
       ;;
     'bash')
+      local bashrc="$HOME/.bashrc"
+      if ! file::empty "$bashrc"; then
+        file::append "$bashrc" ''
+      fi
       echo '[starship] enabling in bash'
-      file::append "$zshrc" '# enable https://starship.rs'
+      file::append "$bashrc" '# enable https://starship.rs'
       # shellcheck disable=SC2016
       # this eval is intentionally not evaluated here, hence single-quote string
-      file::append "$zshrc" 'eval "$(starship init bash)"'
+      file::append "$bashrc" 'eval "$(starship init bash)"'
       ;;
     *)
       echo "[starship] don't know how to enable for $login_shell"
