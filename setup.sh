@@ -9,10 +9,10 @@ recipe=$1
 import 'recipe::load'
 recipe::load || exit 1
 
-import 'function::exists'
 import 'log::info'
 import 'platform::name'
 import 'prompt::yes_or_no'
+import 'recipe::configure'
 import 'recipe::install'
 import 'setup::done'
 import 'setup::missing'
@@ -64,11 +64,7 @@ if setup::missing "$recipe"; then
 
   text::header "Setting up $recipe"
 
-  recipe::install || exit 1
-
-  if function::exists 'configure'; then
-    configure || exit 1
-  fi
+  { recipe::install && recipe::configure; } || exit 1
 
   setup::done "$recipe"
 else

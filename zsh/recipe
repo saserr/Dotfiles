@@ -20,36 +20,38 @@ zsh_path() {
   fi
 }
 
-configure() {
-  local platform="$(platform::name)"
-  local zsh_path=$(zsh_path $platform)
+recipe::configure() {
+  local platform
+  platform="$(platform::name)" || return 1
+  local zsh_path
+  platform=$(zsh_path "$platform") || return 1
 
-  if [[ $SHELL != $zsh_path ]]; then
+  if [[ $SHELL != "$zsh_path" ]]; then
     echo "[$platform] do you want to set zsh as login shell (current: $SHELL) (Yes / No)? "
     case $(prompt::yes_or_no) in
-    Yes)
-      echo "[$platform] changing login shell to zsh ..."
-      if [[ $platform == mac ]]; then
-        if ! file::contains /etc/shells '/usr/local/bin/zsh'; then
-          sudo file:append /etc/shells '/usr/local/bin/zsh'
+      Yes)
+        echo "[$platform] changing login shell to zsh ..."
+        if [[ $platform == mac ]]; then
+          if ! file::contains /etc/shells '/usr/local/bin/zsh'; then
+            sudo file:append /etc/shells '/usr/local/bin/zsh'
+          fi
         fi
-      fi
-      chsh -s $zsh_path
-      ;;
-    No)
-      echo "[$platform] $SHELL will remain the login shell ..."
-      ;;
+        chsh -s "$zsh_path"
+        ;;
+      No)
+        echo "[$platform] $SHELL will remain the login shell ..."
+        ;;
     esac
   fi
 
   echo '[zsh] setting up .zshenv ...'
-  platform::safe_link '.zshenv' $PWD/zsh/zshenv ~/.zshenv
+  platform::safe_link '.zshenv' "$PWD/zsh/zshenv" ~/.zshenv
 
   echo '[zsh] save the local specific zsh environment configuration into ~/.zshenv.local.zsh ...'
   touch ~/.zshenv.local.zsh
 
   echo '[zsh] setting up .zshrc ...'
-  platform::safe_link '.zshrc' $PWD/zsh/zshrc ~/.zshrc
+  platform::safe_link '.zshrc' "$PWD/zsh/zshrc" ~/.zshrc
 
   echo '[zsh] save the local specific zsh configuration into ~/.zshrc.local.zsh'
   touch ~/.zshrc.local.zsh

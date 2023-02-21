@@ -13,38 +13,38 @@ debian::install() {
   curl -sS https://starship.rs/install.sh | sh
 }
 
-configure() {
+recipe::configure() {
   local login_shell
   login_shell="$(platform::login_shell)" || return 1
   case $login_shell in
-  'zsh')
-    echo '[starship] enabling in zsh'
+    'zsh')
+      echo '[starship] enabling in zsh'
 
-    local zshrc
-    if setup::missing zsh; then
-      zshrc=~/.zshrc
-    else
-      zshrc=~/.zshrc.local.zsh
-    fi
+      local zshrc
+      if setup::missing zsh; then
+        zshrc=~/.zshrc
+      else
+        zshrc=~/.zshrc.local.zsh
+      fi
 
-    if ! file::empty $zshrc; then
-      file::append $zshrc ''
-    fi
-    file::append "$zshrc" '# enable https://starship.rs'
-    # shellcheck disable=SC2016
-    # this eval is intentionally not evaluated here, hence single-quote string
-    file::append "$zshrc" 'eval "$(starship init zsh)"'
-    ;;
-  'bash')
-    echo '[starship] enabling in bash'
-    file::append "$zshrc" '# enable https://starship.rs'
-    # shellcheck disable=SC2016
-    # this eval is intentionally not evaluated here, hence single-quote string
-    file::append "$zshrc" 'eval "$(starship init bash)"'
-    ;;
-  *)
-    echo "[starship] don't know how to enable for $login_shell"
-    return 1
-    ;;
+      if ! file::empty "$zshrc"; then
+        file::append "$zshrc" ''
+      fi
+      file::append "$zshrc" '# enable https://starship.rs'
+      # shellcheck disable=SC2016
+      # this eval is intentionally not evaluated here, hence single-quote string
+      file::append "$zshrc" 'eval "$(starship init zsh)"'
+      ;;
+    'bash')
+      echo '[starship] enabling in bash'
+      file::append "$zshrc" '# enable https://starship.rs'
+      # shellcheck disable=SC2016
+      # this eval is intentionally not evaluated here, hence single-quote string
+      file::append "$zshrc" 'eval "$(starship init bash)"'
+      ;;
+    *)
+      echo "[starship] don't know how to enable for $login_shell"
+      return 1
+      ;;
   esac
 }
