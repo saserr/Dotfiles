@@ -5,7 +5,9 @@ file::exists() {
   arguments::expect $# 'path'
 
   local path=$1
-  path="$(platform::readlink -f "$path")" || return 1
+  while [[ -L "$path" ]]; do
+    path="$(platform::readlink -f "$path")" || return 1
+  done
 
   [[ -f "$path" ]]
 }

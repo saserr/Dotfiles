@@ -1,11 +1,16 @@
 import 'platform::name'
 
-# TODO test
-
 case "$(platform::name)" in
   'mac')
+    import 'abort'
+    import 'command::exists'
+
     platform::readlink() {
-      greadlink "$@"
+      if command::exists 'greadlink'; then
+        greadlink "$@"
+      else
+        abort 'mac' 'greadlink is missing'
+      fi
     }
     ;;
   *)
