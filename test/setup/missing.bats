@@ -18,10 +18,10 @@ setup() {
 }
 
 @test "is not missing if recipe has been set up" {
-  mkdir -p ~/.setup/
-  touch ~/.setup/test
+  mkdir -p "$HOME/.setup/"
+  touch "$HOME/.setup/test"
 
   ! setup::missing 'test'
 
-  rm ~/.setup/test
+  rm "$HOME/.setup/test"
 }

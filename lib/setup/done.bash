@@ -5,6 +5,6 @@ setup::done() {
 
   local recipe=$1
 
-  mkdir -p ~/.setup/
+  mkdir -p "$HOME/.setup/"
   echo "1" >"$HOME/.setup/$recipe"
 }

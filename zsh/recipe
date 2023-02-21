@@ -45,14 +45,14 @@ recipe::configure() {
   fi
 
   echo '[zsh] setting up .zshenv ...'
-  platform::safe_link '.zshenv' "$PWD/zsh/zshenv" ~/.zshenv
+  platform::safe_link '.zshenv' "$PWD/zsh/zshenv" "$HOME/.zshenv"
 
   echo '[zsh] save the local specific zsh environment configuration into ~/.zshenv.local.zsh ...'
-  touch ~/.zshenv.local.zsh
+  touch "$HOME/.zshenv.local.zsh"
 
   echo '[zsh] setting up .zshrc ...'
-  platform::safe_link '.zshrc' "$PWD/zsh/zshrc" ~/.zshrc
+  platform::safe_link '.zshrc' "$PWD/zsh/zshrc" "$HOME/.zshrc"
 
   echo '[zsh] save the local specific zsh configuration into ~/.zshrc.local.zsh'
-  touch ~/.zshrc.local.zsh
+  touch "$HOME/.zshrc.local.zsh"
 }

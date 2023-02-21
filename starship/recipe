@@ -22,9 +22,9 @@ recipe::configure() {
 
       local zshrc
       if setup::missing zsh; then
-        zshrc=~/.zshrc
+        zshrc="$HOME/.zshrc"
       else
-        zshrc=~/.zshrc.local.zsh
+        zshrc="$HOME/.zshrc.local.zsh"
       fi
 
       if ! file::empty "$zshrc"; then

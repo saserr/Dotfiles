@@ -14,19 +14,19 @@ recipe::configure() {
 
   if command::exists curl; then
     echo "[git] setting up .gitignore"
-    if file::empty ~/.gitignore; then
-      echo >>~/.gitignore
+    if file::empty "$HOME/.gitignore"; then
+      echo >>"$HOME/.gitignore"
     fi
 
     case "$(platform::name)" in
       'mac')
-        curl https://www.toptal.com/developers/gitignore/api/macos >>~/.gitignore
+        curl https://www.toptal.com/developers/gitignore/api/macos >>"$HOME/.gitignore"
         ;;
       'debian')
-        curl https://www.toptal.com/developers/gitignore/api/linux >>~/.gitignore
+        curl https://www.toptal.com/developers/gitignore/api/linux >>"$HOME/.gitignore"
         ;;
       'linux')
-        curl https://www.toptal.com/developers/gitignore/api/linux >>~/.gitignore
+        curl https://www.toptal.com/developers/gitignore/api/linux >>"$HOME/.gitignore"
         ;;
     esac
   else
