@@ -183,7 +183,7 @@ setup() {
 @test "the failure message contains the shell if it is invoked outside of a function" {
   import 'text::contains'
 
-  run bash -c 'source lib/arguments/expect.bash && arguments::expect 1'
+  run /usr/bin/env bash -c "source 'lib/arguments/expect.bash' && arguments::expect 1"
 
   text::contains "${lines[0]}" 'bash'
   text::contains "${lines[0]}" 'wrong number of arguments'

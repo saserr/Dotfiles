@@ -41,7 +41,7 @@ setup() {
 @test "the output contains the shell if it is invoked outside of a function" {
   import 'text::contains'
 
-  run bash -c "source lib/import.bash && import 'arguments::error' && arguments::error 'foo'"
+  run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::error' && arguments::error 'foo'"
 
   ((status == 2))
   text::contains "${lines[0]}" 'bash'

@@ -82,7 +82,7 @@ setup() {
   import 'log::warn'
 
   stub id '-u : echo 1000'
-  stub sudo 'bash -c \* : bash -c "$3" '
+  stub sudo '/usr/bin/env bash -c \* : /usr/bin/env bash -c "$4" '
   stub apt 'update : '
   stub apt ' -y install bar : '
 

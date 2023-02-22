@@ -49,7 +49,7 @@
 }
 
 @test "fails if it is invoked directly in the shell" {
-  run bash -c "source lib/import.bash && import 'caller::location' && caller::location 0"
+  run /usr/bin/env bash -c "source 'lib/import.bash' && import 'caller::location' && caller::location 0"
 
   ((status == 1))
   [[ "$output" == '' ]]

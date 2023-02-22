@@ -22,7 +22,10 @@ jobs:
       with:
         image: bats/bats:latest
         options: -v ${{ github.workspace }}:/code
-        run: find test/ -type f -name '*.bats' -not -regex 'test/helpers/mocks/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
+        run: |
+          find test/ -type f -name '*.bats' \
+            -not -regex 'test/helpers/mocks/.*' \
+            -exec /usr/bin/env bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
 
   test-macos:
     name: Test (Mac OS builtin bash)
@@ -43,7 +46,10 @@ jobs:
         brew install coreutils findutils parallel bats-core
 
     - name: Bats
-      run: gfind test/ -type f -name '*.bats' -not -regex 'test/helpers/mocks/.*' -exec bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
+      run: |
+        gfind test/ -type f -name '*.bats' \
+          -not -regex 'test/helpers/mocks/.*' \
+          -exec /usr/bin/env bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
 
   lint:
     name: Lint

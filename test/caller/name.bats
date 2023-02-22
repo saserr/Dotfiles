@@ -16,7 +16,7 @@ setup() {
 }
 
 @test "returns the shell name if it is invoked directly in the shell" {
-  run bash -c "source lib/import.bash && import 'caller::name' && caller::name"
+  run /usr/bin/env bash -c "source 'lib/import.bash' && import 'caller::name' && caller::name"
 
   ((status == 0))
   [[ "$output" == 'bash' ]]

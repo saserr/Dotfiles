@@ -41,7 +41,7 @@ apt::install() {
     log::warn 'apt' 'running as non-root; sudo is needed'
     export -f __apt_install
     export name
-    sudo bash -c "$(declare -p missing); __apt_install"
+    sudo /usr/bin/env bash -c "$(declare -p missing); __apt_install"
   else
     __apt_install
   fi

@@ -15,6 +15,10 @@ if (($#)); then
 else
   export -f shfmt
   shfmt lib/
-  find test/ -type f -name '*.bats' -not -regex 'test/helpers/mocks/.*' -exec bash -c 'shfmt "$@"' {} +
-  find test/ -type f -name '*.bash' -not -regex 'test/helpers/mocks/.*' -exec bash -c 'shfmt "$@"' {} +
+  find test/ -type f -name '*.bats' \
+    -not -regex 'test/helpers/mocks/.*' \
+    -exec /usr/bin/env bash -c 'shfmt "$@"' {} +
+  find test/ -type f -name '*.bash' \
+    -not -regex 'test/helpers/mocks/.*' \
+    -exec /usr/bin/env bash -c 'shfmt "$@"' {} +
 fi
