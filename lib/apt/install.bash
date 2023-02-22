@@ -1,7 +1,7 @@
 import 'apt::missing'
 import 'arguments::expect'
 import 'log::error'
-import 'log::info'
+import 'log::trace'
 import 'log::warn'
 
 apt::install() {
@@ -23,7 +23,7 @@ apt::install() {
   done
 
   if ((${#missing[@]} == 0)); then
-    log::info 'apt' "$name already installed"
+    log::trace 'apt' "$name already installed"
     return 0
   fi
 
@@ -36,7 +36,7 @@ apt::install() {
     return 0
   }
 
-  log::info 'apt' "installing $name"
+  log::trace 'apt' "installing $name"
   if (($(id -u) != 0)); then
     log::warn 'apt' 'running as non-root; sudo is needed'
     export -f __apt_install

@@ -16,7 +16,6 @@ import 'recipe::configure'
 import 'recipe::install'
 import 'setup::done'
 import 'setup::missing'
-import 'text::header'
 import 'variable::is_array'
 
 if setup::missing "$recipe"; then
@@ -62,9 +61,11 @@ if setup::missing "$recipe"; then
     esac
   fi
 
-  text::header "Setting up $recipe"
+  log::info "$recipe" 'installing'
+  recipe::install || exit 1
 
-  { recipe::install && recipe::configure; } || exit 1
+  log::info "$recipe" 'configuring'
+  recipe::configure || exit 1
 
   setup::done "$recipe"
 else

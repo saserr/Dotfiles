@@ -29,7 +29,7 @@ setup() {
 
 @test "installs formula if not installed" {
   load ../helpers/mocks/stub
-  import 'log::info'
+  import 'log::trace'
 
   stub brew 'update : '
   stub brew 'install bar : '
@@ -38,12 +38,12 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'installing foo')" ]]
+  [[ "$output" == "$(log::trace 'homebrew' 'installing foo')" ]]
 }
 
 @test "installs multiple formulas" {
   load ../helpers/mocks/stub
-  import 'log::info'
+  import 'log::trace'
 
   stub brew 'update : '
   stub brew 'install bar baz : '
@@ -52,12 +52,12 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'installing foo')" ]]
+  [[ "$output" == "$(log::trace 'homebrew' 'installing foo')" ]]
 }
 
 @test "installs only missing formulas" {
   load ../helpers/mocks/stub
-  import 'log::info'
+  import 'log::trace'
 
   homebrew::missing() { [[ "$1" != 'bar' ]]; }
 
@@ -68,18 +68,18 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'installing foo')" ]]
+  [[ "$output" == "$(log::trace 'homebrew' 'installing foo')" ]]
 }
 
 @test "succeeds if formula is already installed" {
-  import 'log::info'
+  import 'log::trace'
 
   homebrew::missing() { return 1; }
 
   run homebrew::install 'foo' 'bar'
 
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'foo already installed')" ]]
+  [[ "$output" == "$(log::trace 'homebrew' 'foo already installed')" ]]
 }
 
 @test "fails if brew update fails" {
@@ -111,7 +111,7 @@ setup() {
 
 @test "uses formula as name when only one argument is passed" {
   load ../helpers/mocks/stub
-  import 'log::info'
+  import 'log::trace'
 
   stub brew 'update : '
   stub brew 'install foo : '
@@ -120,5 +120,5 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'installing foo')" ]]
+  [[ "$output" == "$(log::trace 'homebrew' 'installing foo')" ]]
 }

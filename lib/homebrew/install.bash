@@ -1,7 +1,7 @@
 import 'arguments::expect'
 import 'homebrew::missing'
 import 'log::error'
-import 'log::info'
+import 'log::trace'
 
 homebrew::install() {
   arguments::expect $# '[name]' 'formula' '...'
@@ -22,11 +22,11 @@ homebrew::install() {
   done
 
   if ((${#missing[@]} == 0)); then
-    log::info 'homebrew' "$name already installed"
+    log::trace 'homebrew' "$name already installed"
     return 0
   fi
 
-  log::info 'homebrew' "installing $name"
+  log::trace 'homebrew' "installing $name"
 
   if ! { brew update && brew install "${missing[@]}"; }; then
     log::error 'homebrew' "failed to install $name"

@@ -3,7 +3,7 @@
 import 'file::append'
 import 'file::empty'
 import 'log::error'
-import 'log::info'
+import 'log::trace'
 import 'platform::login_shell'
 
 homebrew_formula='starship'
@@ -11,7 +11,6 @@ homebrew_formula='starship'
 debian_required=(curl)
 
 debian::install() {
-  log::info 'starship' 'installing'
   curl -sS https://starship.rs/install.sh | sh
 }
 
@@ -20,7 +19,7 @@ recipe::configure() {
   login_shell="$(platform::login_shell)" || return 1
   case $login_shell in
     'zsh')
-      log::info 'starship' 'enabling in zsh'
+      log::trace 'starship' 'enabling in zsh'
 
       local zshrc
       if setup::missing zsh; then
@@ -38,7 +37,7 @@ recipe::configure() {
       file::append "$zshrc" 'eval "$(starship init zsh)"'
       ;;
     'bash')
-      log::info 'starship' 'enabling in bash'
+      log::trace 'starship' 'enabling in bash'
 
       local bashrc="$HOME/.bashrc"
       if ! file::empty "$bashrc"; then

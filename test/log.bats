@@ -36,6 +36,13 @@ setup() {
   [[ "$output" == "$(echo -e '\033[0;34m[foo]\033[0m bar')" ]]
 }
 
+@test "the output doesn't have color if the color argument is empty" {
+  run log '' 'foo' 'bar'
+
+  ((status == 0))
+  [[ "$output" == "$(echo '[foo] bar')" ]]
+}
+
 @test "the output contains any additional messages" {
   run log '0' 'foo' 'bar' 'baz'
 

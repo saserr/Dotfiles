@@ -2,7 +2,7 @@
 
 import 'command::exists'
 import 'file::empty'
-import 'log::info'
+import 'log::trace'
 import 'log::warn'
 
 homebrew_formula='git'
@@ -11,11 +11,11 @@ apt_package='git'
 recommended=(git-lfs)
 
 recipe::configure() {
-  log::info 'git' 'setting up .gitconfig'
+  log::trace 'git' 'setting up .gitconfig'
   ./git/gitconfig.sh
 
   if command::exists curl; then
-    log::info 'git' 'setting up .gitignore'
+    log::trace 'git' 'setting up .gitignore'
     if file::empty "$HOME/.gitignore"; then
       echo >>"$HOME/.gitignore"
     fi
