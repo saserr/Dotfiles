@@ -11,7 +11,7 @@ homebrew_formula='starship'
 debian_required=(curl)
 
 debian::install() {
-  log::info 'starship' 'installing ...'
+  log::info 'starship' 'installing'
   curl -sS https://starship.rs/install.sh | sh
 }
 

@@ -31,7 +31,7 @@ recipe::configure() {
   if [[ $SHELL != "$zsh_path" ]]; then
     case $(prompt::yes_or_no "$platform" "do you want to set zsh as login shell (current: $(platform::login_shell))?" 'Yes') in
       Yes)
-        log::info "$platform" 'changing login shell to zsh ...'
+        log::info "$platform" 'changing login shell to zsh'
         if [[ $platform == mac ]]; then
           if ! file::contains /etc/shells '/usr/local/bin/zsh'; then
             sudo file:append /etc/shells '/usr/local/bin/zsh'
@@ -40,18 +40,18 @@ recipe::configure() {
         chsh -s "$zsh_path"
         ;;
       No)
-        log::info "$platform" "$(platform::login_shell) will remain the login shell ..."
+        log::info "$platform" "$(platform::login_shell) will remain the login shell"
         ;;
     esac
   fi
 
-  log::info 'zsh' 'setting up .zshenv ...'
+  log::info 'zsh' 'setting up .zshenv'
   platform::safe_link '.zshenv' "$PWD/zsh/zshenv" "$HOME/.zshenv"
 
-  log::info 'zsh' 'save the local specific zsh environment configuration into ~/.zshenv.local.zsh ...'
+  log::info 'zsh' 'save the local specific zsh environment configuration into ~/.zshenv.local.zsh'
   touch "$HOME/.zshenv.local.zsh"
 
-  log::info 'zsh' 'setting up .zshrc ...'
+  log::info 'zsh' 'setting up .zshrc'
   platform::safe_link '.zshrc' "$PWD/zsh/zshrc" "$HOME/.zshrc"
 
   log::info 'zsh' 'save the local specific zsh configuration into ~/.zshrc.local.zsh'

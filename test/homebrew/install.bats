@@ -38,7 +38,7 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'installing foo ...')" ]]
+  [[ "$output" == "$(log::info 'homebrew' 'installing foo')" ]]
 }
 
 @test "installs multiple formulas" {
@@ -52,7 +52,7 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'installing foo ...')" ]]
+  [[ "$output" == "$(log::info 'homebrew' 'installing foo')" ]]
 }
 
 @test "installs only missing formulas" {
@@ -68,7 +68,7 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'installing foo ...')" ]]
+  [[ "$output" == "$(log::info 'homebrew' 'installing foo')" ]]
 }
 
 @test "succeeds if formula is already installed" {
@@ -79,7 +79,7 @@ setup() {
   run homebrew::install 'foo' 'bar'
 
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'foo already installed ...')" ]]
+  [[ "$output" == "$(log::info 'homebrew' 'foo already installed')" ]]
 }
 
 @test "fails if brew update fails" {
@@ -120,5 +120,5 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::info 'homebrew' 'installing foo ...')" ]]
+  [[ "$output" == "$(log::info 'homebrew' 'installing foo')" ]]
 }

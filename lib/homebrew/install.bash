@@ -22,11 +22,11 @@ homebrew::install() {
   done
 
   if ((${#missing[@]} == 0)); then
-    log::info 'homebrew' "$name already installed ..."
+    log::info 'homebrew' "$name already installed"
     return 0
   fi
 
-  log::info 'homebrew' "installing $name ..."
+  log::info 'homebrew' "installing $name"
 
   if ! { brew update && brew install "${missing[@]}"; }; then
     log::error 'homebrew' "failed to install $name"

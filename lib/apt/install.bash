@@ -23,7 +23,7 @@ apt::install() {
   done
 
   if ((${#missing[@]} == 0)); then
-    log::info 'apt' "$name already installed ..."
+    log::info 'apt' "$name already installed"
     return 0
   fi
 
@@ -36,9 +36,9 @@ apt::install() {
     return 0
   }
 
-  log::info 'apt' "installing $name ..."
+  log::info 'apt' "installing $name"
   if (($(id -u) != 0)); then
-    log::warn 'apt' 'running as non-root; sudo is needed ...'
+    log::warn 'apt' 'running as non-root; sudo is needed'
     export -f __apt_install
     export name
     sudo bash -c "$(declare -p missing); __apt_install"

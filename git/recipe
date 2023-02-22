@@ -11,7 +11,7 @@ apt_package='git'
 recommended=(git-lfs)
 
 recipe::configure() {
-  log::info 'git' 'setting up .gitconfig ...'
+  log::info 'git' 'setting up .gitconfig'
   ./git/gitconfig.sh
 
   if command::exists curl; then
