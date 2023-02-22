@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+import 'log::info'
+
 homebrew_formula='git-lfs'
 apt_package='git-lfs'
 
 recipe::configure() {
-  echo "[git-lfs] installing for the current user"
+  log::info 'git-lfs' 'installing for the current user'
   git lfs install
 }
