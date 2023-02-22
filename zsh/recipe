@@ -3,6 +3,7 @@
 import 'file::append'
 import 'file::contains'
 import 'platform::name'
+import 'platform::login_shell'
 import 'platform::safe_link'
 import 'prompt::yes_or_no'
 
@@ -11,7 +12,7 @@ apt_package='zsh'
 
 recommended=(starship)
 
-zsh_path() {
+__zsh::path() {
   local platform=$1
   if [[ $platform == mac ]]; then
     echo '/usr/local/bin/zsh'
@@ -24,11 +25,10 @@ recipe::configure() {
   local platform
   platform="$(platform::name)" || return 1
   local zsh_path
-  platform=$(zsh_path "$platform") || return 1
+  platform=$(__zsh::path "$platform") || return 1
 
   if [[ $SHELL != "$zsh_path" ]]; then
-    echo "[$platform] do you want to set zsh as login shell (current: $SHELL) (Yes / No)? "
-    case $(prompt::yes_or_no) in
+    case $(prompt::yes_or_no "$platform" "do you want to set zsh as login shell (current: $(platform::login_shell))?" 'Yes') in
       Yes)
         echo "[$platform] changing login shell to zsh ..."
         if [[ $platform == mac ]]; then
@@ -39,7 +39,7 @@ recipe::configure() {
         chsh -s "$zsh_path"
         ;;
       No)
-        echo "[$platform] $SHELL will remain the login shell ..."
+        echo "[$platform] $(platform::login_shell) will remain the login shell ..."
         ;;
     esac
   fi
