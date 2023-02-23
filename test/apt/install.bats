@@ -13,7 +13,7 @@ setup() {
 
   run apt::install
 
-  assert::wrong_usage 'apt::install' '[name]' 'package' '...'
+  assert::wrong_usage 'apt::install' 'package' '...'
 }
 
 @test "checks if package is installed" {
@@ -22,9 +22,10 @@ setup() {
     return 1
   }
 
-  apt::install 'foo' 'bar'
+  apt::install 'foo'
 
-  [[ "${args[0]}" == 'bar' ]]
+  ((${#args[@]} == 1))
+  [[ "${args[0]}" == 'foo' ]]
 }
 
 @test "installs package if not installed" {
@@ -33,14 +34,14 @@ setup() {
 
   stub id '-u : echo 0'
   stub apt 'update : '
-  stub apt ' -y install bar : '
+  stub apt ' -y install foo : '
 
-  run apt::install 'foo' 'bar'
+  run apt::install 'foo'
 
   unstub apt
   unstub id
   ((status == 0))
-  [[ "$output" == "$(log::trace 'apt' 'installing foo')" ]]
+  [[ "$output" == "$(log::trace 'apt' 'installing: foo')" ]]
 }
 
 @test "installs multiple packages" {
@@ -49,14 +50,14 @@ setup() {
 
   stub id '-u : echo 0'
   stub apt 'update : '
-  stub apt ' -y install bar baz : '
+  stub apt ' -y install foo bar baz : '
 
   run apt::install 'foo' 'bar' 'baz'
 
   unstub apt
   unstub id
   ((status == 0))
-  [[ "$output" == "$(log::trace 'apt' 'installing foo')" ]]
+  [[ "$output" == "$(log::trace 'apt' 'installing: foo bar baz')" ]]
 }
 
 @test "installs only missing packages" {
@@ -67,14 +68,15 @@ setup() {
 
   stub id '-u : echo 0'
   stub apt 'update : '
-  stub apt ' -y install baz : '
+  stub apt ' -y install foo baz : '
 
   run apt::install 'foo' 'bar' 'baz'
 
   unstub apt
   unstub id
   ((status == 0))
-  [[ "$output" == "$(log::trace 'apt' 'installing foo')" ]]
+  [[ "${lines[0]}" == "$(log::trace 'apt' 'already installed: bar')" ]]
+  [[ "${lines[1]}" == "$(log::trace 'apt' 'installing: foo baz')" ]]
 }
 
 @test "installs package with sudo if the current user is not root" {
@@ -84,9 +86,9 @@ setup() {
   stub id '-u : echo 1000'
   stub sudo '/usr/bin/env bash -c \* : /usr/bin/env bash -c "$4" '
   stub apt 'update : '
-  stub apt ' -y install bar : '
+  stub apt ' -y install foo : '
 
-  run apt::install 'foo' 'bar'
+  run apt::install 'foo'
 
   unstub apt
   unstub sudo
@@ -100,10 +102,10 @@ setup() {
 
   apt::missing() { return 1; }
 
-  run apt::install 'foo' 'bar'
+  run apt::install 'foo'
 
   ((status == 0))
-  [[ "$output" == "$(log::trace 'apt' 'foo already installed')" ]]
+  [[ "$output" == "$(log::trace 'apt' 'already installed: foo')" ]]
 }
 
 @test "fails if apt update fails" {
@@ -113,12 +115,12 @@ setup() {
   stub id '-u : echo 0'
   stub apt 'update : exit 1'
 
-  run apt::install 'foo' 'bar'
+  run apt::install 'foo'
 
   unstub apt
   unstub id
   ((status == 1))
-  [[ "${lines[1]}" == "$(log::error 'apt' 'failed to install foo')" ]]
+  [[ "${lines[1]}" == "$(log::error 'apt' 'installation failed')" ]]
 }
 
 @test "fails if apt install fails" {
@@ -127,28 +129,12 @@ setup() {
 
   stub id '-u : echo 0'
   stub apt 'update : '
-  stub apt ' -y install bar : exit 1'
-
-  run apt::install 'foo' 'bar'
-
-  unstub apt
-  unstub id
-  ((status == 1))
-  [[ "${lines[1]}" == "$(log::error 'apt' 'failed to install foo')" ]]
-}
-
-@test "uses package as name when only one argument is passed" {
-  load ../helpers/mocks/stub
-  import 'log::trace'
-
-  stub id '-u : echo 0'
-  stub apt 'update : '
-  stub apt ' -y install foo : '
+  stub apt ' -y install foo : exit 1'
 
   run apt::install 'foo'
 
   unstub apt
   unstub id
-  ((status == 0))
-  [[ "$output" == "$(log::trace 'apt' 'installing foo')" ]]
+  ((status == 1))
+  [[ "${lines[1]}" == "$(log::error 'apt' 'installation failed')" ]]
 }

@@ -9,12 +9,12 @@ debian::install() {
   variable::expect 'recipe'
 
   if variable::nonempty 'apt_package'; then
-    apt::install "${recipe:?}" "${apt_package:?}"
+    apt::install "${apt_package:?}"
     return
   fi
 
   if variable::nonempty 'program'; then
-    apt::install "${recipe:?}" "${program:?}"
+    apt::install "${program:?}"
     return
   fi
 
