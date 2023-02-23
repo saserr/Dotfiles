@@ -1,4 +1,6 @@
 import 'arguments::expect'
+import 'bash::support::associative_array'
+import 'bash::support::declare_reference'
 import 'variable::exists'
 import 'variable::is_array'
 
@@ -12,19 +14,18 @@ variable::nonempty() {
   fi
 
   if variable::is_array "$name"; then
-    # 'declare -n' requires bash version >= 4.3
-    if (("${BASH_VERSINFO[0]}" > 4)) \
-      || ((("${BASH_VERSINFO[0]}" == 4) && ("${BASH_VERSINFO[1]}" >= 3))); then
+    if bash::support::declare_reference; then
       # check if array has size > 0
       declare -n array="$name"
       ((${#array[@]}))
-    elif (("${BASH_VERSINFO[0]}" < 4)); then
+    elif bash::support::associative_array; then
+      # check if array has size > 0
+      eval "((\${#${name}[@]}))"
+    else
       # check if first element of the array is not null. note that this check
       # does not work with an associative array, hence it is not safe to use it
       # on bash versions >= 4.
       [[ -n "${!name[0]+declared}" ]]
-    else # bash versions between [4, 4.2] (untested)
-      eval "((\${#${name}[@]}))"
     fi
   else
     [[ "${!name}" ]]

@@ -32,8 +32,9 @@ setup() {
 }
 
 @test "succeeds if variable is a non-empty associative array" {
-  if ((${BASH_VERSINFO[0]} < 4)); then
-    skip 'associative arrays are unsupported'
+  import 'bash::support::associative_array'
+  if ! bash::support::associative_array; then
+    skip 'associative arrays are not supported'
   fi
 
   declare -A foo
@@ -67,8 +68,9 @@ setup() {
 }
 
 @test "succeeds if variable is only declared as an associative array" {
-  if ((${BASH_VERSINFO[0]} < 4)); then
-    skip 'associative arrays are unsupported'
+  import 'bash::support::associative_array'
+  if ! bash::support::associative_array; then
+    skip 'associative arrays are not supported'
   fi
 
   declare -A foo
@@ -77,9 +79,9 @@ setup() {
 }
 
 @test "succeeds if variable is only globally declared" {
-  if ((${BASH_VERSINFO[0]} < 4)) \
-    || (((${BASH_VERSINFO[0]} == 4) && (${BASH_VERSINFO[1]} < 2))); then
-    skip "'declare -g' is unsupported"
+  import 'bash::support::declare_global'
+  if ! bash::support::declare_global; then
+    skip 'declare global is not supported'
   fi
 
   declare -g foo
