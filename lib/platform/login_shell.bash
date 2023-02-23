@@ -3,9 +3,9 @@ import 'arguments::expect'
 platform::login_shell() {
   arguments::expect $# # none
 
-  if echo "$SHELL" | grep -q zsh; then
+  if [[ "$SHELL" == *'/zsh' ]]; then
     echo 'zsh'
-  elif echo "$SHELL" | grep -q bash; then
+  elif [[ "$SHELL" == *'/bash' ]]; then
     echo 'bash'
   else
     echo "$SHELL"
