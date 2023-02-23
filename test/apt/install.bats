@@ -4,8 +4,10 @@ setup() {
   source 'lib/import.bash'
   import 'apt::install'
 
-  # return that package is not installed
+  # return that any package is not installed
   apt::missing() { return 0; }
+  # return that the current user is root
+  platform::is_root() { return 0; }
 }
 
 @test "fails without arguments" {
@@ -32,14 +34,13 @@ setup() {
   load ../helpers/mocks/stub
   import 'log::trace'
 
-  stub id '-u : echo 0'
-  stub apt 'update : '
-  stub apt ' -y install foo : '
+  stub apt \
+    'update : ' \
+    '-y install foo : '
 
   run apt::install 'foo'
 
   unstub apt
-  unstub id
   ((status == 0))
   [[ "$output" == "$(log::trace 'apt' 'installing: foo')" ]]
 }
@@ -48,14 +49,13 @@ setup() {
   load ../helpers/mocks/stub
   import 'log::trace'
 
-  stub id '-u : echo 0'
-  stub apt 'update : '
-  stub apt ' -y install foo bar baz : '
+  stub apt \
+    'update : ' \
+    '-y install foo bar baz : '
 
   run apt::install 'foo' 'bar' 'baz'
 
   unstub apt
-  unstub id
   ((status == 0))
   [[ "$output" == "$(log::trace 'apt' 'installing: foo bar baz')" ]]
 }
@@ -66,14 +66,13 @@ setup() {
 
   apt::missing() { [[ "$1" != 'bar' ]]; }
 
-  stub id '-u : echo 0'
-  stub apt 'update : '
-  stub apt ' -y install foo baz : '
+  stub apt \
+    'update : ' \
+    '-y install foo baz : '
 
   run apt::install 'foo' 'bar' 'baz'
 
   unstub apt
-  unstub id
   ((status == 0))
   [[ "${lines[0]}" == "$(log::trace 'apt' 'already installed: bar')" ]]
   [[ "${lines[1]}" == "$(log::trace 'apt' 'installing: foo baz')" ]]
@@ -83,16 +82,16 @@ setup() {
   load ../helpers/mocks/stub
   import 'log::warn'
 
-  stub id '-u : echo 1000'
+  platform::is_root() { return 1; }
   stub sudo '/usr/bin/env bash -c \* : /usr/bin/env bash -c "$4" '
-  stub apt 'update : '
-  stub apt ' -y install foo : '
+  stub apt \
+    'update : ' \
+    '-y install foo : '
 
   run apt::install 'foo'
 
   unstub apt
   unstub sudo
-  unstub id
   ((status == 0))
   [[ "${lines[1]}" == "$(log::warn 'apt' 'running as non-root; sudo is needed')" ]]
 }
@@ -112,13 +111,11 @@ setup() {
   load ../helpers/mocks/stub
   import 'log::error'
 
-  stub id '-u : echo 0'
   stub apt 'update : exit 1'
 
   run apt::install 'foo'
 
   unstub apt
-  unstub id
   ((status == 1))
   [[ "${lines[1]}" == "$(log::error 'apt' 'installation failed')" ]]
 }
@@ -127,14 +124,13 @@ setup() {
   load ../helpers/mocks/stub
   import 'log::error'
 
-  stub id '-u : echo 0'
-  stub apt 'update : '
-  stub apt ' -y install foo : exit 1'
+  stub apt \
+    'update : ' \
+    '-y install foo : exit 1'
 
   run apt::install 'foo'
 
   unstub apt
-  unstub id
   ((status == 1))
   [[ "${lines[1]}" == "$(log::error 'apt' 'installation failed')" ]]
 }

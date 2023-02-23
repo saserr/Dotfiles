@@ -3,6 +3,7 @@ import 'arguments::expect'
 import 'log::error'
 import 'log::trace'
 import 'log::warn'
+import 'platform::is_root'
 
 apt::install() {
   arguments::expect $# 'package' '...'
@@ -37,11 +38,11 @@ apt::install() {
   }
 
   log::trace 'apt' "installing: ${missing[*]}"
-  if (($(id -u) != 0)); then
+  if platform::is_root; then
+    __apt_install
+  else
     log::warn 'apt' 'running as non-root; sudo is needed'
     export -f __apt_install
     sudo /usr/bin/env bash -c "$(declare -p missing); __apt_install"
-  else
-    __apt_install
   fi
 }

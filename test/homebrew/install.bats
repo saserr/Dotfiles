@@ -4,7 +4,7 @@ setup() {
   source 'lib/import.bash'
   import 'homebrew::install'
 
-  # return that formula is not installed
+  # return that any formula is not installed
   homebrew::missing() { return 0; }
 }
 
@@ -32,8 +32,9 @@ setup() {
   load ../helpers/mocks/stub
   import 'log::trace'
 
-  stub brew 'update : '
-  stub brew 'install foo : '
+  stub brew \
+    'update : ' \
+    'install foo : '
 
   run homebrew::install 'foo'
 
@@ -46,8 +47,9 @@ setup() {
   load ../helpers/mocks/stub
   import 'log::trace'
 
-  stub brew 'update : '
-  stub brew 'install foo bar baz : '
+  stub brew \
+    'update : ' \
+    'install foo bar baz : '
 
   run homebrew::install 'foo' 'bar' 'baz'
 
@@ -62,8 +64,9 @@ setup() {
 
   homebrew::missing() { [[ "$1" != 'bar' ]]; }
 
-  stub brew 'update : '
-  stub brew 'install foo baz : '
+  stub brew \
+    'update : ' \
+    'install foo baz : '
 
   run homebrew::install 'foo' 'bar' 'baz'
 
@@ -101,8 +104,9 @@ setup() {
   load ../helpers/mocks/stub
   import 'log::error'
 
-  stub brew 'update : '
-  stub brew 'install foo : exit 1'
+  stub brew \
+    'update : ' \
+    'install foo : exit 1'
 
   run homebrew::install 'foo'
 
