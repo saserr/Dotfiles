@@ -6,29 +6,69 @@ setup() {
 }
 
 @test "fails if there is no \$recipe file" {
-  import 'log::error'
+  import 'log::warn'
 
   local recipe='foo'
   run recipe::load
 
   ((status == 1))
-  [[ "$output" == "$(log::error 'foo' 'has no recipe')" ]]
+  [[ "$output" == "$(log::warn 'foo' 'has no recipe')" ]]
 }
 
 @test "fails if recipe::file fails" {
-  import 'log::error'
+  import 'log::warn'
 
   recipe::file() { return 1; }
 
   local recipe='foo'
   run recipe::load
 
-  ((status == 2))
-  [[ "${lines[0]}" == "$(log::error 'recipe::file' 'failed')" ]]
+  ((status == 1))
+  [[ "$output" == "$(log::warn 'foo' 'has no recipe')" ]]
 }
 
-@test "exits if recipe::file fails" {
-  recipe::file() { return 1; }
+@test "loads the \$recipe file" {
+  local RECIPES_PATH=("$BATS_TEST_TMPDIR")
+  mkdir -p "$BATS_TEST_TMPDIR/bar"
+  echo "echo 'foo'" >"$BATS_TEST_TMPDIR/bar/recipe.bash"
+
+  local recipe='bar'
+  run recipe::load
+
+  ((status == 0))
+  [[ "$output" == 'foo' ]]
+}
+
+@test "cd to the \$recipe's directory" {
+  local RECIPES_PATH=("$BATS_TEST_TMPDIR")
+  mkdir -p "$BATS_TEST_TMPDIR/foo"
+  touch "$BATS_TEST_TMPDIR/foo/recipe.bash"
+
+  local recipe='foo'
+  recipe::load
+
+  [[ "$PWD" == "$BATS_TEST_TMPDIR/foo" ]]
+}
+
+@test "fails if loading the \$recipe file fails" {
+  import 'log::error'
+
+  local RECIPES_PATH=("$BATS_TEST_TMPDIR")
+  mkdir -p "$BATS_TEST_TMPDIR/foo"
+  echo 'return 1' >"$BATS_TEST_TMPDIR/foo/recipe.bash"
+
+  local recipe='foo'
+  run recipe::load
+
+  ((status == 2))
+  [[ "${lines[0]}" == "$(log::error 'foo' "failed to load from $BATS_TEST_TMPDIR/foo/recipe.bash")" ]]
+}
+
+@test "exits if loading the \$recipe file fails" {
+  local RECIPES_PATH=("$BATS_TEST_TMPDIR")
+  mkdir -p "$BATS_TEST_TMPDIR/baz"
+  echo 'return 1' >"$BATS_TEST_TMPDIR/baz/recipe.bash"
+
   fail() {
     echo 'foo'
     recipe::load 2>/dev/null
@@ -42,53 +82,17 @@ setup() {
   [[ "$output" == 'foo' ]]
 }
 
-@test "loads the \$recipe file" {
-  recipe::file() { echo "$BATS_TEST_TMPDIR/foo"; }
-  echo "echo 'bar'" >"$BATS_TEST_TMPDIR/foo"
+@test "fails if cd to the \$recipe's directory fails" {
+  local RECIPES_PATH=("$BATS_TEST_TMPDIR")
+  mkdir -p "$BATS_TEST_TMPDIR/bar"
+  echo "echo 'foo'" >"$BATS_TEST_TMPDIR/bar/recipe.bash"
 
-  local recipe='baz'
-  run recipe::load
-
-  ((status == 0))
-  [[ "$output" == 'bar' ]]
-}
-
-@test "cd to the \$recipe's directory" {
-  recipe::file() { echo "$BATS_TEST_TMPDIR/foo"; }
-  echo "echo 'bar'" >"$BATS_TEST_TMPDIR/foo"
-
-  local recipe='baz'
-  recipe::load
-
-  [[ "$PWD" == "$BATS_TEST_TMPDIR" ]]
-}
-
-@test "fails if loading the \$recipe file fails" {
-  import 'log::error'
-
-  recipe::file() { echo "$BATS_TEST_TMPDIR/foo"; }
-  echo "return 1" >"$BATS_TEST_TMPDIR/foo"
+  cd() { [[ "$1" != "$BATS_TEST_TMPDIR/bar" ]]; }
 
   local recipe='bar'
   run recipe::load
 
-  ((status == 2))
-  [[ "${lines[0]}" == "$(log::error 'bar' "failed to load from $(recipe::file)")" ]]
-}
-
-@test "exits if loading the \$recipe file fails" {
-  recipe::file() { echo "$BATS_TEST_TMPDIR/foo"; }
-  echo "return 1" >"$BATS_TEST_TMPDIR/foo"
-  fail() {
-    echo 'foo'
-    recipe::load 2>/dev/null
-    echo 'bar'
-  }
-
-  local recipe='baz'
-  run fail
-
-  ((status == 2))
+  ((status == 1))
   [[ "$output" == 'foo' ]]
 }
 
@@ -99,16 +103,4 @@ setup() {
 
   ((status == 2))
   [[ "${lines[0]}" == "$(log::error 'recipe::load' 'expected nonempty variables: recipe')" ]]
-}
-
-@test "fails if cd to the \$recipe's directory fails" {
-  recipe::file() { echo "$BATS_TEST_TMPDIR/foo"; }
-  echo "echo 'bar'" >"$BATS_TEST_TMPDIR/foo"
-  cd() { [[ "$1" != "$BATS_TEST_TMPDIR" ]]; }
-
-  local recipe='baz'
-  run recipe::load
-
-  ((status == 1))
-  [[ "$output" == 'bar' ]]
 }

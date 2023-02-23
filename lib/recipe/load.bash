@@ -1,8 +1,7 @@
 import 'abort'
 import 'arguments::expect'
 import 'caller::location'
-import 'file::exists'
-import 'log::error'
+import 'log::warn'
 import 'recipe::file'
 import 'variable::expect'
 
@@ -12,16 +11,7 @@ recipe::load() {
 
   local file
   if ! file="$(recipe::file)"; then
-    local messages=('failed')
-    local location
-    if location="$(caller::location 1)"; then
-      messages+=("at $location")
-    fi
-    abort 'recipe::file' "${messages[@]}"
-  fi
-
-  if ! file::exists "$file"; then
-    log::error "${recipe:?}" 'has no recipe'
+    log::warn "${recipe:?}" 'has no recipe'
     return 1
   fi
 
