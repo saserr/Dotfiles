@@ -5,5 +5,5 @@ recipe::file() {
   arguments::expect $# # none
   variable::expect 'recipe'
 
-  echo "${recipe:?}/recipe"
+  echo "recipes/${recipe:?}/recipe.bash"
 }

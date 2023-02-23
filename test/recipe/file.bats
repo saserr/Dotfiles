@@ -11,7 +11,7 @@ setup() {
   run recipe::file
 
   ((status == 0))
-  [[ "$output" == "${recipe}/recipe" ]]
+  [[ "$output" == "recipes/${recipe}/recipe.bash" ]]
 }
 
 @test "fails if \$recipe is missing" {

@@ -1,18 +1,14 @@
-#!/usr/bin/env bash
-
 import 'command::exists'
 import 'file::empty'
 import 'log::trace'
 import 'log::warn'
 
-homebrew_formula='git'
-apt_package='git'
-
-recommended=(git-lfs)
+program='git'
+recommended=('git-lfs')
 
 recipe::configure() {
   log::trace 'git' 'setting up .gitconfig'
-  ./git/gitconfig.sh
+  ./configure
 
   if command::exists curl; then
     log::trace 'git' 'setting up .gitignore'
@@ -24,10 +20,7 @@ recipe::configure() {
       'mac')
         curl https://www.toptal.com/developers/gitignore/api/macos >>"$HOME/.gitignore"
         ;;
-      'debian')
-        curl https://www.toptal.com/developers/gitignore/api/linux >>"$HOME/.gitignore"
-        ;;
-      'linux')
+      *)
         curl https://www.toptal.com/developers/gitignore/api/linux >>"$HOME/.gitignore"
         ;;
     esac

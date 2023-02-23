@@ -53,6 +53,16 @@ setup() {
   [[ "$output" == 'bar' ]]
 }
 
+@test "cd to the \$recipe's directory" {
+  recipe::file() { echo "$BATS_TEST_TMPDIR/foo"; }
+  echo "echo 'bar'" >"$BATS_TEST_TMPDIR/foo"
+
+  local recipe='baz'
+  recipe::load
+
+  [[ "$PWD" == "$BATS_TEST_TMPDIR" ]]
+}
+
 @test "fails if loading the \$recipe file fails" {
   import 'log::error'
 
@@ -89,4 +99,16 @@ setup() {
 
   ((status == 2))
   [[ "${lines[0]}" == "$(log::error 'recipe::load' 'expected nonempty variables: recipe')" ]]
+}
+
+@test "fails if cd to the \$recipe's directory fails" {
+  recipe::file() { echo "$BATS_TEST_TMPDIR/foo"; }
+  echo "echo 'bar'" >"$BATS_TEST_TMPDIR/foo"
+  cd() { [[ "$1" != "$BATS_TEST_TMPDIR" ]]; }
+
+  local recipe='baz'
+  run recipe::load
+
+  ((status == 1))
+  [[ "$output" == 'bar' ]]
 }

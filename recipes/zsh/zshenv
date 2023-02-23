@@ -1,0 +1,6 @@
+# environment variables
+export PAGER='less -r'
+
+if [ -f ~/.zshenv.local.zsh ]; then
+  source ~/.zshenv.local.zsh
+fi

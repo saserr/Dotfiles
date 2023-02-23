@@ -34,4 +34,6 @@ recipe::load() {
     fi
     abort "${recipe:?}" "${messages[@]}"
   fi
+
+  cd "$(dirname -- "$file")" || return 1
 }

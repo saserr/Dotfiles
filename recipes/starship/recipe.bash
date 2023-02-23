@@ -1,14 +1,11 @@
-#!/usr/bin/env bash
-
 import 'file::append'
 import 'file::empty'
 import 'log::error'
 import 'log::trace'
 import 'platform::login_shell'
 
-homebrew_formula='starship'
-
-debian_required=(curl)
+program='starship'
+debian_required=('curl')
 
 debian::install() {
   curl -sS https://starship.rs/install.sh | sh

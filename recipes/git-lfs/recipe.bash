@@ -1,9 +1,6 @@
-#!/usr/bin/env bash
-
 import 'log::trace'
 
-homebrew_formula='git-lfs'
-apt_package='git-lfs'
+program='git-lfs'
 
 recipe::configure() {
   log::trace 'git-lfs' 'installing for the current user'
