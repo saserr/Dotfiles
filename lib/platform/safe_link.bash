@@ -2,6 +2,7 @@ import 'arguments::expect'
 import 'log::error'
 import 'log::trace'
 import 'path::exists'
+import 'platform::readlink'
 import 'prompt::yes_or_no'
 
 platform::safe_link() {
@@ -11,12 +12,17 @@ platform::safe_link() {
   local from=$2
   local to=$3
 
-  log::trace "$name" "$to will be linked to $from"
-
   if ! path::exists "$from"; then
     log::error "$name" "$from does not exist; aborting!"
     return 1
   fi
+
+  if [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]; then
+    log::trace "$name" "$to already links to $from"
+    return 0
+  fi
+
+  log::trace "$name" "$to will be linked to $from"
 
   if path::exists "$to"; then
     if path::exists "$to.old"; then

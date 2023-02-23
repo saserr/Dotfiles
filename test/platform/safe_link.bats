@@ -37,6 +37,7 @@ setup() {
 
 @test "makes a symlink from \$from to \$to if \$to does not exist" {
   import 'log::trace'
+  import 'platform::readlink'
 
   echo 'foo' >"$from"
 
@@ -45,7 +46,39 @@ setup() {
   ((status == 0))
   [[ "$output" == "$(log::trace 'test' "$to will be linked to $from")" ]]
   [[ -L "$to" ]] # $to is a symlink
-  [[ "$(cat "$to")" == 'foo' ]]
+  [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]
+}
+
+@test "does nothing if a symlink from \$from to \$to already exists" {
+  import 'log::trace'
+  import 'platform::readlink'
+
+  echo 'foo' >"$from"
+  ln -s "$from" "$to"
+
+  run platform::safe_link 'test' "$from" "$to" <<<''
+
+  ((status == 0))
+  [[ "$output" == "$(log::trace 'test' "$to already links to $from")" ]]
+  [[ -L "$to" ]] # $to is a symlink
+  [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]
+}
+
+@test "does nothing if a symlink from \$from to \$to already exists when \$from is also a symbolic link" {
+  import 'log::trace'
+  import 'platform::readlink'
+
+  foo="$BATS_TEST_TMPDIR/foo"
+  echo 'foo' >"$foo"
+  ln -s "$foo" "$from"
+  ln -s "$from" "$to"
+
+  run platform::safe_link 'test' "$from" "$to" <<<''
+
+  ((status == 0))
+  [[ "$output" == "$(log::trace 'test' "$to already links to $from")" ]]
+  [[ -L "$to" ]] # $to is a symlink
+  [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]
 }
 
 @test "asks if \$to should be replaced if \$to exists" {
@@ -80,6 +113,8 @@ setup() {
 }
 
 @test "makes a symlink from \$from to \$to if \$to exists and a positive answer is given at the prompt" {
+  import 'platform::readlink'
+
   echo 'foo' >"$from"
   echo 'bar' >"$to"
 
@@ -87,7 +122,7 @@ setup() {
 
   ((status == 0))
   [[ -L "$to" ]] # $to is a symlink
-  [[ "$(cat "$to")" == 'foo' ]]
+  [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]
 }
 
 @test "fails and leaves things unchanged if \$to.old exists" {
@@ -97,7 +132,7 @@ setup() {
   echo 'bar' >"$to"
   echo 'baz' >"$to.old"
 
-  run platform::safe_link 'test' "$from" "$to"
+  run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 1))
   [[ "${lines[1]}" == "$(log::error 'test' "both $to and $to.old already exist; aborting!")" ]]
@@ -127,11 +162,10 @@ setup() {
   import 'log::error'
   import 'log::trace'
 
-  run platform::safe_link 'test' "$from" "$to"
+  run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 1))
-  [[ "${lines[0]}" == "$(log::trace 'test' "$to will be linked to $from")" ]]
-  [[ "${lines[1]}" == "$(log::error 'test' "$from does not exist; aborting!")" ]]
+  [[ "$output" == "$(log::error 'test' "$from does not exist; aborting!")" ]]
   [[ ! -e "$from" ]] # $from does not exist
   [[ ! -e "$to" ]]   # $to does not exist
 }
