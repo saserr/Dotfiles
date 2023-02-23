@@ -5,5 +5,5 @@ apt::missing() {
 
   local package=$1
 
-  ! dpkg -s "$package" 2>&1 | grep -q 'Status: install ok installed'
+  ! grep -Fxq 'Status: install ok installed' <(dpkg -s "$package" 2>&1)
 }

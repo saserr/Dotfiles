@@ -6,5 +6,5 @@ file::contains() {
   local file=$1
   local text=$2
 
-  grep -q "$text" "$file"
+  grep -Fq "$text" "$file"
 }
