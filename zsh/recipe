@@ -46,13 +46,13 @@ recipe::configure() {
   fi
 
   log::trace 'zsh' 'setting up .zshenv'
-  platform::safe_link '.zshenv' "$PWD/zsh/zshenv" "$HOME/.zshenv"
+  platform::safe_link '.zshenv' "$HOME/.zshenv" "$PWD/zsh/zshenv"
 
   log::trace 'zsh' 'save the local specific zsh environment configuration into ~/.zshenv.local.zsh'
   touch "$HOME/.zshenv.local.zsh"
 
   log::trace 'zsh' 'setting up .zshrc'
-  platform::safe_link '.zshrc' "$PWD/zsh/zshrc" "$HOME/.zshrc"
+  platform::safe_link '.zshrc' "$HOME/.zshrc" "$PWD/zsh/zshrc"
 
   log::trace 'zsh' 'save the local specific zsh configuration into ~/.zshrc.local.zsh'
   touch "$HOME/.zshrc.local.zsh"

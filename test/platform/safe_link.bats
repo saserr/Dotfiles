@@ -39,29 +39,29 @@ setup() {
   import 'log::trace'
   import 'platform::readlink'
 
-  echo 'foo' >"$from"
+  echo 'foo' >"$to"
 
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 0))
-  [[ "$output" == "$(log::trace 'test' "$to will be linked to $from")" ]]
-  [[ -L "$to" ]] # $to is a symlink
-  [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]
+  [[ "$output" == "$(log::trace 'test' "$from will be linked to $to")" ]]
+  [[ -L "$from" ]] # $from is a symlink
+  [[ "$(platform::readlink -f "$from")" == "$(platform::readlink -f "$to")" ]]
 }
 
 @test "does nothing if a symlink from \$from to \$to already exists" {
   import 'log::trace'
   import 'platform::readlink'
 
-  echo 'foo' >"$from"
-  ln -s "$from" "$to"
+  echo 'foo' >"$to"
+  ln -s "$to" "$from"
 
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 0))
-  [[ "$output" == "$(log::trace 'test' "$to already links to $from")" ]]
-  [[ -L "$to" ]] # $to is a symlink
-  [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]
+  [[ "$output" == "$(log::trace 'test' "$from already links to $to")" ]]
+  [[ -L "$from" ]] # $from is a symlink
+  [[ "$(platform::readlink -f "$from")" == "$(platform::readlink -f "$to")" ]]
 }
 
 @test "does nothing if a symlink from \$from to \$to already exists when \$from is also a symbolic link" {
@@ -70,18 +70,19 @@ setup() {
 
   foo="$BATS_TEST_TMPDIR/foo"
   echo 'foo' >"$foo"
-  ln -s "$foo" "$from"
-  ln -s "$from" "$to"
+  ln -s "$foo" "$to"
+  ln -s "$to" "$from"
 
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 0))
-  [[ "$output" == "$(log::trace 'test' "$to already links to $from")" ]]
-  [[ -L "$to" ]] # $to is a symlink
-  [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]
+  [[ "$output" == "$(log::trace 'test' "$from already links to $to")" ]]
+  [[ -L "$from" ]] # $from is a symlink
+  [[ "$(platform::readlink -f "$from")" == "$(platform::readlink -f "$to")" ]]
+
 }
 
-@test "asks if \$to should be replaced if \$to exists" {
+@test "asks if \$from should be replaced if \$from exists" {
   import 'log::trace'
   import 'text::contains'
 
@@ -92,12 +93,12 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<"$eof"
 
   ((status == 1))
-  [[ "${lines[0]}" == "$(log::trace 'test' "$to will be linked to $from")" ]]
+  [[ "${lines[0]}" == "$(log::trace 'test' "$from will be linked to $to")" ]]
   text::contains "${lines[1]}" 'test'
-  text::contains "${lines[1]}" "$to exists; do you want to replace it? [Y/n]"
+  text::contains "${lines[1]}" "$from exists; do you want to replace it? [Y/n]"
 }
 
-@test "moves \$to to \$to.old if \$to exists and a positive answer is given at the prompt" {
+@test "moves \$from to \$from.old if \$from exists and a positive answer is given at the prompt" {
   import 'log::trace'
   import 'text::ends_with'
 
@@ -107,12 +108,12 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<'y'
 
   ((status == 0))
-  text::ends_with "${lines[1]}" "$(log::trace 'test' "old $to will be moved to $to.old")"
-  [[ -f "$to.old" ]] # $to.old is a file
-  [[ "$(cat "$to.old")" == 'bar' ]]
+  text::ends_with "${lines[1]}" "$(log::trace 'test' "$from will be moved to $from.old")"
+  [[ -f "$from.old" ]] # $from.old is a file
+  [[ "$(cat "$from.old")" == 'foo' ]]
 }
 
-@test "makes a symlink from \$from to \$to if \$to exists and a positive answer is given at the prompt" {
+@test "makes a symlink from \$from to \$to if \$from exists and a positive answer is given at the prompt" {
   import 'platform::readlink'
 
   echo 'foo' >"$from"
@@ -121,29 +122,29 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<'y'
 
   ((status == 0))
-  [[ -L "$to" ]] # $to is a symlink
-  [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]
+  [[ -L "$from" ]] # $from is a symlink
+  [[ "$(platform::readlink -f "$from")" == "$(platform::readlink -f "$to")" ]]
 }
 
-@test "fails and leaves things unchanged if \$to.old exists" {
+@test "fails and leaves things unchanged if \$from.old exists" {
   import 'log::error'
 
   echo 'foo' >"$from"
-  echo 'bar' >"$to"
-  echo 'baz' >"$to.old"
+  echo 'bar' >"$from.old"
+  echo 'baz' >"$to"
 
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 1))
-  [[ "${lines[1]}" == "$(log::error 'test' "both $to and $to.old already exist; aborting!")" ]]
-  [[ -f "$to" ]] # $to is still a file
-  [[ "$(cat "$to")" == 'bar' ]]
-  [[ -f "$to.old" ]] # $to.old is a file
-  [[ "$(cat "$to.old")" == 'baz' ]]
+  [[ "${lines[1]}" == "$(log::error 'test' "both $from and $from.old already exist; aborting!")" ]]
+  [[ -f "$from" ]] # $from is still a file
+  [[ "$(cat "$from")" == 'foo' ]]
+  [[ -f "$from.old" ]] # $from.old is a file
+  [[ "$(cat "$from.old")" == 'bar' ]]
 }
 
-@test "fails and leaves things unchanged if \$to exists and a negative answer is given at the prompt" {
-  import 'log::trace'
+@test "fails and leaves things unchanged if \$from exists and a negative answer is given at the prompt" {
+  import 'log::warn'
   import 'text::ends_with'
 
   echo 'foo' >"$from"
@@ -152,20 +153,19 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<'n'
 
   ((status == 1))
-  text::ends_with "${lines[1]}" "$(log::trace 'test' "$to will not be linked")"
-  [[ -f "$to" ]] # $to is still a file
-  [[ "$(cat "$to")" == 'bar' ]]
-  [[ ! -e "$to.old" ]] # $to.old does not exist
+  text::ends_with "${lines[1]}" "$(log::warn 'test' "$from will not be linked to $to")"
+  [[ -f "$from" ]] # $from is still a file
+  [[ "$(cat "$from")" == 'foo' ]]
+  [[ ! -e "$from.old" ]] # $from.old does not exist
 }
 
-@test "fails and leaves things unchanged if \$from does not exist" {
+@test "fails and leaves things unchanged if \$to does not exist" {
   import 'log::error'
-  import 'log::trace'
 
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 1))
-  [[ "$output" == "$(log::error 'test' "$from does not exist; aborting!")" ]]
+  [[ "$output" == "$(log::error 'test' "$to does not exist; aborting!")" ]]
   [[ ! -e "$from" ]] # $from does not exist
   [[ ! -e "$to" ]]   # $to does not exist
 }

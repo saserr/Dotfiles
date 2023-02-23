@@ -12,35 +12,35 @@ platform::safe_link() {
   local from=$2
   local to=$3
 
-  if ! path::exists "$from"; then
-    log::error "$name" "$from does not exist; aborting!"
+  if ! path::exists "$to"; then
+    log::error "$name" "$to does not exist; aborting!"
     return 1
   fi
 
-  if [[ "$(platform::readlink -f "$to")" == "$(platform::readlink -f "$from")" ]]; then
-    log::trace "$name" "$to already links to $from"
+  if [[ "$(platform::readlink -f "$from")" == "$(platform::readlink -f "$to")" ]]; then
+    log::trace "$name" "$from already links to $to"
     return 0
   fi
 
-  log::trace "$name" "$to will be linked to $from"
+  log::trace "$name" "$from will be linked to $to"
 
-  if path::exists "$to"; then
-    if path::exists "$to.old"; then
-      log::error "$name" "both $to and $to.old already exist; aborting!"
+  if path::exists "$from"; then
+    if path::exists "$from.old"; then
+      log::error "$name" "both $from and $from.old already exist; aborting!"
       return 1
     fi
 
-    case "$(prompt::yes_or_no "$name" "$to exists; do you want to replace it?" 'Yes')" in
+    case "$(prompt::yes_or_no "$name" "$from exists; do you want to replace it?" 'Yes')" in
       Yes)
-        log::trace "$name" "old $to will be moved to $to.old"
-        mv "$to" "$to.old"
+        log::trace "$name" "$from will be moved to $from.old"
+        mv "$from" "$from.old" || return 1
         ;;
       *)
-        log::trace "$name" "$to will not be linked"
+        log::warn "$name" "$from will not be linked to $to"
         return 1
         ;;
     esac
   fi
 
-  ln -s "$from" "$to"
+  ln -s "$to" "$from"
 }
