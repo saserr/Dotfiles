@@ -13,9 +13,8 @@ setup() {
 
   mac::install
 
-  ((${#args[@]} == 2))
-  [[ "${args[0]}" == 'foo' ]]
-  [[ "${args[1]}" == 'bar' ]]
+  ((${#args[@]} == 1))
+  [[ "${args[0]}" == 'bar' ]]
 }
 
 @test "installs \$program using apt" {
@@ -26,9 +25,8 @@ setup() {
 
   mac::install
 
-  ((${#args[@]} == 2))
-  [[ "${args[0]}" == 'foo' ]]
-  [[ "${args[1]}" == 'bar' ]]
+  ((${#args[@]} == 1))
+  [[ "${args[0]}" == 'bar' ]]
 }
 
 @test "preferes \$homebrew_formula over \$program" {
@@ -40,9 +38,8 @@ setup() {
 
   mac::install
 
-  ((${#args[@]} == 2))
-  [[ "${args[0]}" == 'foo' ]]
-  [[ "${args[1]}" == 'bar' ]]
+  ((${#args[@]} == 1))
+  [[ "${args[0]}" == 'bar' ]]
 }
 
 @test "fails if both \$homebrew_formula and \$program are missing" {

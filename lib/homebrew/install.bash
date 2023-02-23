@@ -4,32 +4,31 @@ import 'log::error'
 import 'log::trace'
 
 homebrew::install() {
-  arguments::expect $# '[name]' 'formula' '...'
+  arguments::expect $# 'formula' '...'
 
-  if (($# == 1)); then
-    local name=$1
-    local formulas=("$1")
-  else
-    local name=$1
-    local formulas=("${@:2}")
-  fi
+  local formulas=("$@")
 
+  local installed=()
   local missing=()
   for formula in "${formulas[@]}"; do
     if homebrew::missing "$formula"; then
       missing+=("$formula")
+    else
+      installed+=("$formula")
     fi
   done
 
+  if ((${#installed[@]})); then
+    log::trace 'homebrew' "already installed: ${installed[*]}"
+  fi
+
   if ((${#missing[@]} == 0)); then
-    log::trace 'homebrew' "$name already installed"
     return 0
   fi
 
-  log::trace 'homebrew' "installing $name"
-
+  log::trace 'homebrew' "installing: ${missing[*]}"
   if ! { brew update && brew install "${missing[@]}"; }; then
-    log::error 'homebrew' "failed to install $name"
+    log::error 'homebrew' "installation failed"
     return 1
   fi
 }
