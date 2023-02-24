@@ -10,7 +10,6 @@ setup() {
 
   local recipe='foo'
   local homebrew_formula='bar'
-
   mac::install
 
   ((${#args[@]} == 1))
@@ -22,7 +21,6 @@ setup() {
 
   local recipe='foo'
   local program='bar'
-
   mac::install
 
   ((${#args[@]} == 1))
@@ -35,7 +33,6 @@ setup() {
   local recipe='foo'
   local homebrew_formula='bar'
   local program='baz'
-
   mac::install
 
   ((${#args[@]} == 1))
@@ -46,7 +43,6 @@ setup() {
   import 'log::error'
 
   local recipe='foo'
-
   run mac::install
 
   ((status == 1))
@@ -58,7 +54,6 @@ setup() {
 
   local homebrew_formula='foo'
   local program='bar'
-
   run mac::install
 
   ((status == 2))

@@ -55,9 +55,9 @@
   [[ "$output" == '' ]]
 }
 
-@test "fails if it level is invalid" {
+@test "fails if level is invalid" {
   local foo="$BATS_TEST_TMPDIR/foo"
-  echo ' #!/usr/bin/env bash' >>"$foo"
+  echo '#!/usr/bin/env bash' >>"$foo"
   echo "source 'lib/import.bash'" >>"$foo"
   echo "import 'caller::location'" >>"$foo"
   echo 'caller::location 1' >>"$foo"

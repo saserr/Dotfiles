@@ -4,7 +4,8 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load '../helpers/assert/wrong_usage.bash'
+  load '../helpers/import.bash'
+  import 'assert::wrong_usage'
 
   run arguments::integer
 
@@ -12,7 +13,8 @@ setup() {
 }
 
 @test "fails with only one argument" {
-  load '../helpers/assert/wrong_usage.bash'
+  load '../helpers/import.bash'
+  import 'assert::wrong_usage'
 
   run arguments::integer
 

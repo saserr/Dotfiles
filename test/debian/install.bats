@@ -10,7 +10,6 @@ setup() {
 
   local recipe='foo'
   local apt_package='bar'
-
   debian::install
 
   ((${#args[@]} == 1))
@@ -22,7 +21,6 @@ setup() {
 
   local recipe='foo'
   local program='bar'
-
   debian::install
 
   ((${#args[@]} == 1))
@@ -35,7 +33,6 @@ setup() {
   local recipe='foo'
   local apt_package='bar'
   local program='baz'
-
   debian::install
 
   ((${#args[@]} == 1))
@@ -46,7 +43,6 @@ setup() {
   import 'log::error'
 
   local recipe='foo'
-
   run debian::install
 
   ((status == 1))
@@ -58,7 +54,6 @@ setup() {
 
   local apt_package='foo'
   local program='bar'
-
   run debian::install
 
   ((status == 2))
