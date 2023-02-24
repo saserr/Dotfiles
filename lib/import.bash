@@ -1,5 +1,5 @@
 if ! declare -F 'import' >/dev/null 2>&1; then
-  __import_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+  IMPORT_PATH+=("$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)")
 
   __import::abort() {
     if { declare -F 'arguments::expect' >/dev/null 2>&1 && arguments::expect $# 'message'; } || (($#)); then
@@ -64,27 +64,33 @@ if ! declare -F 'import' >/dev/null 2>&1; then
       return 0
     fi
 
-    if ! eval "${function}() { __import::not_loaded; };"; then
-      __import::abort "failed to load the '$function' function"
-    fi
+    local path
+    for path in "${IMPORT_PATH[@]}"; do
+      local file="$path/${function//:://}.bash"
+      if [[ -e "$file" ]] && [[ ! -d "$file" ]]; then
+        if ! eval "${function}() { __import::not_loaded; };"; then
+          __import::abort "failed to load the '$function' function"
+        fi
 
-    local file
-    file="$__import_dir/${function//:://}.bash"
-    # shellcheck source=/dev/null
-    if ! source "$file"; then
-      __import::abort "can't load the '$function' function from $file"
-    fi
+        # shellcheck source=/dev/null
+        if ! source "$file"; then
+          __import::abort "can't load the '$function' function from $file"
+        fi
 
-    local declaration
-    if ! declaration="$(declare -f "$function" 2>&1)" \
-      || [[ "$declaration" == *'__import::not_loaded'* ]]; then
-      __import::abort "the '$function' function is missing in $file"
-    fi
+        local declaration
+        if ! declaration="$(declare -f "$function" 2>&1)" \
+          || [[ "$declaration" == *'__import::not_loaded'* ]]; then
+          __import::abort "the '$function' function is missing in $file"
+        fi
+
+        return 0
+      fi
+    done
+
+    __import::abort "unknown function: $function"
   }
 
   import 'arguments::expect'
   import 'log::error'
   import 'abort'
-
-  __import_dir="${LIB_DIR:-$__import_dir}"
 fi
