@@ -5,9 +5,43 @@ setup() {
   import 'recipe::file'
 }
 
-@test "adds 'recipes' to \$RECIPES_PATH on import" {
+@test "creates \$RECIPES_PATH with 'recipes' if \$RECIPES_PATH is not declared" {
+  import 'variable::exists'
+
+  unset 'RECIPES_PATH'
+  ! variable::exists 'RECIPES_PATH'
+
+  source 'lib/recipe/file.bash'
+
   ((${#RECIPES_PATH[@]} == 1))
-  [[ "${RECIPES_PATH[0]}" == 'recipes' ]]
+  [[ "${RECIPES_PATH[0]}" == *'/recipes' ]]
+}
+
+@test "appends 'recipes' to \$RECIPES_PATH if \$RECIPES_PATH is an array" {
+  import 'variable::is_array'
+
+  local RECIPES_PATH=('foo')
+  variable::is_array 'RECIPES_PATH'
+
+  source 'lib/recipe/file.bash'
+
+  ((${#RECIPES_PATH[@]} == 2))
+  [[ "${RECIPES_PATH[0]}" == 'foo' ]]
+  [[ "${RECIPES_PATH[1]}" == *'/recipes' ]]
+}
+
+@test "redeclares \$RECIPES_PATH as an array and appends 'recipes' if \$RECIPES_PATH is not an array" {
+  import 'variable::exists'
+  import 'variable::is_array'
+
+  local RECIPES_PATH='foo'
+  variable::exists 'RECIPES_PATH' && ! variable::is_array 'RECIPES_PATH'
+
+  source 'lib/recipe/file.bash'
+
+  ((${#RECIPES_PATH[@]} == 2))
+  [[ "${RECIPES_PATH[0]}" == 'foo' ]]
+  [[ "${RECIPES_PATH[1]}" == *'/recipes' ]]
 }
 
 @test "returns the location of the \$recipe's configuration" {

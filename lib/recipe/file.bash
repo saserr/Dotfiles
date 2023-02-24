@@ -1,15 +1,8 @@
 import 'arguments::expect'
-import 'bash::support::declare_global'
 import 'file::exists'
 import 'variable::expect'
 
-if bash::support::declare_global; then
-  declare -ga 'RECIPES_PATH'
-elif ! variable::exists 'RECIPES_PATH'; then
-  RECIPES_PATH=()
-fi
-
-RECIPES_PATH+=("recipes")
+RECIPES_PATH+=("$PWD/recipes")
 
 recipe::file() {
   arguments::expect $# # none
