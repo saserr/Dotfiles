@@ -9,7 +9,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run homebrew::install
 
@@ -29,7 +29,7 @@ setup() {
 }
 
 @test "installs formula if not installed" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::trace'
 
   stub brew \
@@ -44,7 +44,7 @@ setup() {
 }
 
 @test "installs multiple formulas" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::trace'
 
   stub brew \
@@ -59,7 +59,7 @@ setup() {
 }
 
 @test "installs only missing formulas" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::trace'
 
   homebrew::missing() { [[ "$1" != 'bar' ]]; }
@@ -88,7 +88,7 @@ setup() {
 }
 
 @test "fails if brew update fails" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::error'
 
   stub brew 'update : exit 1'
@@ -101,7 +101,7 @@ setup() {
 }
 
 @test "fails if brew install fails" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::error'
 
   stub brew \

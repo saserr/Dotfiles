@@ -9,7 +9,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run file::empty
 

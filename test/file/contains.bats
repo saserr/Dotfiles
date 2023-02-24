@@ -9,7 +9,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run file::contains
 
@@ -17,7 +17,7 @@ setup() {
 }
 
 @test "fails with only one argument" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run file::contains "$test_file"
 

@@ -6,7 +6,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run arguments::expect
 
@@ -14,7 +14,7 @@ setup() {
 }
 
 @test "fails when first argument is not an integer" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run arguments::expect 'foo'
 

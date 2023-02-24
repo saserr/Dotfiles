@@ -11,7 +11,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load ../helpers/assert/wrong_usage.bash
+  load '../helpers/assert/wrong_usage.bash'
 
   run apt::install
 
@@ -31,7 +31,7 @@ setup() {
 }
 
 @test "installs package if not installed" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::trace'
 
   stub apt \
@@ -46,7 +46,7 @@ setup() {
 }
 
 @test "installs multiple packages" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::trace'
 
   stub apt \
@@ -61,7 +61,7 @@ setup() {
 }
 
 @test "installs only missing packages" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::trace'
 
   apt::missing() { [[ "$1" != 'bar' ]]; }
@@ -79,7 +79,7 @@ setup() {
 }
 
 @test "installs package with sudo if the current user is not root" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::warn'
 
   platform::is_root() { return 1; }
@@ -108,7 +108,7 @@ setup() {
 }
 
 @test "fails if apt update fails" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::error'
 
   stub apt 'update : exit 1'
@@ -121,7 +121,7 @@ setup() {
 }
 
 @test "fails if apt install fails" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
   import 'log::error'
 
   stub apt \

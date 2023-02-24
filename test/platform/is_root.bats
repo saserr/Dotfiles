@@ -6,7 +6,7 @@ setup() {
 }
 
 @test "succeeds if the current user is root" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
 
   stub id '-u : echo 0'
 
@@ -18,7 +18,7 @@ setup() {
 }
 
 @test "fails if the current user is not root" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
 
   stub id '-u : echo 1000'
 
@@ -30,7 +30,7 @@ setup() {
 }
 
 @test "fails if retrieving the current user fails" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
 
   stub id '-u : exit 1'
 

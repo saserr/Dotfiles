@@ -6,7 +6,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load ../helpers/assert/wrong_usage.bash
+  load '../helpers/assert/wrong_usage.bash'
 
   run homebrew::missing
 

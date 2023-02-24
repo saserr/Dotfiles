@@ -12,7 +12,7 @@
   source 'lib/import.bash'
   run import
 
-  load helpers/assert/wrong_usage
+  load 'helpers/assert/wrong_usage.bash'
   assert::wrong_usage 'import' 'function'
 }
 

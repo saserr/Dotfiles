@@ -6,7 +6,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load helpers/assert/wrong_usage
+  load 'helpers/assert/wrong_usage.bash'
 
   run log
 
@@ -14,7 +14,7 @@ setup() {
 }
 
 @test "fails with only the color argument" {
-  load helpers/assert/wrong_usage
+  load 'helpers/assert/wrong_usage.bash'
 
   run log '0'
 
@@ -22,7 +22,7 @@ setup() {
 }
 
 @test "fails with only the color and tag arguments" {
-  load helpers/assert/wrong_usage
+  load 'helpers/assert/wrong_usage.bash'
 
   run log '0' 'foo'
 

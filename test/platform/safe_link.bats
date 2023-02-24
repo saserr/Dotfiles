@@ -12,7 +12,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run platform::safe_link
 
@@ -20,7 +20,7 @@ setup() {
 }
 
 @test "fails with only one argument" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run platform::safe_link 'test'
 
@@ -28,7 +28,7 @@ setup() {
 }
 
 @test "fails with only two arguments" {
-  load ../helpers/assert/wrong_usage
+  load '../helpers/assert/wrong_usage.bash'
 
   run platform::safe_link 'test' "$from"
 

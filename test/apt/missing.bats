@@ -6,7 +6,7 @@ setup() {
 }
 
 @test "fails without arguments" {
-  load ../helpers/assert/wrong_usage.bash
+  load '../helpers/assert/wrong_usage.bash'
 
   run apt::missing
 
@@ -14,7 +14,7 @@ setup() {
 }
 
 @test "succeeds if package is not installed" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
 
   stub dpkg '-s foo : exit 1'
 
@@ -24,7 +24,7 @@ setup() {
 }
 
 @test "succeeds if status is not installed" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
 
   stub dpkg '-s foo : echo "Status: not installed"'
 
@@ -34,7 +34,7 @@ setup() {
 }
 
 @test "fails if package is installed" {
-  load ../helpers/mocks/stub
+  load '../helpers/mocks/stub.bash'
 
   stub dpkg '-s foo : echo "Status: install ok installed"'
 
