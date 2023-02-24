@@ -12,7 +12,7 @@ platform::name() {
       ;;
     'Linux')
       # shellcheck source=/dev/null
-      printf '%s\n' "$(source /etc/os-release && echo "$ID")"
+      printf '%s\n' "$(source '/etc/os-release' && echo "$ID")"
       ;;
     *)
       echo "$os_name"

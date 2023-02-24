@@ -3,7 +3,7 @@
 @test "returns the location of the current function when level is 0" {
   local foo="$BATS_TEST_TMPDIR/foo"
   echo '#!/usr/bin/env bash' >>"$foo"
-  echo 'source lib/import.bash' >>"$foo"
+  echo "source 'lib/import.bash'" >>"$foo"
   echo "import 'caller::location'" >>"$foo"
   echo 'bar() { baz; }' >>"$foo"
   echo 'baz() { caller::location 0; }' >>"$foo"
@@ -19,7 +19,7 @@
 @test "returns the location of the calling function when level is 1" {
   local foo="$BATS_TEST_TMPDIR/foo"
   echo '#!/usr/bin/env bash' >>"$foo"
-  echo 'source lib/import.bash' >>"$foo"
+  echo "source 'lib/import.bash'" >>"$foo"
   echo "import 'caller::location'" >>"$foo"
   echo 'bar() { baz; }' >>"$foo"
   echo 'baz() { caller::location 1; }' >>"$foo"
@@ -35,7 +35,7 @@
 @test "returns the location of the caller's calling function when level is 2" {
   local foo="$BATS_TEST_TMPDIR/foo"
   echo '#!/usr/bin/env bash' >>"$foo"
-  echo 'source lib/import.bash' >>"$foo"
+  echo "source 'lib/import.bash'" >>"$foo"
   echo "import 'caller::location'" >>"$foo"
   echo 'bar() { baz; }' >>"$foo"
   echo 'baz() { caller::location 2; }' >>"$foo"
@@ -58,7 +58,7 @@
 @test "fails if it level is invalid" {
   local foo="$BATS_TEST_TMPDIR/foo"
   echo ' #!/usr/bin/env bash' >>"$foo"
-  echo 'source lib/import.bash' >>"$foo"
+  echo "source 'lib/import.bash'" >>"$foo"
   echo "import 'caller::location'" >>"$foo"
   echo 'caller::location 1' >>"$foo"
   chmod +x "$foo"

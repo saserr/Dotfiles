@@ -25,7 +25,7 @@ setup() {
 @test "returns the script name if it is invoked directly in the script" {
   local foo="$BATS_TEST_TMPDIR/foo"
   echo '#!/usr/bin/env bash' >>"$foo"
-  echo "source lib/import.bash && import 'caller::name' && caller::name" >>"$foo"
+  echo "source 'lib/import.bash' && import 'caller::name' && caller::name" >>"$foo"
   chmod +x "$foo"
 
   run "$foo"

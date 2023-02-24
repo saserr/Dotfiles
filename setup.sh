@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source lib/import.bash
+source 'lib/import.bash'
 
 import 'arguments::expect'
 arguments::expect $# 'recipe'

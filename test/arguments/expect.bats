@@ -194,7 +194,7 @@ setup() {
 
   local foo="$BATS_TEST_TMPDIR/foo"
   echo '#!/usr/bin/env bash' >>"$foo"
-  echo 'source lib/arguments/expect.bash && arguments::expect 1' >>"$foo"
+  echo "source 'lib/arguments/expect.bash' && arguments::expect 1" >>"$foo"
   chmod +x "$foo"
 
   run "$foo"

@@ -53,7 +53,7 @@ setup() {
 
   local foo="$BATS_TEST_TMPDIR/foo"
   echo '#!/usr/bin/env bash' >>"$foo"
-  echo "source lib/import.bash && import 'arguments::error' && arguments::error 'bar'" >>"$foo"
+  echo "source 'lib/import.bash' && import 'arguments::error' && arguments::error 'bar'" >>"$foo"
   chmod +x "$foo"
 
   run "$foo"
