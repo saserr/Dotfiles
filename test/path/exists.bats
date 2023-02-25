@@ -4,7 +4,7 @@ setup() {
   source 'lib/import.bash'
   import 'path::exists'
 
-  test_path="$BATS_TEST_TMPDIR/test"
+  test_path="$BATS_TEST_TMPDIR/foo"
   [[ ! -e "$test_path" ]] # $test_path does not exist
 }
 
@@ -34,14 +34,21 @@ setup() {
 }
 
 @test "a path to a broken symlink doesn't exists" {
-  ln -s "$BATS_TEST_TMPDIR/test2" "$test_path"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$test_path"
 
   ! path::exists "$test_path"
 }
 
-@test "a path to a valid symlink exists" {
-  touch "$BATS_TEST_TMPDIR/test2"
-  ln -s "$BATS_TEST_TMPDIR/test2" "$test_path"
+@test "a path to a valid symlink that links to a directory exists" {
+  mkdir "$BATS_TEST_TMPDIR/bar"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$test_path"
+
+  path::exists "$test_path"
+}
+
+@test "a path to a valid symlink that links to a file exists" {
+  touch "$BATS_TEST_TMPDIR/bar"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$test_path"
 
   path::exists "$test_path"
 }
