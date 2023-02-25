@@ -23,13 +23,19 @@ setup() {
 }
 
 @test "returns the script name if it is invoked directly in the script" {
-  local foo="$BATS_TEST_TMPDIR/foo"
-  echo '#!/usr/bin/env bash' >>"$foo"
-  echo "source 'lib/import.bash' && import 'caller::name' && caller::name" >>"$foo"
-  chmod +x "$foo"
+  load '../helpers/import.bash'
+  import 'file::write'
 
-  run "$foo"
+  local script="$BATS_TEST_TMPDIR/foo"
+  file::write "$script" \
+    '#!/usr/bin/env bash' \
+    "source 'lib/import.bash'" \
+    "import 'caller::name'" \
+    'caller::name'
+  chmod +x "$script"
+
+  run "$script"
 
   ((status == 0))
-  [[ "$output" == "$foo" ]]
+  [[ "$output" == "$script" ]]
 }

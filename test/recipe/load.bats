@@ -28,15 +28,17 @@ setup() {
 }
 
 @test "loads the \$recipe file" {
-  local RECIPES_PATH=("$BATS_TEST_TMPDIR")
-  mkdir -p "$BATS_TEST_TMPDIR/bar"
-  echo "echo 'foo'" >"$BATS_TEST_TMPDIR/bar/recipe.bash"
+  load '../helpers/import.bash'
+  import 'file::write'
 
-  local recipe='bar'
+  local RECIPES_PATH=("$BATS_TEST_TMPDIR")
+  file::write "$BATS_TEST_TMPDIR/foo/recipe.bash" "echo 'bar'"
+
+  local recipe='foo'
   run recipe::load
 
   ((status == 0))
-  [[ "$output" == 'foo' ]]
+  [[ "$output" == 'bar' ]]
 }
 
 @test "cd to the \$recipe's directory" {
@@ -51,11 +53,12 @@ setup() {
 }
 
 @test "fails if loading the \$recipe file fails" {
+  load '../helpers/import.bash'
+  import 'file::write'
   import 'log::error'
 
   local RECIPES_PATH=("$BATS_TEST_TMPDIR")
-  mkdir -p "$BATS_TEST_TMPDIR/foo"
-  echo 'return 1' >"$BATS_TEST_TMPDIR/foo/recipe.bash"
+  file::write "$BATS_TEST_TMPDIR/foo/recipe.bash" 'return 1'
 
   local recipe='foo'
   run recipe::load
@@ -65,9 +68,11 @@ setup() {
 }
 
 @test "exits if loading the \$recipe file fails" {
+  load '../helpers/import.bash'
+  import 'file::write'
+
   local RECIPES_PATH=("$BATS_TEST_TMPDIR")
-  mkdir -p "$BATS_TEST_TMPDIR/baz"
-  echo 'return 1' >"$BATS_TEST_TMPDIR/baz/recipe.bash"
+  file::write "$BATS_TEST_TMPDIR/baz/recipe.bash" 'return 1'
 
   fail() {
     echo 'foo'
@@ -83,17 +88,19 @@ setup() {
 }
 
 @test "fails if cd to the \$recipe's directory fails" {
+  load '../helpers/import.bash'
+  import 'file::write'
+
   local RECIPES_PATH=("$BATS_TEST_TMPDIR")
-  mkdir -p "$BATS_TEST_TMPDIR/bar"
-  echo "echo 'foo'" >"$BATS_TEST_TMPDIR/bar/recipe.bash"
+  file::write "$BATS_TEST_TMPDIR/foo/recipe.bash" "echo 'bar'"
 
-  cd() { [[ "$1" != "$BATS_TEST_TMPDIR/bar" ]]; }
+  cd() { [[ "$1" != "$BATS_TEST_TMPDIR/foo" ]]; }
 
-  local recipe='bar'
+  local recipe='foo'
   run recipe::load
 
   ((status == 1))
-  [[ "$output" == 'foo' ]]
+  [[ "$output" == 'bar' ]]
 }
 
 @test "fails if \$recipe is missing" {

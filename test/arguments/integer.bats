@@ -57,14 +57,19 @@ setup() {
 }
 
 @test "the failure message contains the script name if it is invoked outside of a function" {
+  load '../helpers/import.bash'
+  import 'file::write'
   import 'text::contains'
 
-  local foo="$BATS_TEST_TMPDIR/foo"
-  echo '#!/usr/bin/env bash' >>"$foo"
-  echo "source 'lib/import.bash' && import 'arguments::integer' && arguments::integer 'bar' 'baz'" >>"$foo"
-  chmod +x "$foo"
+  local script="$BATS_TEST_TMPDIR/foo"
+  file::write "$script" \
+    '#!/usr/bin/env bash' \
+    "source 'lib/import.bash'" \
+    "import 'arguments::integer'" \
+    "arguments::integer 'bar' 'baz'"
+  chmod +x "$script"
 
-  run "$foo"
+  run "$script"
 
   text::contains "${lines[0]}" "$foo"
   text::contains "${lines[0]}" 'the bar argument is not an integer'

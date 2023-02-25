@@ -50,14 +50,19 @@ setup() {
 }
 
 @test "the output contains the script name if it is invoked outside of a function" {
+  load '../helpers/import.bash'
+  import 'file::write'
   import 'text::contains'
 
-  local foo="$BATS_TEST_TMPDIR/foo"
-  echo '#!/usr/bin/env bash' >>"$foo"
-  echo "source 'lib/import.bash' && import 'arguments::error' && arguments::error 'bar'" >>"$foo"
-  chmod +x "$foo"
+  local script="$BATS_TEST_TMPDIR/foo"
+  file::write "$script" \
+    '#!/usr/bin/env bash' \
+    "source 'lib/import.bash'" \
+    "import 'arguments::error'" \
+    "arguments::error 'bar'"
+  chmod +x "$script"
 
-  run "$foo"
+  run "$script"
 
   ((status == 2))
   text::contains "${lines[0]}" "$foo"
