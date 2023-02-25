@@ -4,7 +4,7 @@ setup() {
   source 'lib/import.bash'
   import 'file::exists'
 
-  test_file="$BATS_TEST_TMPDIR/test"
+  test_file="$BATS_TEST_TMPDIR/foo"
   [[ ! -e "$test_file" ]] # $test_file does not exist
 }
 
@@ -34,21 +34,46 @@ setup() {
 }
 
 @test "a path to a broken symlink is not a file" {
-  ln -s "$BATS_TEST_TMPDIR/test2" "$test_file"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$test_file"
 
   ! file::exists "$test_file"
 }
 
 @test "a path to a valid file symlink is a file" {
-  touch "$BATS_TEST_TMPDIR/test2"
-  ln -s "$BATS_TEST_TMPDIR/test2" "$test_file"
+  touch "$BATS_TEST_TMPDIR/bar"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$test_file"
 
   file::exists "$test_file"
 }
 
 @test "a path to a valid directory symlink is not a file" {
-  mkdir "$BATS_TEST_TMPDIR/test2"
-  ln -s "$BATS_TEST_TMPDIR/test2" "$test_file"
+  mkdir "$BATS_TEST_TMPDIR/bar"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$test_file"
+
+  ! file::exists "$test_file"
+}
+
+@test "a path to a valid file through multiple symlinks is a file" {
+  mkdir "$BATS_TEST_TMPDIR/bar"
+  touch "$BATS_TEST_TMPDIR/bar/test"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$BATS_TEST_TMPDIR/baz"
+  ln -s "$BATS_TEST_TMPDIR/baz/test" "$test_file"
+
+  file::exists "$test_file"
+}
+
+@test "a path to a valid directory through multiple symlinks is not a file" {
+  mkdir "$BATS_TEST_TMPDIR/bar"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$BATS_TEST_TMPDIR/baz"
+  ln -s "$BATS_TEST_TMPDIR/baz" "$test_file"
+
+  ! file::exists "$test_file"
+}
+
+@test "a path to a non-existent file through multiple symlinks is not a file" {
+  mkdir "$BATS_TEST_TMPDIR/bar"
+  ln -s "$BATS_TEST_TMPDIR/bar" "$BATS_TEST_TMPDIR/baz"
+  ln -s "$BATS_TEST_TMPDIR/baz/test" "$test_file"
 
   ! file::exists "$test_file"
 }
