@@ -6,11 +6,13 @@ setup() {
 }
 
 @test "returns 'mac' if the current platform is Darwin" {
-  uname() { echo 'Darwin'; }
+  load '../helpers/mocks/stub.bash'
+
+  stub uname '-s : echo "Darwin"'
 
   [[ "$(platform::name)" == 'mac' ]]
 
-  unset -f uname
+  unstub uname
 }
 
 @test "returns the result of platform::linux::os_release if the current platform is Linux" {
@@ -18,15 +20,15 @@ setup() {
     skip 'linux-only test'
   fi
 
-  # setup
-  uname() { echo 'Linux'; }
+  load '../helpers/mocks/stub.bash'
+
   mv /etc/os-release /etc/os-release.tmp
   echo "ID=foo" >/etc/os-release
+  stub uname '-s : echo "Linux"'
 
   [[ "$(platform::name)" == 'foo' ]]
 
-  # cleanup
-  unset -f uname
+  unstub uname
   rm /etc/os-release
   mv /etc/os-release.tmp /etc/os-release
 }
