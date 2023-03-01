@@ -7,8 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    name: Test
+  test-ubuntu:
+    name: Test (Ubuntu)
     runs-on: ubuntu-latest
 
     steps:
@@ -18,14 +18,7 @@ jobs:
         submodules: recursive
 
     - name: Bats
-      uses: addnab/docker-run-action@v3
-      with:
-        image: bats/bats:latest
-        options: -v ${{ github.workspace }}:/code
-        run: |
-          find test/ -type f -name '*.bats' \
-            -not -regex 'test/helpers/mocks/.*' \
-            -exec /usr/bin/env bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
+      run: ./test.sh
 
   test-macos:
     name: Test (Mac OS builtin bash)
@@ -46,13 +39,10 @@ jobs:
         brew install coreutils findutils parallel bats-core
 
     - name: Bats
-      run: |
-        gfind test/ -type f -name '*.bats' \
-          -not -regex 'test/helpers/mocks/.*' \
-          -exec /usr/bin/env bash -c 'bats -j 4 --no-parallelize-within-files "$@"' {} +
+      run: ./test.sh --local
 
   lint:
-    name: Lint
+    name: Lint 
     runs-on: ubuntu-latest
 
     steps:
@@ -62,15 +52,7 @@ jobs:
         submodules: recursive
 
     - name: ShellCheck
-      uses: ludeeus/action-shellcheck@master
-      with:
-        scandir: './lib'
-        additional_files: setup.sh test.sh
-        check_together: 'yes'
+      run: ./shellcheck.sh
 
     - name: shfmt
-      uses: addnab/docker-run-action@v3
-      with:
-        image: mvdan/shfmt:v3-alpine
-        options: -v ${{ github.workspace }}:/code
-        run: shfmt -i 2 -ci -bn -d /code/lib/
+      run: ./shfmt.sh
