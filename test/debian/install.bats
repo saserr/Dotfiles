@@ -50,11 +50,13 @@ setup() {
 }
 
 @test "fails if \$recipe is missing" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'log::error'
 
   local apt_package='foo'
   local program='bar'
-  run debian::install
+  assert::exits debian::install
 
   ((status == 2))
   [[ "${lines[0]}" == "$(log::error 'debian::install' "expected nonempty variables: recipe")" ]]

@@ -45,44 +45,48 @@ setup() {
 }
 
 @test "fails if variable is declared and an empty value" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   foo=''
-
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is an empty array" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   foo=()
-
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only declared" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   declare foo
-
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only declared as an indexed array" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   declare -a foo
-
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
@@ -94,11 +98,12 @@ setup() {
     skip 'associative arrays are not supported'
   fi
 
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   declare -A foo
-
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
@@ -110,77 +115,72 @@ setup() {
     skip 'declare global is not supported'
   fi
 
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   declare -g foo
-
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only localy declared" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   local foo
-
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is only readonly declared" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   local foo
   readonly foo
-
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if variable is not declared" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
-  run variable::expect 'foo'
+  assert::exits variable::expect 'foo'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
 @test "fails if any variable is not declared" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
   foo='bar'
-
-  run variable::expect 'foo' 'baz'
+  assert::exits variable::expect 'foo' 'baz'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: baz"
 }
 
 @test "fails if multiple variables are not declared" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::ends_with'
 
-  run variable::expect 'foo' 'bar'
+  assert::exits variable::expect 'foo' 'bar'
 
   ((status == 2))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo bar"
-}
-
-@test "exits when it fails" {
-  fail() {
-    echo 'foo'
-    variable::expect 'bar' 2>/dev/null
-    echo 'baz'
-  }
-
-  run fail
-
-  ((status == 2))
-  [[ "$output" == 'foo' ]]
 }

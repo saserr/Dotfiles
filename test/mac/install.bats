@@ -50,11 +50,13 @@ setup() {
 }
 
 @test "fails if \$recipe is missing" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'log::error'
 
   local homebrew_formula='foo'
   local program='bar'
-  run mac::install
+  assert::exits mac::install
 
   ((status == 2))
   [[ "${lines[0]}" == "$(log::error 'mac::install' "expected nonempty variables: recipe")" ]]

@@ -24,10 +24,12 @@ setup() {
 }
 
 @test "fails with wrong default value" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::contains'
   import 'text::ends_with'
 
-  run prompt::yes_or_no 'foo' 'bar' 'baz'
+  assert::exits prompt::yes_or_no 'foo' 'bar' 'baz'
 
   ((status == 2))
   text::contains "${lines[0]}" 'prompt::yes_or_no'

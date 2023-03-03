@@ -25,5 +25,5 @@ recipe::load() {
     abort "${recipe:?}" "${messages[@]}"
   fi
 
-  cd "$(dirname -- "$file")" || return 1
+  cd "$(dirname -- "$file")" || return
 }

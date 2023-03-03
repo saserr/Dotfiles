@@ -41,33 +41,18 @@ setup() {
 }
 
 @test "fails if greadlink is missing on mac platform" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'log::error'
 
   command::exists() { [[ "$1" != 'greadlink' ]]; }
   platform::name() { echo 'mac'; }
   import 'platform::readlink'
 
-  run platform::readlink 'foo'
+  assert::exits platform::readlink 'foo'
 
   ((status == 2))
   [[ "$output" == "$(log::error 'mac' 'greadlink is missing')" ]]
-}
-
-@test "exits if greadlink is missing on mac platform" {
-  platform::name() { echo 'mac'; }
-  import 'platform::readlink'
-
-  command::exists() { [[ "$1" == 'greadlink' ]] && return 1; }
-  fail() {
-    echo 'foo'
-    platform::readlink 'foo' 2>/dev/null
-    echo 'bar'
-  }
-
-  run fail
-
-  ((status == 2))
-  [[ "$output" == 'foo' ]]
 }
 
 @test "uses readlink on any other platform" {

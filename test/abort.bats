@@ -24,39 +24,33 @@ setup() {
 }
 
 @test "the output contains the tag" {
+  load 'helpers/import.bash'
+  import 'assert::exits'
   import 'text::contains'
 
-  run abort 'foo' 'bar'
+  assert::exits abort 'foo' 'bar'
 
   ((status == 2))
   text::contains "$output" 'foo'
 }
 
 @test "the output contains the message" {
+  load 'helpers/import.bash'
+  import 'assert::exits'
   import 'text::contains'
 
-  run abort 'foo' 'bar'
+  assert::exits abort 'foo' 'bar'
 
   ((status == 2))
   text::contains "$output" 'bar'
 }
 
 @test "the output contains the additional messages" {
-  run abort 'foo' 'bar' 'baz'
+  load 'helpers/import.bash'
+  import 'assert::exits'
+
+  assert::exits abort 'foo' 'bar' 'baz'
 
   ((status == 2))
   [[ "${lines[1]}" == '      baz' ]]
-}
-
-@test "exits" {
-  fail() {
-    echo 'foo'
-    abort 'bar' 'test' 2>/dev/null
-    echo 'baz'
-  }
-
-  run fail
-
-  ((status == 2))
-  [[ "$output" == 'foo' ]]
 }

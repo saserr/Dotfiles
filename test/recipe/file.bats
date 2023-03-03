@@ -90,9 +90,11 @@ setup() {
 }
 
 @test "fails if \$recipe is missing" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'log::error'
 
-  run recipe::file
+  assert::exits recipe::file
 
   ((status == 2))
   [[ "${lines[0]}" == "$(log::error 'recipe::file' "expected nonempty variables: recipe")" ]]

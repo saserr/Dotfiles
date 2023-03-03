@@ -15,13 +15,14 @@ setup() {
 }
 
 @test "the output contains the function name and the message" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::contains'
 
   foo() {
     arguments::error 'bar'
   }
-
-  run foo
+  assert::exits foo
 
   ((status == 2))
   text::contains "${lines[0]}" 'foo'
@@ -29,11 +30,13 @@ setup() {
 }
 
 @test "the output contains the additional messages" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
+
   foo() {
     arguments::error 'bar' 'baz'
   }
-
-  run foo
+  assert::exits foo
 
   ((status == 2))
   [[ "${lines[1]}" == '      baz' ]]
@@ -67,17 +70,4 @@ setup() {
   ((status == 2))
   text::contains "${lines[0]}" "$foo"
   text::contains "${lines[0]}" 'bar'
-}
-
-@test "exits" {
-  fail() {
-    echo 'foo'
-    arguments::error 'bar' 2>/dev/null
-    echo 'baz'
-  }
-
-  run fail
-
-  ((status == 2))
-  [[ "$output" == 'foo' ]]
 }

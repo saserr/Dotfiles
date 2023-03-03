@@ -152,15 +152,18 @@
 }
 
 @test "exits if an unknown function is imported" {
-  fail() {
+  source 'lib/import.bash'
+
+  __test() {
     echo 'foo'
-    import 'bar' >/dev/null 2>&1
+    import 'bar' >/dev/null
     echo 'baz'
   }
-
-  source 'lib/import.bash'
-  run fail
+  run __test
 
   ((status == 2))
-  [[ "$output" == 'foo' ]]
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == 'foo' ]]
+  [[ "${lines[1]}" == *'unknown function: bar'* ]]
+  [[ "${lines[2]}" != *'baz'* ]]
 }

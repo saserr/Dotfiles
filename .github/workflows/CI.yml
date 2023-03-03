@@ -42,7 +42,7 @@ jobs:
       run: ./test.sh --local
 
   lint:
-    name: Lint 
+    name: Lint
     runs-on: ubuntu-latest
 
     steps:

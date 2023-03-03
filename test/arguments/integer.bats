@@ -29,20 +29,16 @@ setup() {
 }
 
 @test "fails if the value is not an integer" {
-  run arguments::integer 'foo' 'bar'
-
-  ((status == 2))
-}
-
-@test "the failure message contains the function name and the variable name" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
   import 'text::contains'
 
   foo() {
     arguments::integer 'bar' 'baz'
   }
+  assert::exits foo
 
-  run foo
-
+  ((status == 2))
   text::contains "${lines[0]}" 'foo'
   text::contains "${lines[0]}" 'the bar argument is not an integer'
 }
@@ -73,17 +69,4 @@ setup() {
 
   text::contains "${lines[0]}" "$foo"
   text::contains "${lines[0]}" 'the bar argument is not an integer'
-}
-
-@test "exits when it fails" {
-  fail() {
-    echo 'foo'
-    arguments::integer 'bar' 'not-a-number' 2>/dev/null
-    echo 'baz'
-  }
-
-  run fail
-
-  ((status == 2))
-  [[ "$output" == 'foo' ]]
 }

@@ -31,13 +31,19 @@ setup() {
 }
 
 @test "fails when no arguments are expected but there was one" {
-  run arguments::expect 1
+  load '../helpers/import.bash'
+  import 'assert::exits'
+
+  assert::exits arguments::expect 1
 
   ((status == 2))
 }
 
 @test "fails when an argument is expected but there were none" {
-  run arguments::expect 0 'bar'
+  load '../helpers/import.bash'
+  import 'assert::exits'
+
+  assert::exits arguments::expect 0 'bar'
 
   ((status == 2))
 }
@@ -50,19 +56,28 @@ setup() {
 }
 
 @test "fails when an argument is expected but there was more than one" {
-  run arguments::expect 2 'bar'
+  load '../helpers/import.bash'
+  import 'assert::exits'
+
+  assert::exits arguments::expect 2 'bar'
 
   ((status == 2))
 }
 
 @test "fails when two arguments are expected but there were none" {
-  run arguments::expect 0 'bar' 'baz'
+  load '../helpers/import.bash'
+  import 'assert::exits'
+
+  assert::exits arguments::expect 0 'bar' 'baz'
 
   ((status == 2))
 }
 
 @test "fails when two arguments are expected but there is only one" {
-  run arguments::expect 1 'bar' 'baz'
+  load '../helpers/import.bash'
+  import 'assert::exits'
+
+  assert::exits arguments::expect 1 'bar' 'baz'
 
   ((status == 2))
 }
@@ -89,7 +104,10 @@ setup() {
 }
 
 @test "fails when an optional argument is expected but there was more than one" {
-  run arguments::expect 2 '[bar]'
+  load '../helpers/import.bash'
+  import 'assert::exits'
+
+  assert::exits arguments::expect 2 '[bar]'
 
   ((status == 2))
 }
@@ -207,17 +225,4 @@ setup() {
 
   text::contains "${lines[0]}" 'foo'
   text::contains "${lines[0]}" 'wrong number of arguments'
-}
-
-@test "exits when it fails" {
-  fail() {
-    echo 'foo'
-    arguments::expect 1 2>/dev/null
-    echo 'bar'
-  }
-
-  run fail
-
-  ((status == 2))
-  [[ "$output" == 'foo' ]]
 }
