@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 @test "creates \$IMPORT_PATH with 'recipes' if \$IMPORT_PATH is not declared" {
-  ! declare -p 'IMPORT_PATH'
+  declare -p 'IMPORT_PATH' && return 1 # test that IMPORT_PATH is not declared
 
   source 'lib/import.bash'
 
@@ -30,7 +30,7 @@
 }
 
 @test "declares the 'import' function" {
-  ! declare -F 'import'
+  declare -F 'import' && return 1 # test that import is not declared
 
   source 'lib/import.bash'
 
@@ -58,7 +58,8 @@
 }
 
 @test "imports a missing function" {
-  ! declare -F 'arguments::expect'
+  # test that arguments::expect is not declared
+  declare -F 'arguments::expect' && return 1
 
   source 'lib/import.bash'
   import 'arguments::expect'
@@ -68,7 +69,8 @@
 
 @test "skips paths in \$IMPORT_PATH that don't have the function file" {
   IMPORT_PATH=("$BATS_TEST_TMPDIR")
-  ! declare -F 'arguments::expect'
+  # test that arguments::expect is not declared
+  declare -F 'arguments::expect' && return 1
 
   source 'lib/import.bash'
   import 'arguments::expect'
@@ -80,7 +82,8 @@
   IMPORT_PATH=("$BATS_TEST_TMPDIR")
   mkdir -p "$BATS_TEST_TMPDIR/arguments"
   echo 'arguments::expect() { echo "foo"; }' >"$BATS_TEST_TMPDIR/arguments/expect.bash"
-  ! declare -F 'arguments::expect'
+  # test that arguments::expect is not declared
+  declare -F 'arguments::expect' && return 1
 
   source 'lib/import.bash'
   import 'arguments::expect'
@@ -122,7 +125,7 @@
   source 'lib/import.bash'
   run import 'bar'
 
-  ! declare -F 'bar'
+  declare -F 'bar' && return 1 # test that bar is not declared
   ((status == 2))
   [[ "${lines[0]}" == *'import'* ]]
   [[ "${lines[0]}" == *'unknown function: bar'* ]]
@@ -135,7 +138,7 @@
   source 'lib/import.bash'
   run import 'foo'
 
-  ! declare -F 'foo'
+  declare -F 'foo' && return 1 # test that foo is not declared
   ((status == 2))
   [[ "${lines[0]}" == *'import'* ]]
   [[ "${lines[0]}" == *'unknown function: foo'* ]]
@@ -145,7 +148,7 @@
   source 'lib/import.bash'
   run import 'foo'
 
-  ! declare -F 'foo'
+  declare -F 'foo' && return 1 # test that foo is not declared
   ((status == 2))
   [[ "${lines[0]}" == *'import'* ]]
   [[ "${lines[0]}" == *'unknown function: foo'* ]]

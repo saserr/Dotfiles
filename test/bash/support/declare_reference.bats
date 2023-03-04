@@ -20,5 +20,8 @@ setup() {
     skip 'declare reference is supported'
   fi
 
-  ! bash::support::declare_reference
+  load '../../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails bash::support::declare_reference
 }

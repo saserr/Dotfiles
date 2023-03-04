@@ -45,27 +45,39 @@ setup() {
 }
 
 @test "fails if variable is declared and an empty value" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   foo=''
 
-  ! variable::nonempty 'foo'
+  assert::fails variable::nonempty 'foo'
 }
 
 @test "fails if variable is an empty array" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   foo=()
 
-  ! variable::nonempty 'foo'
+  assert::fails variable::nonempty 'foo'
 }
 
 @test "fails if variable is only declared" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   declare foo
 
-  ! variable::nonempty 'foo'
+  assert::fails variable::nonempty 'foo'
 }
 
 @test "fails if variable is only declared as an indexed array" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   declare -a foo
 
-  ! variable::nonempty 'foo'
+  assert::fails variable::nonempty 'foo'
 }
 
 @test "fails if variable is only declared as an associative array" {
@@ -74,9 +86,12 @@ setup() {
     skip 'associative arrays are not supported'
   fi
 
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   declare -A foo
 
-  ! variable::nonempty 'foo'
+  assert::fails variable::nonempty 'foo'
 }
 
 @test "fails if variable is only globally declared" {
@@ -85,24 +100,36 @@ setup() {
     skip 'declare global is not supported'
   fi
 
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   declare -g foo
 
-  ! variable::nonempty 'foo'
+  assert::fails variable::nonempty 'foo'
 }
 
 @test "fails if variable is only localy declared" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   local foo
 
-  ! variable::nonempty 'foo'
+  assert::fails variable::nonempty 'foo'
 }
 
 @test "fails if variable is only readonly declared" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   local foo
   readonly foo
 
-  ! variable::nonempty 'foo'
+  assert::fails variable::nonempty 'foo'
 }
 
 @test "fails if variable is not declared" {
-  ! variable::nonempty 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails variable::nonempty 'foo'
 }

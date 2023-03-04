@@ -66,9 +66,12 @@ setup() {
 }
 
 @test "fails if variable a non-array value" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   foo='bar'
 
-  ! variable::is_array 'foo'
+  assert::fails variable::is_array 'foo'
 }
 
 @test "fails if variable is only globally declared" {
@@ -77,24 +80,36 @@ setup() {
     skip 'declare global is not supported'
   fi
 
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   declare -g foo
 
-  ! variable::is_array 'foo'
+  assert::fails variable::is_array 'foo'
 }
 
 @test "fails if variable is only localy declared" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   local foo
 
-  ! variable::is_array 'foo'
+  assert::fails variable::is_array 'foo'
 }
 
 @test "fails if variable is only readonly declared" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   local foo
   readonly foo
 
-  ! variable::is_array 'foo'
+  assert::fails variable::is_array 'foo'
 }
 
 @test "fails if variable is not declared" {
-  ! variable::is_array 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails variable::is_array 'foo'
 }

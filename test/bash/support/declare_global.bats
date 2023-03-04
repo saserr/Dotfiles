@@ -20,5 +20,8 @@ setup() {
     skip 'declare global is supported'
   fi
 
-  ! bash::support::declare_global
+  load '../../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails bash::support::declare_global
 }

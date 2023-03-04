@@ -40,19 +40,31 @@ setup() {
 }
 
 @test "fails if text doesn't contain the given infix" {
-  ! text::contains 'foo' 'bar'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::contains 'foo' 'bar'
 }
 
 @test "fails if text is prefix of the given infix" {
-  ! text::contains 'fo' 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::contains 'fo' 'foo'
 }
 
 @test "fails if text is suffix of the given infix" {
-  ! text::contains 'oo' 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::contains 'oo' 'foo'
 }
 
 @test "fails if text is infix of the given infix" {
-  ! text::contains 'o' 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::contains 'o' 'foo'
 }
 
 @test "succeeds if both text and infix are empty" {
@@ -60,7 +72,10 @@ setup() {
 }
 
 @test "fails if text is empty" {
-  ! text::contains '' 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::contains '' 'foo'
 }
 
 @test "succeeds if infix is empty" {

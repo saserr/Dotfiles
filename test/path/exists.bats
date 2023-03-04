@@ -18,7 +18,10 @@ setup() {
 }
 
 @test "a non-existant path doesn't exist" {
-  ! path::exists "$test_path"
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails path::exists "$test_path"
 }
 
 @test "a path to a directory exists" {
@@ -34,9 +37,12 @@ setup() {
 }
 
 @test "a path to a broken symlink doesn't exists" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   ln -s "$BATS_TEST_TMPDIR/bar" "$test_path"
 
-  ! path::exists "$test_path"
+  assert::fails path::exists "$test_path"
 }
 
 @test "a path to a valid symlink that links to a directory exists" {

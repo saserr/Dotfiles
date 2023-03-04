@@ -18,13 +18,19 @@ setup() {
 }
 
 @test "a non-existant path is not a file" {
-  ! file::exists "$test_file"
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails file::exists "$test_file"
 }
 
 @test "a path to a directory is not a file" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   mkdir "$test_file"
 
-  ! file::exists "$test_file"
+  assert::fails file::exists "$test_file"
 }
 
 @test "a path to a file is a file" {
@@ -34,9 +40,12 @@ setup() {
 }
 
 @test "a path to a broken symlink is not a file" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   ln -s "$BATS_TEST_TMPDIR/bar" "$test_file"
 
-  ! file::exists "$test_file"
+  assert::fails file::exists "$test_file"
 }
 
 @test "a path to a valid file symlink is a file" {
@@ -47,10 +56,13 @@ setup() {
 }
 
 @test "a path to a valid directory symlink is not a file" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   mkdir "$BATS_TEST_TMPDIR/bar"
   ln -s "$BATS_TEST_TMPDIR/bar" "$test_file"
 
-  ! file::exists "$test_file"
+  assert::fails file::exists "$test_file"
 }
 
 @test "a path to a valid file through multiple symlinks is a file" {
@@ -63,17 +75,23 @@ setup() {
 }
 
 @test "a path to a valid directory through multiple symlinks is not a file" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   mkdir "$BATS_TEST_TMPDIR/bar"
   ln -s "$BATS_TEST_TMPDIR/bar" "$BATS_TEST_TMPDIR/baz"
   ln -s "$BATS_TEST_TMPDIR/baz" "$test_file"
 
-  ! file::exists "$test_file"
+  assert::fails file::exists "$test_file"
 }
 
 @test "a path to a non-existent file through multiple symlinks is not a file" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   mkdir "$BATS_TEST_TMPDIR/bar"
   ln -s "$BATS_TEST_TMPDIR/bar" "$BATS_TEST_TMPDIR/baz"
   ln -s "$BATS_TEST_TMPDIR/baz/test" "$test_file"
 
-  ! file::exists "$test_file"
+  assert::fails file::exists "$test_file"
 }

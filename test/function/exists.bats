@@ -19,17 +19,26 @@ setup() {
 }
 
 @test "an unknown function is not a function" {
-  ! function::exists 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails function::exists 'foo'
 }
 
 @test "a program on \$PATH is not a function" {
-  ! function::exists 'env'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails function::exists 'env'
 }
 
 @test "a variable is not a function and thus doesn't exist" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   foo='bar'
 
-  ! function::exists 'foo'
+  assert::fails function::exists 'foo'
 }
 
 @test "a global variable is not a function and thus doesn't exist" {
@@ -38,20 +47,29 @@ setup() {
     skip 'declare global is not supported'
   fi
 
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   declare -g foo='bar'
 
-  ! function::exists 'foo'
+  assert::fails function::exists 'foo'
 }
 
 @test "a local variable is not a function and thus doesn't exist" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   local foo='bar'
 
-  ! function::exists 'foo'
+  assert::fails function::exists 'foo'
 }
 
 @test "a readonly variable is not a function and thus doesn't exist" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   local foo='bar'
   readonly foo
 
-  ! function::exists 'foo'
+  assert::fails function::exists 'foo'
 }

@@ -104,5 +104,8 @@ setup() {
 }
 
 @test "fails if variable is not declared" {
-  ! variable::exists 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails variable::exists 'foo'
 }

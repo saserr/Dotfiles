@@ -32,11 +32,17 @@ setup() {
 }
 
 @test "fails if text doesn't end with the given suffix" {
-  ! text::ends_with 'foo' 'bar'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::ends_with 'foo' 'bar'
 }
 
 @test "fails if text is suffix of the given suffix" {
-  ! text::ends_with 'oo' 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::ends_with 'oo' 'foo'
 }
 
 @test "succeeds if both text and suffix are empty" {
@@ -44,7 +50,10 @@ setup() {
 }
 
 @test "fails if text is empty" {
-  ! text::ends_with '' 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::ends_with '' 'foo'
 }
 
 @test "succeeds if suffix is empty" {

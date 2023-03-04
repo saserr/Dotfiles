@@ -111,21 +111,25 @@ setup() {
 }
 
 @test "fails if no answer" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
   import 'text::contains'
 
   run prompt::yes_or_no 'foo' 'bar' <<<$'\n'
 
   ((status == 1))
-  ! text::contains "$output" 'Yes'
-  ! text::contains "$output" 'No'
+  assert::fails text::contains "$output" 'Yes'
+  assert::fails text::contains "$output" 'No'
 }
 
 @test "fails if unknown answer" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
   import 'text::contains'
 
   run prompt::yes_or_no 'foo' 'bar' <<<'a'
 
   ((status == 1))
-  ! text::contains "$output" 'Yes'
-  ! text::contains "$output" 'No'
+  assert::fails text::contains "$output" 'Yes'
+  assert::fails text::contains "$output" 'No'
 }

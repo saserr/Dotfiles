@@ -23,13 +23,19 @@ setup() {
 }
 
 @test "an unknown command doesn't exist" {
-  ! command::exists 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails command::exists 'foo'
 }
 
 @test "a variable is not a command and thus doesn't exist" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   foo='bar'
 
-  ! command::exists 'foo'
+  assert::fails command::exists 'foo'
 }
 
 @test "a global variable is not a command and thus doesn't exist" {
@@ -38,20 +44,29 @@ setup() {
     skip 'declare global is not supported'
   fi
 
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   declare -g foo='bar'
 
-  ! command::exists 'foo'
+  assert::fails command::exists 'foo'
 }
 
 @test "a local variable is not a command and thus doesn't exist" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   local foo='bar'
 
-  ! command::exists 'foo'
+  assert::fails command::exists 'foo'
 }
 
 @test "a readonly variable is not a command and thus doesn't exist" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   local foo='bar'
   readonly foo
 
-  ! command::exists 'foo'
+  assert::fails command::exists 'foo'
 }

@@ -19,10 +19,13 @@ setup() {
 }
 
 @test "is not missing if recipe has been set up" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   mkdir -p "$HOME/.setup/"
   touch "$HOME/.setup/test"
 
-  ! setup::missing 'test'
+  assert::fails setup::missing 'test'
 
   rm "$HOME/.setup/test"
 }

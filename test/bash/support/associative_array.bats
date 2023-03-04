@@ -18,5 +18,8 @@ setup() {
     skip 'associative arrays are supported'
   fi
 
-  ! bash::support::associative_array
+  load '../../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails bash::support::associative_array
 }

@@ -36,10 +36,12 @@ setup() {
 
 @test "fails if package is installed" {
   load '../helpers/mocks/stub.bash'
+  load '../helpers/import.bash'
+  import 'assert::fails'
 
   stub dpkg '-s foo : echo "Status: install ok installed"'
 
-  ! apt::missing 'foo'
+  assert::fails apt::missing 'foo'
 
   unstub dpkg
 }

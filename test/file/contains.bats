@@ -27,13 +27,19 @@ setup() {
 }
 
 @test "a non-existant file doesn't contain given text" {
-  ! file::contains "$test_file" 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails file::contains "$test_file" 'foo'
 }
 
 @test "an empty file doesn't contain given text" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   touch "$test_file"
 
-  ! file::contains "$test_file" 'foo'
+  assert::fails file::contains "$test_file" 'foo'
 }
 
 @test "a file with just the given text" {
@@ -50,7 +56,10 @@ setup() {
 }
 
 @test "a file without the given text" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   echo 'foo' >"$test_file"
 
-  ! file::contains "$test_file" 'bar'
+  assert::fails file::contains "$test_file" 'bar'
 }

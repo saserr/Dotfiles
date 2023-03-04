@@ -6,10 +6,12 @@ setup() {
 }
 
 @test "creates \$RECIPES_PATH with 'recipes' if \$RECIPES_PATH is not declared" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
   import 'variable::exists'
 
   unset 'RECIPES_PATH'
-  ! variable::exists 'RECIPES_PATH'
+  assert::fails variable::exists 'RECIPES_PATH'
 
   source 'lib/recipe/file.bash'
 
@@ -31,11 +33,14 @@ setup() {
 }
 
 @test "redeclares \$RECIPES_PATH as an array and appends 'recipes' if \$RECIPES_PATH is not an array" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
   import 'variable::exists'
   import 'variable::is_array'
 
   local RECIPES_PATH='foo'
-  variable::exists 'RECIPES_PATH' && ! variable::is_array 'RECIPES_PATH'
+  variable::exists 'RECIPES_PATH'
+  assert::fails variable::is_array 'RECIPES_PATH'
 
   source 'lib/recipe/file.bash'
 

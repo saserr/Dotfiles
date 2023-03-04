@@ -28,7 +28,10 @@ setup() {
 }
 
 @test "a non-empty file is not empty" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   echo 'foo' >"$test_file"
 
-  ! file::empty "$test_file"
+  assert::fails file::empty "$test_file"
 }

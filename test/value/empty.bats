@@ -19,5 +19,8 @@ setup() {
 }
 
 @test "a non-empty value is not empty" {
-  ! value::empty 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails value::empty 'foo'
 }

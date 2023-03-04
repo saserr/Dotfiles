@@ -33,9 +33,12 @@ setup() {
   import 'platform::readlink'
 
   load '../helpers/mocks/stub.bash'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   stub greadlink ': exit 1'
 
-  ! platform::readlink
+  assert::fails platform::readlink
 
   unstub greadlink
 }
@@ -84,9 +87,12 @@ setup() {
   import 'platform::readlink'
 
   load '../helpers/mocks/stub.bash'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
   stub readlink ': exit 1'
 
-  ! platform::readlink
+  assert::fails platform::readlink
 
   unstub readlink
 }

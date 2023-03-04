@@ -32,11 +32,17 @@ setup() {
 }
 
 @test "fails if text doesn't start with the given prefix" {
-  ! text::starts_with 'foo' 'bar'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::starts_with 'foo' 'bar'
 }
 
 @test "fails if text is prefix of the given prefix" {
-  ! text::starts_with 'fo' 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::starts_with 'fo' 'foo'
 }
 
 @test "succeeds if both text and prefix are empty" {
@@ -44,7 +50,10 @@ setup() {
 }
 
 @test "fails if text is empty" {
-  ! text::starts_with '' 'foo'
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails text::starts_with '' 'foo'
 }
 
 @test "succeeds if prefix is empty" {
