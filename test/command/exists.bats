@@ -23,10 +23,35 @@ setup() {
 }
 
 @test "an unknown command doesn't exist" {
-  ! command::exists 'dummy'
+  ! command::exists 'foo'
 }
 
-@test "a local variable doesn't exists" {
-  local _local_value='foo'
-  ! command::exists '_local_value'
+@test "a variable is not a command and thus doesn't exist" {
+  foo='bar'
+
+  ! command::exists 'foo'
+}
+
+@test "a global variable is not a command and thus doesn't exist" {
+  import 'bash::support::declare_global'
+  if ! bash::support::declare_global; then
+    skip 'declare global is not supported'
+  fi
+
+  declare -g foo='bar'
+
+  ! command::exists 'foo'
+}
+
+@test "a local variable is not a command and thus doesn't exist" {
+  local foo='bar'
+
+  ! command::exists 'foo'
+}
+
+@test "a readonly variable is not a command and thus doesn't exist" {
+  local foo='bar'
+  readonly foo
+
+  ! command::exists 'foo'
 }
