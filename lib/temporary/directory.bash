@@ -9,7 +9,11 @@ case "$(platform::name)" in
 
       if (($# == 1)); then
         local path=$1
-        echo "$path/$(cd "$path" && mktemp -d 'tmp.XXXXXX')"
+
+        local directory
+        directory="$(cd "$path" && mktemp -d 'tmp.XXXXXXXX')" || return
+
+        echo "$path/$directory"
       else
         mktemp -d
       fi

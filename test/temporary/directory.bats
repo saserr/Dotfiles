@@ -5,22 +5,41 @@ setup() {
   import 'temporary::directory'
 }
 
-@test "creates a directory under \$TMPDIR or /tmp if no path is provided" {
+@test "outputs a path to a directory under \$TMPDIR or /tmp if no path is provided" {
   import 'text::starts_with'
 
-  local dir="$(temporary::directory)"
+  run temporary::directory
 
-  [[ -d "$dir" ]]
-  text::starts_with "$dir" "${TMPDIR:-/tmp}"
+  ((status == 0))
+  text::starts_with "$output" "${TMPDIR:-/tmp}"
+  [[ -d "$output" ]]
 }
 
-@test "creates a directory under the given path" {
+@test "outputs a path to a directory under the provided path" {
   import 'text::starts_with'
 
-  local dir="$(temporary::directory "$BATS_TEST_TMPDIR")"
+  run temporary::directory "$BATS_TEST_TMPDIR"
 
-  echo "$dir"
+  ((status == 0))
+  text::starts_with "$output" "$BATS_TEST_TMPDIR"
+  [[ -d "$output" ]]
+}
 
-  [[ -d "$dir" ]]
-  text::starts_with "$dir" "$BATS_TEST_TMPDIR"
+@test "fails if mktemp fails" {
+  load '../helpers/mocks/stub.bash'
+
+  stub mktemp 'exit 1'
+
+  run temporary::directory
+
+  unstub mktemp
+  ((status == 1))
+  [[ "$output" == '' ]]
+}
+
+@test "fails if the provided path does not exist" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+
+  assert::fails temporary::directory "$BATS_TEST_TMPDIR/foo"
 }
