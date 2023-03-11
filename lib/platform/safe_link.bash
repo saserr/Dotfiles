@@ -1,8 +1,8 @@
 import 'arguments::expect'
+import 'file::canonicalize'
 import 'log::error'
 import 'log::trace'
 import 'path::exists'
-import 'platform::readlink'
 import 'prompt::yes_or_no'
 
 platform::safe_link() {
@@ -17,7 +17,11 @@ platform::safe_link() {
     return 1
   fi
 
-  if [[ "$(platform::readlink -f "$from")" == "$(platform::readlink -f "$to")" ]]; then
+  local real_from
+  local real_to
+  if real_from="$(file::canonicalize "$from")" \
+    && real_to="$(file::canonicalize "$to")" \
+    && [[ "$real_from" == "$real_to" ]]; then
     log::trace "$name" "$from already links to $to"
     return 0
   fi
