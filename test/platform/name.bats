@@ -19,6 +19,7 @@ setup() {
   load '../helpers/mocks/stub.bash'
   import 'abort'
   import 'caller::location'
+  import 'caller::name'
 
   stub uname '-s : echo "Linux"'
   source() {
