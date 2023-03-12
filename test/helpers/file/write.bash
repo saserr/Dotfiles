@@ -1,6 +1,7 @@
 import 'arguments::expect'
 import 'file::append'
 import 'path::exists'
+import 'path::parent'
 
 file::write() {
   arguments::expect $# 'file' 'line' '...'
@@ -12,10 +13,12 @@ file::write() {
     return 1
   fi
 
-  mkdir -p "$(dirname -- "$file")" || return 1
+  local directory
+  directory="$(path::parent "$file")" || return
+  mkdir -p "$directory" || return
 
   local line
   for line in "${lines[@]}"; do
-    file::append "$file" "$line" || return 1
+    file::append "$file" "$line" || return
   done
 }

@@ -75,7 +75,7 @@ setup() {
   local RECIPES_PATH=("$BATS_TEST_TMPDIR")
   file::write "$BATS_TEST_TMPDIR/foo/recipe.bash" "echo 'bar'"
 
-  cd() { [[ "$1" != "$BATS_TEST_TMPDIR/foo" ]]; }
+  cd() { return 1; }
 
   local recipe='foo'
   run recipe::load

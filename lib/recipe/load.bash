@@ -2,6 +2,7 @@ import 'abort'
 import 'arguments::expect'
 import 'caller::location'
 import 'log::warn'
+import 'path::parent'
 import 'recipe::file'
 import 'variable::expect'
 
@@ -25,5 +26,7 @@ recipe::load() {
     abort "${recipe:?}" "${messages[@]}"
   fi
 
-  cd "$(dirname -- "$file")" || return
+  local directory
+  directory="$(path::parent "$file")" || return
+  cd "$directory" || return
 }

@@ -50,8 +50,10 @@ setup() {
 }
 
 @test "returns the location of the \$recipe's configuration" {
+  import 'path::parent'
+
   local expected="$BATS_TEST_TMPDIR/foo/recipe.bash"
-  mkdir -p "$(dirname -- "$expected")"
+  mkdir -p "$(path::parent "$expected")"
   touch "$expected"
 
   local RECIPES_PATH=("$BATS_TEST_TMPDIR")
@@ -72,8 +74,10 @@ setup() {
 }
 
 @test "returns the first location in \$RECIPES_PATH which has the \$recipe's configuration" {
+  import 'path::parent'
+
   local expected="$BATS_TEST_TMPDIR/git/recipe.bash"
-  mkdir -p "$(dirname -- "$expected")"
+  mkdir -p "$(path::parent "$expected")"
   touch "$expected"
 
   local RECIPES_PATH=("$BATS_TEST_TMPDIR" 'recipes')
