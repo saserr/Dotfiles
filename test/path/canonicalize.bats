@@ -2,7 +2,7 @@
 
 setup() {
   source 'lib/import.bash'
-  import 'file::canonicalize'
+  import 'path::canonicalize'
 
   # get the physical directory of BATS_TEST_TMPDIR; this fixes the issue on the
   # mac platform where the /var directory is a symlink to /private/var
@@ -13,15 +13,15 @@ setup() {
   load '../helpers/import.bash'
   import 'assert::wrong_usage'
 
-  run file::canonicalize
+  run path::canonicalize
 
-  assert::wrong_usage 'file::canonicalize' 'path'
+  assert::wrong_usage 'path::canonicalize' 'path'
 }
 
 @test "returns the same path even if the path does not exist" {
   local foo="$BATS_TEST_TMPDIR/foo"
 
-  run file::canonicalize "$foo"
+  run path::canonicalize "$foo"
 
   ((status == 0))
   [[ "$output" == "$foo" ]]
@@ -31,7 +31,7 @@ setup() {
   local foo="$BATS_TEST_TMPDIR/foo"
   touch "$foo"
 
-  run file::canonicalize "$foo"
+  run path::canonicalize "$foo"
 
   ((status == 0))
   [[ "$output" == "$foo" ]]
@@ -41,7 +41,7 @@ setup() {
   local foo="$BATS_TEST_TMPDIR/foo"
   mkdir "$foo"
 
-  run file::canonicalize "$foo"
+  run path::canonicalize "$foo"
 
   ((status == 0))
   [[ "$output" == "$foo" ]]
@@ -53,7 +53,7 @@ setup() {
   local bar="$BATS_TEST_TMPDIR/bar"
   ln -s "$foo" "$bar"
 
-  run file::canonicalize "$bar"
+  run path::canonicalize "$bar"
 
   ((status == 0))
   [[ "$output" == "$foo" ]]
@@ -65,7 +65,7 @@ setup() {
   local bar="$BATS_TEST_TMPDIR/bar"
   ln -s "$foo" "$bar"
 
-  run file::canonicalize "$bar"
+  run path::canonicalize "$bar"
 
   ((status == 0))
   [[ "$output" == "$foo" ]]
@@ -76,7 +76,7 @@ setup() {
   local bar="$BATS_TEST_TMPDIR/bar"
   ln -s "$foo" "$bar"
 
-  run file::canonicalize "$bar"
+  run path::canonicalize "$bar"
 
   ((status == 0))
   [[ "$output" == "$foo" ]]
@@ -90,7 +90,7 @@ setup() {
   local baz="$BATS_TEST_TMPDIR/baz"
   ln -s "$bar" "$baz"
 
-  run file::canonicalize "$baz"
+  run path::canonicalize "$baz"
 
   ((status == 0))
   [[ "$output" == "$foo" ]]
@@ -104,7 +104,7 @@ setup() {
   local baz="$BATS_TEST_TMPDIR/baz"
   ln -s "$bar" "$baz"
 
-  run file::canonicalize "$baz"
+  run path::canonicalize "$baz"
 
   ((status == 0))
   [[ "$output" == "$foo" ]]
@@ -117,7 +117,7 @@ setup() {
   local bar="$BATS_TEST_TMPDIR/bar"
   ln -s "$foo" "$bar"
 
-  run file::canonicalize "$bar/baz"
+  run path::canonicalize "$bar/baz"
 
   ((status == 0))
   [[ "$output" == "$foo/baz" ]]
@@ -133,7 +133,7 @@ setup() {
   local baz="$BATS_TEST_TMPDIR/baz"
   ln -s "$bar" "$baz"
 
-  run file::canonicalize "$baz/test2"
+  run path::canonicalize "$baz/test2"
 
   ((status == 0))
   [[ "$output" == "$foo/test1" ]]
@@ -144,7 +144,7 @@ setup() {
   local bar="$BATS_TEST_TMPDIR/bar"
   ln -s "$foo" "$bar"
 
-  run file::canonicalize "$bar/baz"
+  run path::canonicalize "$bar/baz"
 
   ((status == 1))
   [[ "$output" == '' ]]
@@ -162,7 +162,7 @@ setup() {
 
   stub greadlink 'exit 1'
 
-  assert::fails file::canonicalize "$bar"
+  assert::fails path::canonicalize "$bar"
 
   unstub greadlink
   [[ "$output" == '' ]]
@@ -180,7 +180,7 @@ setup() {
 
   command::exists() { [[ "$1" != 'greadlink' ]]; }
 
-  assert::exits file::canonicalize 'foo'
+  assert::exits path::canonicalize 'foo'
 
   ((status == 1))
   [[ "$output" == "$(log::error 'mac' 'greadlink is not installed')" ]]
@@ -198,7 +198,7 @@ setup() {
 
   stub readlink 'exit 1'
 
-  assert::fails file::canonicalize "$bar"
+  assert::fails path::canonicalize "$bar"
 
   unstub readlink
   [[ "$output" == '' ]]

@@ -39,8 +39,8 @@ setup() {
 }
 
 @test "makes a symlink from \$from to \$to if \$to does not exist" {
-  import 'file::canonicalize'
   import 'log::trace'
+  import 'path::canonicalize'
 
   echo 'foo' >"$to"
 
@@ -49,12 +49,12 @@ setup() {
   ((status == 0))
   [[ "$output" == "$(log::trace 'test' "$from will be linked to $to")" ]]
   [[ -L "$from" ]] # $from is a symlink
-  [[ "$(file::canonicalize "$from")" == "$(file::canonicalize "$to")" ]]
+  [[ "$(path::canonicalize "$from")" == "$(path::canonicalize "$to")" ]]
 }
 
 @test "does nothing if a symlink from \$from to \$to already exists" {
-  import 'file::canonicalize'
   import 'log::trace'
+  import 'path::canonicalize'
 
   echo 'foo' >"$to"
   ln -s "$to" "$from"
@@ -64,12 +64,12 @@ setup() {
   ((status == 0))
   [[ "$output" == "$(log::trace 'test' "$from already links to $to")" ]]
   [[ -L "$from" ]] # $from is a symlink
-  [[ "$(file::canonicalize "$from")" == "$(file::canonicalize "$to")" ]]
+  [[ "$(path::canonicalize "$from")" == "$(path::canonicalize "$to")" ]]
 }
 
 @test "does nothing if a symlink from \$from to \$to already exists when \$from is also a symbolic link" {
-  import 'file::canonicalize'
   import 'log::trace'
+  import 'path::canonicalize'
 
   foo="$BATS_TEST_TMPDIR/foo"
   echo 'foo' >"$foo"
@@ -81,7 +81,7 @@ setup() {
   ((status == 0))
   [[ "$output" == "$(log::trace 'test' "$from already links to $to")" ]]
   [[ -L "$from" ]] # $from is a symlink
-  [[ "$(file::canonicalize "$from")" == "$(file::canonicalize "$to")" ]]
+  [[ "$(path::canonicalize "$from")" == "$(path::canonicalize "$to")" ]]
 
 }
 
@@ -117,7 +117,7 @@ setup() {
 }
 
 @test "makes a symlink from \$from to \$to if \$from exists and a positive answer is given at the prompt" {
-  import 'file::canonicalize'
+  import 'path::canonicalize'
 
   echo 'foo' >"$from"
   echo 'bar' >"$to"
@@ -126,7 +126,7 @@ setup() {
 
   ((status == 0))
   [[ -L "$from" ]] # $from is a symlink
-  [[ "$(file::canonicalize "$from")" == "$(file::canonicalize "$to")" ]]
+  [[ "$(path::canonicalize "$from")" == "$(path::canonicalize "$to")" ]]
 }
 
 @test "fails and leaves things unchanged if \$from.old exists" {

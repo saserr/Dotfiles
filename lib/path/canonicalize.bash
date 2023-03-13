@@ -6,7 +6,7 @@ case "$(platform::name)" in
     import 'command::exists'
     import 'log::error'
 
-    file::canonicalize() {
+    path::canonicalize() {
       arguments::expect $# 'path'
 
       local path=$1
@@ -20,7 +20,7 @@ case "$(platform::name)" in
     }
     ;;
   *)
-    file::canonicalize() {
+    path::canonicalize() {
       arguments::expect $# 'path'
 
       local path=$1
