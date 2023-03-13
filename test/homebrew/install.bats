@@ -17,14 +17,31 @@ setup() {
   assert::wrong_usage 'homebrew::install' 'formula' '...'
 }
 
+@test "fails if homebrew is not installed" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
+  import 'log::error'
+
+  command::exists() { [[ "$1" != 'brew' ]]; }
+
+  assert::exits homebrew::install 'foo'
+
+  ((status == 1))
+  [[ "$output" == "$(log::error 'homebrew' 'is not installed')" ]]
+}
+
 @test "checks if formula is installed" {
+  load '../helpers/mocks/stub.bash'
+
   homebrew::missing() {
     args=("$@")
     return 1
   }
+  stub brew
 
   homebrew::install 'foo'
 
+  unstub brew
   ((${#args[@]} == 1))
   [[ "${args[0]}" == 'foo' ]]
 }
@@ -64,7 +81,6 @@ setup() {
   import 'log::trace'
 
   homebrew::missing() { [[ "$1" != 'bar' ]]; }
-
   stub brew \
     'update : ' \
     'install foo baz : '
@@ -78,12 +94,15 @@ setup() {
 }
 
 @test "succeeds if formula is already installed" {
+  load '../helpers/mocks/stub.bash'
   import 'log::trace'
 
   homebrew::missing() { return 1; }
+  stub brew
 
   run homebrew::install 'foo'
 
+  unstub brew
   ((status == 0))
   [[ "$output" == "$(log::trace 'homebrew' 'already installed: foo')" ]]
 }
