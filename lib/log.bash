@@ -1,10 +1,19 @@
+import 'arguments::error'
 import 'arguments::expect'
+import 'value::empty'
 
 log() {
   arguments::expect $# 'color' 'tag' 'message' '...'
 
   local tag=$2
+  if value::empty "$tag"; then
+    arguments::error 'expected nonempty argument: tag'
+  fi
+
   local messages=("${@:3}")
+  if value::empty "${messages[0]}"; then
+    arguments::error 'expected nonempty argument: message'
+  fi
 
   if [[ "$1" ]]; then
     local color="\033[${1}m"
@@ -23,7 +32,9 @@ log() {
     local message
     local messages=("${messages[@]:1}")
     for message in "${messages[@]}"; do
-      echo "$indentation $message"
+      if ! value::empty "$message"; then
+        echo "$indentation $message"
+      fi
     done
   fi
 }

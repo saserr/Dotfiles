@@ -50,5 +50,36 @@ setup() {
   run log '0' 'foo' 'bar' 'baz'
 
   ((status == 0))
+  ((${#lines[@]} == 2))
   [[ "${lines[1]}" == '      baz' ]]
+}
+
+@test "ignores any additional empty messages" {
+  run log '0' 'foo' 'bar' '' 'baz'
+
+  ((status == 0))
+  ((${#lines[@]} == 2))
+  [[ "${lines[1]}" == '      baz' ]]
+}
+
+@test "fails if tag is empty" {
+  load 'helpers/import.bash'
+  import 'assert::exits'
+  import 'log::error'
+
+  assert::exits log '0' '' 'bar'
+
+  ((status == 2))
+  [[ "${lines[0]}" == "$(log::error 'log' 'expected nonempty argument: tag')" ]]
+}
+
+@test "fails if the first message is empty" {
+  load 'helpers/import.bash'
+  import 'assert::exits'
+  import 'log::error'
+
+  assert::exits log '0' 'foo' ''
+
+  ((status == 2))
+  [[ "${lines[0]}" == "$(log::error 'log' 'expected nonempty argument: message')" ]]
 }
