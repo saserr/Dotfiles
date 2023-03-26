@@ -18,35 +18,40 @@ if ! declare -F 'import' >/dev/null 2>&1; then
       fi
     fi
 
-    if declare -F 'abort' >/dev/null 2>&1; then
-      abort 'import' "${messages[@]}"
-    elif declare -F 'log::error' >/dev/null 2>&1 >/dev/null 2>&1; then
-      log::error 'import' "${messages[@]}" 1>&2
-    else
-      echo "[import] ${messages[0]}" 1>&2
-      if ((${#messages[@]} > 1)); then
-        local message
-        local messages=("${messages[@]:1}")
-        for message in "${messages[@]}"; do
-          echo "         $message" 1>&2
-        done
+    if declare -F 'arguments::expect' >/dev/null 2>&1; then
+      if declare -F 'abort' >/dev/null 2>&1; then
+        abort 'import' "${messages[@]}"
+      elif declare -F 'log::error' >/dev/null 2>&1; then
+        log::error 'import' "${messages[@]}" 1>&2
+        exit 2
       fi
+    fi
+
+    echo "[import] ${messages[0]}" 1>&2
+    if ((${#messages[@]} > 1)); then
+      local message
+      local messages=("${messages[@]:1}")
+      for message in "${messages[@]}"; do
+        echo "         $message" 1>&2
+      done
     fi
 
     exit 2
   }
 
   __import::not_loaded() {
-    local caller="${FUNCNAME[1]}"
+    local function="${FUNCNAME[1]}"
+    echo "[$function] is being loaded; do not call" 1>&2
 
-    echo "[$caller] is being loaded; do not call" 1>&2
+    if ((${#BASH_SOURCE[@]} > 2)); then
+      local indentation
+      if ! indentation="$(printf " %.0s" $(seq 1 $((${#function} + 2))))"; then
+        indentation=' '
+      fi
 
-    if ((${#BASH_SOURCE[@]} > 1)); then
-      local identation
-      identation="$(printf " %.0s" $(seq 1 $((${#caller} + 2))))"
-      local file="${BASH_SOURCE[1]}"
-      local line="${BASH_LINENO[0]}"
-      echo "$identation at $file (line: $line)" 1>&2
+      local file="${BASH_SOURCE[2]}"
+      local line="${BASH_LINENO[1]}"
+      echo "$indentation at $file (line: $line)" 1>&2
     fi
 
     exit 2
@@ -56,7 +61,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     if declare -F 'arguments::expect' >/dev/null 2>&1; then
       arguments::expect $# 'function'
     elif (($# != 1)); then
-      __import::abort "requires a function name as an argument"
+      __import::abort 'requires a function name as an argument'
     fi
 
     local function=$1

@@ -15,13 +15,15 @@ log() {
   fi
 
   if ((${#messages[@]} > 1)); then
-    local identation
-    identation="$(printf " %.0s" $(seq 1 $((${#tag} + 2))))"
+    local indentation
+    if ! indentation="$(printf " %.0s" $(seq 1 $((${#tag} + 2))))"; then
+      indentation=' '
+    fi
 
     local message
     local messages=("${messages[@]:1}")
     for message in "${messages[@]}"; do
-      echo "$identation $message"
+      echo "$indentation $message"
     done
   fi
 }
