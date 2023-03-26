@@ -21,15 +21,45 @@ setup() {
 }
 
 @test "succeeds if variable is a non-empty indexed array with a non-empty first element" {
+  import 'bash::support::associative_array'
+  import 'bash::support::declare_reference'
+
   foo=('bar')
 
   variable::nonempty 'foo'
+
+  # succeeds even when the support for 'declare -n' is ignored
+  if bash::support::declare_reference; then
+    bash::support::declare_reference() { return 1; }
+    variable::nonempty 'foo'
+  fi
+
+  # succeeds even when the support for associative arrays is ignored
+  if bash::support::associative_array; then
+    bash::support::associative_array() { return 1; }
+    variable::nonempty 'foo'
+  fi
 }
 
 @test "succeeds if variable is a non-empty indexed array with an empty first element" {
+  import 'bash::support::associative_array'
+  import 'bash::support::declare_reference'
+
   foo=('')
 
   variable::nonempty 'foo'
+
+  # succeeds even when the support for 'declare -n' is ignored
+  if bash::support::declare_reference; then
+    bash::support::declare_reference() { return 1; }
+    variable::nonempty 'foo'
+  fi
+
+  # succeeds even when the support for associative arrays is ignored
+  if bash::support::associative_array; then
+    bash::support::associative_array() { return 1; }
+    variable::nonempty 'foo'
+  fi
 }
 
 @test "succeeds if variable is a non-empty associative array" {
@@ -38,10 +68,18 @@ setup() {
     skip 'associative arrays are not supported'
   fi
 
+  import 'bash::support::declare_reference'
+
   declare -A foo
   foo['bar']='baz'
 
   variable::nonempty 'foo'
+
+  # succeeds even when the support for 'declare -n' is ignored
+  if bash::support::declare_reference; then
+    bash::support::declare_reference() { return 1; }
+    variable::nonempty 'foo'
+  fi
 }
 
 @test "fails if variable is declared and an empty value" {
@@ -56,10 +94,24 @@ setup() {
 @test "fails if variable is an empty array" {
   load '../helpers/import.bash'
   import 'assert::fails'
+  import 'bash::support::associative_array'
+  import 'bash::support::declare_reference'
 
   foo=()
 
   assert::fails variable::nonempty 'foo'
+
+  # fails even when the support for 'declare -n' is ignored
+  if bash::support::declare_reference; then
+    bash::support::declare_reference() { return 1; }
+    assert::fails variable::nonempty 'foo'
+  fi
+
+  # fails even when the support for associative arrays is ignored
+  if bash::support::associative_array; then
+    bash::support::associative_array() { return 1; }
+    assert::fails variable::nonempty 'foo'
+  fi
 }
 
 @test "fails if variable is only declared" {
@@ -74,10 +126,24 @@ setup() {
 @test "fails if variable is only declared as an indexed array" {
   load '../helpers/import.bash'
   import 'assert::fails'
+  import 'bash::support::associative_array'
+  import 'bash::support::declare_reference'
 
   declare -a foo
 
   assert::fails variable::nonempty 'foo'
+
+  # fails even when the support for 'declare -n' is ignored
+  if bash::support::declare_reference; then
+    bash::support::declare_reference() { return 1; }
+    assert::fails variable::nonempty 'foo'
+  fi
+
+  # fails even when the support for associative arrays is ignored
+  if bash::support::associative_array; then
+    bash::support::associative_array() { return 1; }
+    assert::fails variable::nonempty 'foo'
+  fi
 }
 
 @test "fails if variable is only declared as an associative array" {
@@ -88,10 +154,17 @@ setup() {
 
   load '../helpers/import.bash'
   import 'assert::fails'
+  import 'bash::support::declare_reference'
 
   declare -A foo
 
   assert::fails variable::nonempty 'foo'
+
+  # fails even when the support for 'declare -n' is ignored
+  if bash::support::declare_reference; then
+    bash::support::declare_reference() { return 1; }
+    assert::fails variable::nonempty 'foo'
+  fi
 }
 
 @test "fails if variable is only globally declared" {
