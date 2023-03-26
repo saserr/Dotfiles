@@ -4,6 +4,37 @@
 __arguments::expect::abort() {
   # check if this function has the correct number of arguments
   if (($# < 2)); then
+    local -i vararg=1
+    local -i optional=0
+    local -i required=2
+    __arguments::expect::failure 0 $# 'tag' 'message' '...'
+  fi
+
+  local tag=$1
+  local messages=("${@:2}")
+
+  if declare -F 'abort' >/dev/null 2>&1; then
+    abort "$tag" "${messages[@]}"
+  else
+    echo "[$tag] ${messages[0]}" 1>&2
+    messages=("${messages[@]:1}")
+
+    local indentation
+    if ! indentation="$(printf " %.0s" $(seq 1 $((${#tag} + 2))))"; then
+      indentation=' '
+    fi
+
+    local message
+    for message in "${messages[@]}"; do
+      echo "$indentation $message" 1>&2
+    done
+    exit 2
+  fi
+}
+
+__arguments::expect::failure() {
+  # check if this function has the correct number of arguments
+  if (($# < 2)); then
     local -i stack_position=0
     local -i actual=$#
     local names=('stack_position' 'actual' '[name]' '...')
@@ -13,26 +44,9 @@ __arguments::expect::abort() {
     local names=("${@:3}")
   fi
 
-  local function
-  # skip the last element of the FUNCNAME array which is 'main'
-  if (((stack_position + 1) < ${#FUNCNAME[@]})); then
-    function="${FUNCNAME[$stack_position]}"
-  else
-    function="$0"
-  fi
+  local messages=('wrong number of arguments' "actual: $actual")
 
-  local messages=()
-  local message='wrong number of arguments'
-  if (((stack_position + 1) < ${#BASH_SOURCE[@]})); then
-    local file="${BASH_SOURCE[$((stack_position + 1))]}"
-    local line="${BASH_LINENO[$stack_position]}"
-    message+=" at $file (line: $line)"
-  fi
-  messages+=("$message")
-
-  messages+=("actual: $actual")
-
-  message='expected: '
+  local message='expected: '
   if ((vararg)); then
     message+="${required:?} (or more)"
   elif ((optional)); then
@@ -50,29 +64,42 @@ __arguments::expect::abort() {
     messages+=("arguments: ${names[*]}")
   fi
 
-  if declare -F 'abort' >/dev/null 2>&1; then
-    abort "$function" "${messages[@]}"
-  else
-    echo "[$function] ${messages[0]}" 1>&2
-    messages=("${messages[@]:1}")
-    local message
-    for message in "${messages[@]}"; do
-      echo "    $message" 1>&2
-    done
-    exit 2
+  if (((stack_position + 1) < ${#BASH_SOURCE[@]})); then
+    local file="${BASH_SOURCE[$((stack_position + 1))]}"
+    local line="${BASH_LINENO[$stack_position]}"
+    messages+=("at $file (line: $line)")
   fi
+
+  local function
+  # skip the last element of the FUNCNAME array which is 'main'
+  if ((stack_position < (${#FUNCNAME[@]} - 1))); then
+    function="${FUNCNAME[$stack_position]}"
+  else
+    function="$0"
+  fi
+
+  __arguments::expect::abort "$function" "${messages[@]}"
 }
 
 arguments::expect() {
-  local -i actual=$1
-
-  # check if this function has the correct number of arguments and that the
-  # first argument is an integer
-  if (($# < 1)) || [[ "$actual" != "$1" ]]; then
+  # check if this function has the correct number of arguments
+  if (($# < 1)); then
     local -i vararg=1
     local -i optional=1
     local -i required=1
-    __arguments::expect::abort 0 $# '$#' '[name]' '...'
+    __arguments::expect::failure 0 $# '$#' '[name]' '...'
+  fi
+
+  local -i actual=$1
+  # check if the first argument is an integer
+  if [[ "$actual" != "$1" ]]; then
+    local messages=('the first argument is not an integer')
+    if ((${#BASH_SOURCE[@]} > 1)); then
+      local file="${BASH_SOURCE[1]}"
+      local line="${BASH_LINENO[0]}"
+      messages+=("at $file (line: $line)")
+    fi
+    __arguments::expect::abort "${FUNCNAME[0]}" "${messages[@]}"
   fi
 
   ((actual == ($# - 1))) && return 0
@@ -100,6 +127,6 @@ arguments::expect() {
 
   if ((actual < required)) \
     || { ((vararg == 0)) && ((actual > (required + optional))); }; then
-    __arguments::expect::abort 1 "$actual" "${names[@]}"
+    __arguments::expect::failure 1 "$actual" "${names[@]}"
   fi
 }
