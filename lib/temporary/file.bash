@@ -10,10 +10,10 @@ case "$(platform::name)" in
       if (($# == 1)); then
         local path=$1
 
-        local tmpfile
-        tmpfile="$(cd "$path" && mktemp 'tmp.XXXXXXXX')" || return
+        local file
+        file="$(cd "$path" && mktemp 'tmp.XXXXXXXX')" || return
 
-        echo "$path/$tmpfile"
+        echo "$path/$file"
       else
         mktemp
       fi
