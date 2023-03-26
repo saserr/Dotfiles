@@ -32,19 +32,40 @@ setup() {
   assert::exits prompt::yes_or_no 'foo' 'bar' 'baz'
 
   ((status == 2))
-  text::contains "${lines[0]}" 'prompt::yes_or_no'
-  text::contains "${lines[0]}" 'wrong default value'
+  text::contains "${lines[0]}" '[prompt::yes_or_no]'
+  text::ends_with "${lines[0]}" 'wrong default value'
   text::ends_with "${lines[1]}" 'actual: baz'
   text::ends_with "${lines[2]}" 'expected: Yes|No'
 }
 
-@test "prompts the question" {
+@test "prompts the question and shows the choice with no default answer" {
   import 'text::contains'
 
   run prompt::yes_or_no 'foo' 'bar' <<<''
 
-  text::contains "$output" 'foo'
-  text::contains "$output" 'bar [y/n]'
+  ((${#lines[@]} == 1))
+  text::contains "${lines[0]}" '[foo]'
+  text::contains "${lines[0]}" 'bar [y/n]'
+}
+
+@test "prompts the question and shows the choice with the default 'Yes' answer" {
+  import 'text::contains'
+
+  run prompt::yes_or_no 'foo' 'bar' 'Yes' <<<''
+
+  ((${#lines[@]} == 1))
+  text::contains "${lines[0]}" '[foo]'
+  text::contains "${lines[0]}" 'bar [Y/n]'
+}
+
+@test "prompts the question and shows the choice with the default 'No' answer" {
+  import 'text::contains'
+
+  run prompt::yes_or_no 'foo' 'bar' 'No' <<<''
+
+  ((${#lines[@]} == 1))
+  text::contains "${lines[0]}" '[foo]'
+  text::contains "${lines[0]}" 'bar [y/N]'
 }
 
 @test "returns Yes if the answer is y" {
