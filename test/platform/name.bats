@@ -10,25 +10,30 @@ setup() {
 
   stub uname '-s : echo "Darwin"'
 
-  [[ "$(platform::name)" == 'mac' ]]
+  run platform::name
 
   unstub uname
+  [[ "$output" == 'mac' ]]
 }
 
 @test "returns ID from /etc/os-release if the current platform is 'Linux'" {
   load '../helpers/mocks/stub.bash'
-  import 'abort'
+
+  # force loading of platform::name before source has been mocked
+  platform::name >/dev/null
 
   stub uname '-s : echo "Linux"'
   source() {
     if [[ "$1" == '/etc/os-release' ]]; then
       ID='foo'
     else
-      abort 'source' 'is mocked'
+      echo 'source is mocked' 1>&2
+      exit 1
     fi
   }
 
-  [[ "$(platform::name)" == 'foo' ]]
+  run platform::name
 
   unstub uname
+  [[ "$output" == 'foo' ]]
 }

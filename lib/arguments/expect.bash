@@ -1,16 +1,19 @@
+import 'caller::name'
 import 'log::error'
 import 'stack_trace::create'
 
 __arguments::expect::abort() {
   # check if this function has the correct number of arguments
-  if (($# < 2)); then
+  if (($# < 3)); then
+    local function="${FUNCNAME[0]}"
     local -i stack_position=0
     local -i actual=$#
     local names=('stack_position' 'actual' '[name]' '...')
   else
-    local -i stack_position=$(($1 + 1)) # add 1 to skip this function on the stack
-    local -i actual=$2
-    local names=("${@:3}")
+    local function=$1
+    local -i stack_position=$(($2 + 1)) # add 1 to skip this function on the stack
+    local -i actual=$3
+    local names=("${@:4}")
   fi
 
   local messages=('wrong number of arguments' "actual: $actual")
@@ -39,14 +42,6 @@ __arguments::expect::abort() {
     messages+=("${STACK_TRACE[@]:$((stack_position + 1))}")
   fi
 
-  local function
-  # skip the last element of the FUNCNAME array which is 'main'
-  if ((stack_position < (${#FUNCNAME[@]} - 1))); then
-    function="${FUNCNAME[$stack_position]}"
-  else
-    function="$0"
-  fi
-
   log::error "$function" "${messages[@]}"
   exit 2
 }
@@ -57,7 +52,7 @@ arguments::expect() {
     local -i vararg=1
     local -i optional=1
     local -i required=1
-    __arguments::expect::abort 0 $# '$#' '[name]' '...'
+    __arguments::expect::abort "${FUNCNAME[0]}" 0 $# '$#' '[name]' '...'
   fi
 
   local -i actual=$1
@@ -99,6 +94,6 @@ arguments::expect() {
 
   if ((actual < required)) \
     || { ((vararg == 0)) && ((actual > (required + optional))); }; then
-    __arguments::expect::abort 1 "$actual" "${names[@]}"
+    __arguments::expect::abort "$(caller::name)" 1 "$actual" "${names[@]}"
   fi
 }

@@ -5,14 +5,34 @@ setup() {
   import 'caller::name'
 }
 
-@test "returns the name of the calling function" {
-  foo() { bar; }
-  bar() { caller::name; }
+@test "returns the name of the calling function when functions are declared" {
+  foo() { caller::name; }
+  bar() { foo; }
 
-  run foo
+  run bar
 
   ((status == 0))
-  [[ "$output" == 'foo' ]]
+  [[ "$output" == 'bar' ]]
+}
+
+@test "returns the name of the calling function when functions are imported" {
+  load '../helpers/import.bash'
+  import 'file::write'
+
+  file::write "$BATS_TEST_TMPDIR/foo.bash" \
+    "import 'caller::name'" \
+    'foo() { caller::name; }'
+  file::write "$BATS_TEST_TMPDIR/bar.bash" \
+    "import 'foo'" \
+    'bar() { foo; }'
+
+  IMPORT_PATH+=("$BATS_TEST_TMPDIR")
+  import 'bar'
+
+  run bar
+
+  ((status == 0))
+  [[ "$output" == 'bar' ]]
 }
 
 @test "returns the shell name when invoked directly in the shell" {

@@ -53,6 +53,22 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     __import::abort "$function" 'is being loaded; do not call'
   }
 
+  __import::load() {
+    local function="${FUNCNAME[1]}"
+    local file=$1
+
+    # shellcheck source=/dev/null
+    if ! { eval "$(printf '%q() { __import::not_loaded; };' "$function")" && source "$file"; }; then
+      __import::abort 'import' "can't load the '$function' function from $file"
+    fi
+
+    local declaration
+    if ! declaration="$(declare -f "$function" 2>&1)" \
+      || [[ "$declaration" == *'__import::not_loaded'* ]]; then
+      __import::abort 'import' "the '$function' function is missing in $file"
+    fi
+  }
+
   import() {
     if (($# != 1)); then
       __import::abort 'import' 'expected argument: function'
@@ -67,17 +83,9 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     for path in "${IMPORT_PATH[@]}"; do
       local file="$path/${function//:://}.bash"
       if [[ -e "$file" ]] && [[ ! -d "$file" ]]; then
-        # shellcheck source=/dev/null
-        if ! { eval "$(printf '%q() { __import::not_loaded; };' "$function")" && source "$file"; }; then
-          __import::abort 'import' "can't load the '$function' function from $file"
+        if ! eval "$(printf '%q() { __import::load '\''%q'\''; %q "$@"; };' "$function" "$file" "$function")"; then
+          __import::abort "can't declare the '$function' function"
         fi
-
-        local declaration
-        if ! declaration="$(declare -f "$function" 2>&1)" \
-          || [[ "$declaration" == *'__import::not_loaded'* ]]; then
-          __import::abort 'import' "the '$function' function is missing in $file"
-        fi
-
         return 0
       fi
     done

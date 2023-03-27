@@ -179,7 +179,8 @@
   touch "$BATS_TEST_TMPDIR/foo.bash"
   source 'lib/import.bash'
 
-  run import 'foo'
+  import 'foo'
+  run foo
 
   ((status == 2))
   [[ "${lines[0]}" == *'[import]'* ]]
@@ -226,6 +227,7 @@
 
 @test "fails if a function is used while being imported" {
   echo "import 'bar'" >"$BATS_TEST_TMPDIR/foo.bash"
+  echo 'bar' >>"$BATS_TEST_TMPDIR/foo.bash"
   echo "foo() { echo 'foo'; }" >>"$BATS_TEST_TMPDIR/foo.bash"
 
   echo "import 'foo'" >"$BATS_TEST_TMPDIR/bar.bash"
@@ -235,18 +237,20 @@
   # fails because foo is called in bar.bash before it was actually declared
   run bash -c "IMPORT_PATH=('$BATS_TEST_TMPDIR') \
     && source 'lib/import.bash' \
-    && import 'foo'"
+    && import 'foo' \
+    && foo"
 
   ((status == 2))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[foo]'* ]]
   [[ "${lines[0]}" == *'is being loaded; do not call' ]]
   [[ "${lines[1]}" == "      at $BATS_TEST_TMPDIR/bar.bash (line: 2)" ]]
-  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 1)" ]]
+  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 2)" ]]
 }
 
 @test "fails if a function is used while being imported (no abort)" {
   echo "import 'bar'" >"$BATS_TEST_TMPDIR/foo.bash"
+  echo 'bar' >>"$BATS_TEST_TMPDIR/foo.bash"
   echo "foo() { echo 'foo'; }" >>"$BATS_TEST_TMPDIR/foo.bash"
 
   echo "import 'foo'" >"$BATS_TEST_TMPDIR/bar.bash"
@@ -257,18 +261,20 @@
   run bash -c "IMPORT_PATH=('$BATS_TEST_TMPDIR') \
     && source 'lib/import.bash' \
     && unset -f 'abort' \
-    && import 'foo'"
+    && import 'foo' \
+    && foo"
 
   ((status == 2))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[foo]'* ]]
   [[ "${lines[0]}" == *'is being loaded; do not call' ]]
   [[ "${lines[1]}" == "      at $BATS_TEST_TMPDIR/bar.bash (line: 2)" ]]
-  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 1)" ]]
+  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 2)" ]]
 }
 
 @test "fails if a function is used while being imported (no abort and log::error)" {
   echo "import 'bar'" >"$BATS_TEST_TMPDIR/foo.bash"
+  echo 'bar' >>"$BATS_TEST_TMPDIR/foo.bash"
   echo "foo() { echo 'foo'; }" >>"$BATS_TEST_TMPDIR/foo.bash"
 
   echo "import 'foo'" >"$BATS_TEST_TMPDIR/bar.bash"
@@ -280,13 +286,14 @@
     && source 'lib/import.bash' \
     && unset -f 'abort' \
     && unset -f 'log::error' \
-    && import 'foo'"
+    && import 'foo' \
+    && foo"
 
   ((status == 2))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == '[foo] is being loaded; do not call' ]]
   [[ "${lines[1]}" == "      at $BATS_TEST_TMPDIR/bar.bash (line: 2)" ]]
-  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 1)" ]]
+  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 2)" ]]
 }
 
 @test "fails if sourcing the function file fails" {
@@ -294,7 +301,8 @@
   echo 'return 1' >"$BATS_TEST_TMPDIR/foo.bash"
   source 'lib/import.bash'
 
-  run import 'foo'
+  import 'foo'
+  run foo
 
   ((status == 2))
   [[ "${lines[0]}" == *'[import]'* ]]
