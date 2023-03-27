@@ -31,32 +31,6 @@ setup() {
   [[ "${lines[4]}" == "                    at $script (line: 4)" ]]
 }
 
-@test "fails without arguments (no abort)" {
-  load '../helpers/import.bash'
-  import 'assert::exits'
-  import 'file::write'
-
-  local script="$BATS_TEST_TMPDIR/foo"
-  file::write "$script" \
-    '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
-    "import 'arguments::expect'" \
-    "unset -f 'abort'" \
-    "foo() { arguments::expect; }" \
-    'foo'
-  chmod +x "$script"
-
-  run "$script"
-
-  ((status == 2))
-  ((${#lines[@]} == 5))
-  [[ "${lines[0]}" == '[arguments::expect] wrong number of arguments' ]]
-  [[ "${lines[1]}" == '                    actual: 0' ]]
-  [[ "${lines[2]}" == '                    expected: 1 (or more)' ]]
-  [[ "${lines[3]}" == '                    arguments: $# [name] ...' ]]
-  [[ "${lines[4]}" == "                    at $script (line: 5)" ]]
-}
-
 @test "fails when first argument is not an integer" {
   load '../helpers/import.bash'
   import 'assert::exits'
@@ -78,29 +52,6 @@ setup() {
   [[ "${lines[0]}" == "$(log::error 'arguments::expect' 'expected integer argument: $#')" ]]
   [[ "${lines[1]}" == '                    actual: foo' ]]
   [[ "${lines[2]}" == "                    at $script (line: 4)" ]]
-}
-
-@test "fails when first argument is not an integer (no abort)" {
-  load '../helpers/import.bash'
-  import 'file::write'
-  import 'assert::exits'
-
-  local script="$BATS_TEST_TMPDIR/foo"
-  file::write "$script" \
-    '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
-    "import 'arguments::expect'" \
-    "unset -f 'abort'" \
-    "arguments::expect 'foo'"
-  chmod +x "$script"
-
-  run "$script"
-
-  ((status == 2))
-  ((${#lines[@]} == 3))
-  [[ "${lines[0]}" == '[arguments::expect] expected integer argument: $#' ]]
-  [[ "${lines[1]}" == '                    actual: foo' ]]
-  [[ "${lines[2]}" == "                    at $script (line: 5)" ]]
 }
 
 @test "succeeds when no arguments are expected and there were none" {
@@ -306,31 +257,6 @@ setup() {
   [[ "${lines[1]}" == '      actual: 1' ]]
   [[ "${lines[2]}" == '      expected: 0' ]]
   [[ "${lines[3]}" == "      at $script (line: 5)" ]]
-}
-
-@test "the failure message contains the caller's filename and line number (no abort)" {
-  load '../helpers/import.bash'
-  import 'file::write'
-  import 'log::error'
-  import 'text::ends_with'
-
-  local script="$BATS_TEST_TMPDIR/foo"
-  file::write "$script" \
-    '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
-    "import 'arguments::expect'" \
-    "unset -f 'abort'" \
-    'foo() { arguments::expect 1; }' \
-    'foo'
-  chmod +x "$script"
-
-  run "$script"
-
-  ((${#lines[@]} == 4))
-  [[ "${lines[0]}" == '[foo] wrong number of arguments' ]]
-  [[ "${lines[1]}" == '      actual: 1' ]]
-  [[ "${lines[2]}" == '      expected: 0' ]]
-  [[ "${lines[3]}" == "      at $script (line: 6)" ]]
 }
 
 @test "the failure message contains the shell if it is invoked outside of a function" {

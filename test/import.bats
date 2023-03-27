@@ -48,20 +48,36 @@
   run "$script"
 
   ((status == 2))
-  ((${#lines[@]} == 5))
+  ((${#lines[@]} == 2))
   [[ "${lines[0]}" == *'[import]'* ]]
-  [[ "${lines[0]}" == *'wrong number of arguments' ]]
-  [[ "${lines[1]}" == '         actual: 0' ]]
-  [[ "${lines[2]}" == '         expected: 1' ]]
-  [[ "${lines[3]}" == '         arguments: function' ]]
-  [[ "${lines[4]}" == "         at $script (line: 3)" ]]
+  [[ "${lines[0]}" == *'expected argument: function' ]]
+  [[ "${lines[1]}" == "         at $script (line: 3)" ]]
 }
 
-@test "fails without arguments (no arguments::expect)" {
+@test "fails without arguments (no abort)" {
   local script="$BATS_TEST_TMPDIR/test.bash"
   echo '#!/usr/bin/env bash' >"$script"
   echo "source 'lib/import.bash'" >>"$script"
-  echo "unset -f 'arguments::expect'" >>"$script"
+  echo "unset -f 'abort'" >>"$script"
+  echo 'test() { import; }' >>"$script"
+  echo 'test' >>"$script"
+  chmod +x "$script"
+
+  run "$script"
+
+  ((status == 2))
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == *'[import]'* ]]
+  [[ "${lines[0]}" == *'expected argument: function' ]]
+  [[ "${lines[1]}" == "         at $script (line: 4)" ]]
+}
+
+@test "fails without arguments (no abort and log::error)" {
+  local script="$BATS_TEST_TMPDIR/test.bash"
+  echo '#!/usr/bin/env bash' >"$script"
+  echo "source 'lib/import.bash'" >>"$script"
+  echo "unset -f 'abort'" >>"$script"
+  echo "unset -f 'log::error'" >>"$script"
   echo 'test() { import; }' >>"$script"
   echo 'test' >>"$script"
   chmod +x "$script"
@@ -71,7 +87,7 @@
   ((status == 2))
   ((${#lines[@]} == 2))
   [[ "${lines[0]}" == '[import] expected argument: function' ]]
-  [[ "${lines[1]}" == "         at $script (line: 4)" ]]
+  [[ "${lines[1]}" == "         at $script (line: 5)" ]]
 }
 
 @test "doesn't do anything if function already exists" {

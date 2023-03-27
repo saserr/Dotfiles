@@ -2,7 +2,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
   IMPORT_PATH+=("$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)")
 
   __import::abort() {
-    if { declare -F 'arguments::expect' >/dev/null 2>&1 && arguments::expect $# 'message'; } || (($#)); then
+    if (($#)); then
       local messages=("$1")
       if ((${#BASH_SOURCE[@]} > 2)); then
         local file="${BASH_SOURCE[2]}"
@@ -18,22 +18,19 @@ if ! declare -F 'import' >/dev/null 2>&1; then
       fi
     fi
 
-    if declare -F 'arguments::expect' >/dev/null 2>&1; then
-      if declare -F 'abort' >/dev/null 2>&1; then
-        abort 'import' "${messages[@]}"
-      elif declare -F 'log::error' >/dev/null 2>&1; then
-        log::error 'import' "${messages[@]}" 1>&2
-        exit 2
+    if declare -F 'abort' >/dev/null 2>&1; then
+      abort 'import' "${messages[@]}"
+    elif declare -F 'log::error' >/dev/null 2>&1; then
+      log::error 'import' "${messages[@]}" 1>&2
+    else
+      echo "[import] ${messages[0]}" 1>&2
+      if ((${#messages[@]} > 1)); then
+        local message
+        local messages=("${messages[@]:1}")
+        for message in "${messages[@]}"; do
+          echo "         $message" 1>&2
+        done
       fi
-    fi
-
-    echo "[import] ${messages[0]}" 1>&2
-    if ((${#messages[@]} > 1)); then
-      local message
-      local messages=("${messages[@]:1}")
-      for message in "${messages[@]}"; do
-        echo "         $message" 1>&2
-      done
     fi
 
     exit 2
@@ -58,9 +55,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
   }
 
   import() {
-    if declare -F 'arguments::expect' >/dev/null 2>&1; then
-      arguments::expect $# 'function'
-    elif (($# != 1)); then
+    if (($# != 1)); then
       __import::abort 'expected argument: function'
     fi
 
@@ -91,7 +86,6 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     __import::abort "unknown function: $function"
   }
 
-  import 'arguments::expect'
   import 'log::error'
   import 'abort'
 fi

@@ -1,38 +1,6 @@
-# Do not import any other functions because the import function depens on
-# arguments::expect.
+import 'abort'
 
 __arguments::expect::abort() {
-  # check if this function has the correct number of arguments
-  if (($# < 2)); then
-    local -i vararg=1
-    local -i optional=0
-    local -i required=2
-    __arguments::expect::failure 0 $# 'tag' 'message' '...'
-  fi
-
-  local tag=$1
-  local messages=("${@:2}")
-
-  if declare -F 'abort' >/dev/null 2>&1; then
-    abort "$tag" "${messages[@]}"
-  else
-    echo "[$tag] ${messages[0]}" 1>&2
-    messages=("${messages[@]:1}")
-
-    local indentation
-    if ! indentation="$(printf " %.0s" $(seq 1 $((${#tag} + 2))))"; then
-      indentation=' '
-    fi
-
-    local message
-    for message in "${messages[@]}"; do
-      echo "$indentation $message" 1>&2
-    done
-    exit 2
-  fi
-}
-
-__arguments::expect::failure() {
   # check if this function has the correct number of arguments
   if (($# < 2)); then
     local -i stack_position=0
@@ -78,7 +46,7 @@ __arguments::expect::failure() {
     function="$0"
   fi
 
-  __arguments::expect::abort "$function" "${messages[@]}"
+  abort "$function" "${messages[@]}"
 }
 
 arguments::expect() {
@@ -87,7 +55,7 @@ arguments::expect() {
     local -i vararg=1
     local -i optional=1
     local -i required=1
-    __arguments::expect::failure 0 $# '$#' '[name]' '...'
+    __arguments::expect::abort 0 $# '$#' '[name]' '...'
   fi
 
   local -i actual=$1
@@ -99,7 +67,7 @@ arguments::expect() {
       local line="${BASH_LINENO[0]}"
       messages+=("at $file (line: $line)")
     fi
-    __arguments::expect::abort "${FUNCNAME[0]}" "${messages[@]}"
+    abort "${FUNCNAME[0]}" "${messages[@]}"
   fi
 
   ((actual == ($# - 1))) && return 0
@@ -127,6 +95,6 @@ arguments::expect() {
 
   if ((actual < required)) \
     || { ((vararg == 0)) && ((actual > (required + optional))); }; then
-    __arguments::expect::failure 1 "$actual" "${names[@]}"
+    __arguments::expect::abort 1 "$actual" "${names[@]}"
   fi
 }
