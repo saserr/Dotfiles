@@ -16,46 +16,51 @@ setup() {
 
 @test "the output contains the function name and the message" {
   load '../helpers/import.bash'
-  import 'assert::exits'
-  import 'text::contains'
+  import 'file::write'
+  import 'log::error'
 
-  foo() {
-    arguments::error 'bar'
-  }
-  assert::exits foo
+  local script="$BATS_TEST_TMPDIR/foo"
+  file::write "$script" \
+    '#!/usr/bin/env bash' \
+    "source 'lib/import.bash'" \
+    "import 'arguments::error'" \
+    "foo() { arguments::error 'bar'; }" \
+    'foo'
+  chmod +x "$script"
+
+  run "$script"
 
   ((status == 2))
-  text::contains "${lines[0]}" 'foo'
-  text::contains "${lines[0]}" 'bar'
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == "$(log::error 'foo' 'bar')" ]]
+  [[ "${lines[1]}" == "      at $script (line: 5)" ]]
 }
 
 @test "the output contains the additional messages" {
   load '../helpers/import.bash'
   import 'assert::exits'
 
-  foo() {
-    arguments::error 'bar' 'baz'
-  }
-  assert::exits foo
+  test() { arguments::error 'foo' 'bar' 'baz'; }
+  assert::exits test
 
   ((status == 2))
-  [[ "${lines[1]}" == '      baz' ]]
+  [[ "${lines[1]}" == '       bar' ]]
+  [[ "${lines[2]}" == '       baz' ]]
 }
 
 @test "the output contains the shell if it is invoked outside of a function" {
-  import 'text::contains'
+  import 'log::error'
 
   run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::error' && arguments::error 'foo'"
 
   ((status == 2))
-  text::contains "${lines[0]}" 'bash'
-  text::contains "${lines[0]}" 'foo'
+  [[ "$output" == "$(log::error 'bash' 'foo')" ]]
 }
 
 @test "the output contains the script name if it is invoked outside of a function" {
   load '../helpers/import.bash'
   import 'file::write'
-  import 'text::contains'
+  import 'log::error'
 
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
@@ -68,6 +73,5 @@ setup() {
   run "$script"
 
   ((status == 2))
-  text::contains "${lines[0]}" "$foo"
-  text::contains "${lines[0]}" 'bar'
+  [[ "$output" == "$(log::error "$script" 'bar')" ]]
 }

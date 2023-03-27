@@ -23,34 +23,46 @@ setup() {
   assert::wrong_usage 'abort' 'tag' 'message' '...'
 }
 
-@test "the output contains the tag" {
+@test "the output contains the tag and the message" {
   load 'helpers/import.bash'
   import 'assert::exits'
-  import 'text::contains'
+  import 'log::error'
 
   assert::exits abort 'foo' 'bar'
 
   ((status == 2))
-  text::contains "$output" 'foo'
+  [[ "${lines[0]}" == "$(log::error 'foo' 'bar')" ]]
 }
 
-@test "the output contains the message" {
-  load 'helpers/import.bash'
-  import 'assert::exits'
-  import 'text::contains'
-
-  assert::exits abort 'foo' 'bar'
-
-  ((status == 2))
-  text::contains "$output" 'bar'
-}
-
-@test "the output contains the additional messages" {
+@test "the output contains any additional messages" {
   load 'helpers/import.bash'
   import 'assert::exits'
 
-  assert::exits abort 'foo' 'bar' 'baz'
+  assert::exits abort 'test' 'foo' 'bar' 'baz'
 
   ((status == 2))
-  [[ "${lines[1]}" == '      baz' ]]
+  [[ "${lines[0]}" == "$(log::error 'test' 'foo')" ]]
+  [[ "${lines[1]}" == '       bar' ]]
+  [[ "${lines[2]}" == '       baz' ]]
+}
+
+@test "the output contains the stack trace" {
+  load 'helpers/import.bash'
+  import 'file::write'
+  import 'log::error'
+
+  local script="$BATS_TEST_TMPDIR/foo"
+  file::write "$script" \
+    '#!/usr/bin/env bash' \
+    "source 'lib/import.bash'" \
+    "import 'abort'" \
+    "abort 'foo' 'bar'"
+  chmod +x "$script"
+
+  run "$script"
+
+  ((status == 2))
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == "$(log::error 'foo' 'bar')" ]]
+  [[ "${lines[1]}" == "      at $script (line: 4)" ]]
 }

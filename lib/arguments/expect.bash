@@ -1,4 +1,5 @@
-import 'abort'
+import 'log::error'
+import 'stack_trace::create'
 
 __arguments::expect::abort() {
   # check if this function has the correct number of arguments
@@ -32,10 +33,10 @@ __arguments::expect::abort() {
     messages+=("arguments: ${names[*]}")
   fi
 
-  if (((stack_position + 1) < ${#BASH_SOURCE[@]})); then
-    local file="${BASH_SOURCE[$((stack_position + 1))]}"
-    local line="${BASH_LINENO[$stack_position]}"
-    messages+=("at $file (line: $line)")
+  # add stack trace
+  if stack_trace::create; then
+    # skip all elements on STACK_TRACE up to stack_position's caller
+    messages+=("${STACK_TRACE[@]:$((stack_position + 1))}")
   fi
 
   local function
@@ -46,7 +47,8 @@ __arguments::expect::abort() {
     function="$0"
   fi
 
-  abort "$function" "${messages[@]}"
+  log::error "$function" "${messages[@]}"
+  exit 2
 }
 
 arguments::expect() {
@@ -62,12 +64,14 @@ arguments::expect() {
   # check if the first argument is an integer
   if [[ "$actual" != "$1" ]]; then
     local messages=('expected integer argument: $#' "actual: $1")
-    if ((${#BASH_SOURCE[@]} > 1)); then
-      local file="${BASH_SOURCE[1]}"
-      local line="${BASH_LINENO[0]}"
-      messages+=("at $file (line: $line)")
+    # add stack trace
+    if import 'stack_trace::create' && stack_trace::create; then
+      # skip ${STACK_TRACE[0]} which is this file (expect.bash)
+      messages+=("${STACK_TRACE[@]:1}")
     fi
-    abort "${FUNCNAME[0]}" "${messages[@]}"
+
+    log::error "${FUNCNAME[0]}" "${messages[@]}"
+    exit 2
   fi
 
   ((actual == ($# - 1))) && return 0

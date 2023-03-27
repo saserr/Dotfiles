@@ -1,6 +1,5 @@
 import 'abort'
 import 'arguments::expect'
-import 'caller::location'
 import 'log::warn'
 import 'path::parent'
 import 'recipe::file'
@@ -18,12 +17,7 @@ recipe::load() {
 
   # shellcheck source=/dev/null
   if ! source "$file"; then
-    local messages=("failed to load from $file")
-    local location
-    if location="$(caller::location 1)"; then
-      messages+=("at $location")
-    fi
-    abort "${recipe:?}" "${messages[@]}"
+    abort "${recipe:?}" "failed to load from $file"
   fi
 
   local directory

@@ -1,62 +1,61 @@
 if ! declare -F 'import' >/dev/null 2>&1; then
   IMPORT_PATH+=("$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)")
+  SKIP_ON_STACK_TRACE+=("${BASH_SOURCE[0]}")
 
   __import::abort() {
-    if (($#)); then
-      local messages=("$1")
-      if ((${#BASH_SOURCE[@]} > 2)); then
-        local file="${BASH_SOURCE[2]}"
-        local line="${BASH_LINENO[1]}"
-        messages+=("at $file (line: $line)")
-      fi
+    if (($# > 1)); then
+      local tag=$1
+      local messages=("${@:2}")
     else
-      local messages=('expected argument: message')
-      if ((${#BASH_SOURCE[@]} > 1)); then
-        local file="${BASH_SOURCE[1]}"
-        local line="${BASH_LINENO[0]}"
-        messages+=("at $file (line: $line)")
-      fi
+      local tag="${FUNCNAME[0]}"
+      local messages=('expected argument: tag message ...')
     fi
 
     if declare -F 'abort' >/dev/null 2>&1; then
-      abort 'import' "${messages[@]}"
-    elif declare -F 'log::error' >/dev/null 2>&1; then
-      log::error 'import' "${messages[@]}" 1>&2
+      abort "$tag" "${messages[@]}"
     else
-      echo "[import] ${messages[0]}" 1>&2
-      if ((${#messages[@]} > 1)); then
-        local message
-        local messages=("${messages[@]:1}")
-        for message in "${messages[@]}"; do
-          echo "         $message" 1>&2
-        done
+      # add stack trace
+      if import 'stack_trace::create' && stack_trace::create; then
+        messages+=("${STACK_TRACE[@]}")
       fi
-    fi
 
-    exit 2
+      if declare -F 'log::error' >/dev/null 2>&1; then
+        log::error "$tag" "${messages[@]}" 1>&2
+      else
+        echo "[$tag] ${messages[0]}" 1>&2
+        if ((${#messages[@]} > 1)); then
+          local indentation
+          if ! indentation="$(printf " %.0s" $(seq 1 $((${#tag} + 2))))"; then
+            indentation=' '
+          fi
+
+          local message
+          local messages=("${messages[@]:1}")
+          for message in "${messages[@]}"; do
+            echo "$indentation $message" 1>&2
+          done
+        fi
+      fi
+
+      exit 2
+    fi
   }
 
   __import::not_loaded() {
     local function="${FUNCNAME[1]}"
-    echo "[$function] is being loaded; do not call" 1>&2
 
-    if ((${#BASH_SOURCE[@]} > 2)); then
-      local indentation
-      if ! indentation="$(printf " %.0s" $(seq 1 $((${#function} + 2))))"; then
-        indentation=' '
-      fi
-
-      local file="${BASH_SOURCE[2]}"
-      local line="${BASH_LINENO[1]}"
-      echo "$indentation at $file (line: $line)" 1>&2
+    # if the function that is being loaded is used by __import::abort, unset it
+    # so that this function is not again called which would lead to a call cycle
+    if [[ "$function" == 'abort' ]] || [[ "$function" == 'log::error' ]]; then
+      unset -f "$function"
     fi
 
-    exit 2
+    __import::abort "$function" 'is being loaded; do not call'
   }
 
   import() {
     if (($# != 1)); then
-      __import::abort 'expected argument: function'
+      __import::abort 'import' 'expected argument: function'
     fi
 
     local function=$1
@@ -70,20 +69,20 @@ if ! declare -F 'import' >/dev/null 2>&1; then
       if [[ -e "$file" ]] && [[ ! -d "$file" ]]; then
         # shellcheck source=/dev/null
         if ! { eval "$(printf '%q() { __import::not_loaded; };' "$function")" && source "$file"; }; then
-          __import::abort "can't load the '$function' function from $file"
+          __import::abort 'import' "can't load the '$function' function from $file"
         fi
 
         local declaration
         if ! declaration="$(declare -f "$function" 2>&1)" \
           || [[ "$declaration" == *'__import::not_loaded'* ]]; then
-          __import::abort "the '$function' function is missing in $file"
+          __import::abort 'import' "the '$function' function is missing in $file"
         fi
 
         return 0
       fi
     done
 
-    __import::abort "unknown function: $function"
+    __import::abort 'import' "unknown function: $function"
   }
 
   import 'log::error'

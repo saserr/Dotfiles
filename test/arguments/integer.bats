@@ -30,17 +30,25 @@ setup() {
 
 @test "fails if the value is not an integer" {
   load '../helpers/import.bash'
-  import 'assert::exits'
+  import 'file::write'
   import 'log::error'
 
-  foo() {
-    arguments::integer 'bar' 'baz'
-  }
-  assert::exits foo
+  local script="$BATS_TEST_TMPDIR/foo"
+  file::write "$script" \
+    '#!/usr/bin/env bash' \
+    "source 'lib/import.bash'" \
+    "import 'arguments::integer'" \
+    "foo() { arguments::integer 'bar' 'baz'; }" \
+    'foo'
+  chmod +x "$script"
+
+  run "$script"
 
   ((status == 2))
+  ((${#lines[@]} == 3))
   [[ "${lines[0]}" == "$(log::error 'foo' 'expected integer argument: bar')" ]]
   [[ "${lines[1]}" == '      actual: baz' ]]
+  [[ "${lines[2]}" == "      at $script (line: 5)" ]]
 }
 
 @test "the failure message contains the shell if it is invoked outside of a function" {

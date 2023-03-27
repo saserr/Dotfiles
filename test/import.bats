@@ -29,6 +29,36 @@
   [[ "${IMPORT_PATH[1]}" == "$PWD/lib" ]]
 }
 
+@test "creates \$SKIP_ON_STACK_TRACE with 'lib/import.bash' if \$SKIP_ON_STACK_TRACE is not declared" {
+  # test that SKIP_ON_STACK_TRACE is not declared
+  declare -p 'SKIP_ON_STACK_TRACE' && return 1
+
+  source 'lib/import.bash'
+
+  ((${#SKIP_ON_STACK_TRACE[@]} == 1))
+  [[ "${SKIP_ON_STACK_TRACE[0]}" == 'lib/import.bash' ]]
+}
+
+@test "appends 'lib/import.bash' to \$SKIP_ON_STACK_TRACE if \$SKIP_ON_STACK_TRACE is an array" {
+  local SKIP_ON_STACK_TRACE=('foo')
+
+  source 'lib/import.bash'
+
+  ((${#SKIP_ON_STACK_TRACE[@]} == 2))
+  [[ "${SKIP_ON_STACK_TRACE[0]}" == 'foo' ]]
+  [[ "${SKIP_ON_STACK_TRACE[1]}" == 'lib/import.bash' ]]
+}
+
+@test "redeclares \$SKIP_ON_STACK_TRACE as an array and appends 'lib/import.bash' if \$SKIP_ON_STACK_TRACE is not an array" {
+  local SKIP_ON_STACK_TRACE='foo'
+
+  source 'lib/import.bash'
+
+  ((${#SKIP_ON_STACK_TRACE[@]} == 2))
+  [[ "${SKIP_ON_STACK_TRACE[0]}" == 'foo' ]]
+  [[ "${SKIP_ON_STACK_TRACE[1]}" == 'lib/import.bash' ]]
+}
+
 @test "declares the 'import' function" {
   declare -F 'import' && return 1 # test that import is not declared
 
@@ -48,10 +78,11 @@
   run "$script"
 
   ((status == 2))
-  ((${#lines[@]} == 2))
+  ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *'expected argument: function' ]]
   [[ "${lines[1]}" == "         at $script (line: 3)" ]]
+  [[ "${lines[2]}" == "         at $script (line: 4)" ]]
 }
 
 @test "fails without arguments (no abort)" {
@@ -66,10 +97,11 @@
   run "$script"
 
   ((status == 2))
-  ((${#lines[@]} == 2))
+  ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *'expected argument: function' ]]
   [[ "${lines[1]}" == "         at $script (line: 4)" ]]
+  [[ "${lines[2]}" == "         at $script (line: 5)" ]]
 }
 
 @test "fails without arguments (no abort and log::error)" {
@@ -85,9 +117,10 @@
   run "$script"
 
   ((status == 2))
-  ((${#lines[@]} == 2))
+  ((${#lines[@]} == 3))
   [[ "${lines[0]}" == '[import] expected argument: function' ]]
   [[ "${lines[1]}" == "         at $script (line: 5)" ]]
+  [[ "${lines[2]}" == "         at $script (line: 6)" ]]
 }
 
 @test "doesn't do anything if function already exists" {
@@ -192,8 +225,6 @@
 }
 
 @test "fails if a function is used while being imported" {
-  IMPORT_PATH=("$BATS_TEST_TMPDIR")
-
   echo "import 'bar'" >"$BATS_TEST_TMPDIR/foo.bash"
   echo "foo() { echo 'foo'; }" >>"$BATS_TEST_TMPDIR/foo.bash"
 
@@ -201,21 +232,61 @@
   echo 'foo' >>"$BATS_TEST_TMPDIR/bar.bash"
   echo "bar() { echo 'bar'; }" >>"$BATS_TEST_TMPDIR/bar.bash"
 
-  source 'lib/import.bash'
-
   # fails because foo is called in bar.bash before it was actually declared
-  run import 'foo'
+  run bash -c "IMPORT_PATH=('$BATS_TEST_TMPDIR') \
+    && source 'lib/import.bash' \
+    && import 'foo'"
 
   ((status == 2))
-  ((${#lines[@]} == 2))
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == *'[foo]'* ]]
+  [[ "${lines[0]}" == *'is being loaded; do not call' ]]
+  [[ "${lines[1]}" == "      at $BATS_TEST_TMPDIR/bar.bash (line: 2)" ]]
+  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 1)" ]]
+}
+
+@test "fails if a function is used while being imported (no abort)" {
+  echo "import 'bar'" >"$BATS_TEST_TMPDIR/foo.bash"
+  echo "foo() { echo 'foo'; }" >>"$BATS_TEST_TMPDIR/foo.bash"
+
+  echo "import 'foo'" >"$BATS_TEST_TMPDIR/bar.bash"
+  echo 'foo' >>"$BATS_TEST_TMPDIR/bar.bash"
+  echo "bar() { echo 'bar'; }" >>"$BATS_TEST_TMPDIR/bar.bash"
+
+  # fails because foo is called in bar.bash before it was actually declared
+  run bash -c "IMPORT_PATH=('$BATS_TEST_TMPDIR') \
+    && source 'lib/import.bash' \
+    && unset -f 'abort' \
+    && import 'foo'"
+
+  ((status == 2))
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == *'[foo]'* ]]
+  [[ "${lines[0]}" == *'is being loaded; do not call' ]]
+  [[ "${lines[1]}" == "      at $BATS_TEST_TMPDIR/bar.bash (line: 2)" ]]
+  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 1)" ]]
+}
+
+@test "fails if a function is used while being imported (no abort and log::error)" {
+  echo "import 'bar'" >"$BATS_TEST_TMPDIR/foo.bash"
+  echo "foo() { echo 'foo'; }" >>"$BATS_TEST_TMPDIR/foo.bash"
+
+  echo "import 'foo'" >"$BATS_TEST_TMPDIR/bar.bash"
+  echo 'foo' >>"$BATS_TEST_TMPDIR/bar.bash"
+  echo "bar() { echo 'bar'; }" >>"$BATS_TEST_TMPDIR/bar.bash"
+
+  # fails because foo is called in bar.bash before it was actually declared
+  run bash -c "IMPORT_PATH=('$BATS_TEST_TMPDIR') \
+    && source 'lib/import.bash' \
+    && unset -f 'abort' \
+    && unset -f 'log::error' \
+    && import 'foo'"
+
+  ((status == 2))
+  ((${#lines[@]} == 3))
   [[ "${lines[0]}" == '[foo] is being loaded; do not call' ]]
   [[ "${lines[1]}" == "      at $BATS_TEST_TMPDIR/bar.bash (line: 2)" ]]
-
-  # works when imported the other way around
-  run import 'bar'
-
-  ((status == 0))
-  [[ "$output" == 'foo' ]]
+  [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 1)" ]]
 }
 
 @test "fails if sourcing the function file fails" {
@@ -239,19 +310,22 @@ test_unknown_function() {
 
   local unexpected="$BATS_TEST_TMPDIR/unexpected"
   echo "touch '$unexpected'" >>"$BATS_TEST_TMPDIR/test.bash"
-
   echo '}' >>"$BATS_TEST_TMPDIR/test.bash"
+
   echo 'test' >>"$BATS_TEST_TMPDIR/test.bash"
+  local -i call_line
+  call_line="$(wc -l <"$BATS_TEST_TMPDIR/test.bash")"
 
   chmod u+x "$BATS_TEST_TMPDIR/test.bash"
   run "$BATS_TEST_TMPDIR/test.bash"
 
   ((status == 2))
   [[ ! -e "$unexpected" ]]
-  ((${#lines[@]} == 2))
+  ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *'unknown function: foo' ]]
   [[ "${lines[1]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: $import_line)" ]]
+  [[ "${lines[2]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: $call_line)" ]]
 }
 
 @test "exits if an unknown function is imported" {

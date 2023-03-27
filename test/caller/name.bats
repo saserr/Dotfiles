@@ -15,14 +15,14 @@ setup() {
   [[ "$output" == 'foo' ]]
 }
 
-@test "returns the shell name if it is invoked directly in the shell" {
+@test "returns the shell name when invoked directly in the shell" {
   run /usr/bin/env bash -c "source 'lib/import.bash' && import 'caller::name' && caller::name"
 
   ((status == 0))
   [[ "$output" == 'bash' ]]
 }
 
-@test "returns the script name if it is invoked directly in the script" {
+@test "returns the script name when invoked directly in the script" {
   load '../helpers/import.bash'
   import 'file::write'
 

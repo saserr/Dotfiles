@@ -23,12 +23,13 @@ setup() {
   run "$script"
 
   ((status == 2))
-  ((${#lines[@]} == 5))
+  ((${#lines[@]} == 6))
   [[ "${lines[0]}" == "$(log::error 'arguments::expect' 'wrong number of arguments')" ]]
   [[ "${lines[1]}" == '                    actual: 0' ]]
   [[ "${lines[2]}" == '                    expected: 1 (or more)' ]]
   [[ "${lines[3]}" == '                    arguments: $# [name] ...' ]]
   [[ "${lines[4]}" == "                    at $script (line: 4)" ]]
+  [[ "${lines[5]}" == "                    at $script (line: 5)" ]]
 }
 
 @test "fails when first argument is not an integer" {
@@ -42,16 +43,18 @@ setup() {
     '#!/usr/bin/env bash' \
     "source 'lib/import.bash'" \
     "import 'arguments::expect'" \
-    "arguments::expect 'foo'"
+    "foo() { arguments::expect 'bar'; }" \
+    'foo'
   chmod +x "$script"
 
   run "$script"
 
   ((status == 2))
-  ((${#lines[@]} == 3))
+  ((${#lines[@]} == 4))
   [[ "${lines[0]}" == "$(log::error 'arguments::expect' 'expected integer argument: $#')" ]]
-  [[ "${lines[1]}" == '                    actual: foo' ]]
+  [[ "${lines[1]}" == '                    actual: bar' ]]
   [[ "${lines[2]}" == "                    at $script (line: 4)" ]]
+  [[ "${lines[3]}" == "                    at $script (line: 5)" ]]
 }
 
 @test "succeeds when no arguments are expected and there were none" {
@@ -235,7 +238,7 @@ setup() {
   assert::fails text::contains "${lines[3]}" 'arguments:'
 }
 
-@test "the failure message contains the caller's filename and line number" {
+@test "the failure message contains the stack trace" {
   load '../helpers/import.bash'
   import 'file::write'
   import 'log::error'

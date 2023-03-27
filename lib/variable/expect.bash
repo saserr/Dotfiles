@@ -1,6 +1,5 @@
 import 'abort'
 import 'arguments::expect'
-import 'caller::location'
 import 'caller::name'
 import 'variable::nonempty'
 
@@ -18,10 +17,6 @@ variable::expect() {
   done
 
   if ((${#missing[@]})); then
-    local messages=("expected nonempty variables: ${missing[*]}")
-    if location="$(caller::location 2)"; then
-      messages+=("at $location")
-    fi
-    abort "$(caller::name)" "${messages[@]}"
+    abort "$(caller::name)" "expected nonempty variables: ${missing[*]}"
   fi
 }
