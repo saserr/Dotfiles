@@ -73,12 +73,8 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     for path in "${IMPORT_PATH[@]}"; do
       local file="$path/${function//:://}.bash"
       if [[ -e "$file" ]] && [[ ! -d "$file" ]]; then
-        if ! eval "${function}() { __import::not_loaded; };"; then
-          __import::abort "failed to load the '$function' function"
-        fi
-
         # shellcheck source=/dev/null
-        if ! source "$file"; then
+        if ! { eval "$(printf '%q() { __import::not_loaded; };' "$function")" && source "$file"; }; then
           __import::abort "can't load the '$function' function from $file"
         fi
 
