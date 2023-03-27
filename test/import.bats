@@ -70,7 +70,7 @@
 
   ((status == 2))
   ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == '[import] requires a function name as an argument' ]]
+  [[ "${lines[0]}" == '[import] expected argument: function' ]]
   [[ "${lines[1]}" == "         at $script (line: 4)" ]]
 }
 

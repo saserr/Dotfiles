@@ -10,7 +10,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
         messages+=("at $file (line: $line)")
       fi
     else
-      local messages=("requires a message as an argument")
+      local messages=('expected argument: message')
       if ((${#BASH_SOURCE[@]} > 1)); then
         local file="${BASH_SOURCE[1]}"
         local line="${BASH_LINENO[0]}"
@@ -61,7 +61,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     if declare -F 'arguments::expect' >/dev/null 2>&1; then
       arguments::expect $# 'function'
     elif (($# != 1)); then
-      __import::abort 'requires a function name as an argument'
+      __import::abort 'expected argument: function'
     fi
 
     local function=$1
