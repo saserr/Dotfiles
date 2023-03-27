@@ -93,7 +93,7 @@ arguments::expect() {
   local -i actual=$1
   # check if the first argument is an integer
   if [[ "$actual" != "$1" ]]; then
-    local messages=('the first argument is not an integer')
+    local messages=('expected integer argument: $#' "actual: $1")
     if ((${#BASH_SOURCE[@]} > 1)); then
       local file="${BASH_SOURCE[1]}"
       local line="${BASH_LINENO[0]}"

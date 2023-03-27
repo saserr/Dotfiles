@@ -74,9 +74,10 @@ setup() {
   run "$script"
 
   ((status == 2))
-  ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == "$(log::error 'arguments::expect' 'the first argument is not an integer')" ]]
-  [[ "${lines[1]}" == "                    at $script (line: 4)" ]]
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == "$(log::error 'arguments::expect' 'expected integer argument: $#')" ]]
+  [[ "${lines[1]}" == '                    actual: foo' ]]
+  [[ "${lines[2]}" == "                    at $script (line: 4)" ]]
 }
 
 @test "fails when first argument is not an integer (no abort)" {
@@ -96,9 +97,10 @@ setup() {
   run "$script"
 
   ((status == 2))
-  ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == '[arguments::expect] the first argument is not an integer' ]]
-  [[ "${lines[1]}" == "                    at $script (line: 5)" ]]
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == '[arguments::expect] expected integer argument: $#' ]]
+  [[ "${lines[1]}" == '                    actual: foo' ]]
+  [[ "${lines[2]}" == "                    at $script (line: 5)" ]]
 }
 
 @test "succeeds when no arguments are expected and there were none" {

@@ -10,7 +10,7 @@ arguments::integer() {
   local -i value=$2
 
   if [[ "$value" != "$2" ]]; then
-    local messages=("the $name argument is not an integer")
+    local messages=("expected integer argument: $name" "actual: $2")
     local location
     if location="$(caller::location 2)"; then
       messages+=("at $location")

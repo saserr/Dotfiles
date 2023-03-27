@@ -31,7 +31,7 @@ setup() {
 @test "fails if the value is not an integer" {
   load '../helpers/import.bash'
   import 'assert::exits'
-  import 'text::contains'
+  import 'log::error'
 
   foo() {
     arguments::integer 'bar' 'baz'
@@ -39,23 +39,26 @@ setup() {
   assert::exits foo
 
   ((status == 2))
-  text::contains "${lines[0]}" 'foo'
-  text::contains "${lines[0]}" 'the bar argument is not an integer'
+  [[ "${lines[0]}" == "$(log::error 'foo' 'expected integer argument: bar')" ]]
+  [[ "${lines[1]}" == '      actual: baz' ]]
 }
 
 @test "the failure message contains the shell if it is invoked outside of a function" {
-  import 'text::contains'
+  import 'log::error'
 
   run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::integer' && arguments::integer 'foo' 'bar'"
 
-  text::contains "${lines[0]}" 'bash'
-  text::contains "${lines[0]}" 'the foo argument is not an integer'
+  ((status == 2))
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == "$(log::error 'bash' 'expected integer argument: foo')" ]]
+  [[ "${lines[1]}" == "       actual: bar" ]]
 }
 
 @test "the failure message contains the script name if it is invoked outside of a function" {
   load '../helpers/import.bash'
   import 'file::write'
-  import 'text::contains'
+  import 'log::error'
+  import 'text::ends_with'
 
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
@@ -67,6 +70,8 @@ setup() {
 
   run "$script"
 
-  text::contains "${lines[0]}" "$foo"
-  text::contains "${lines[0]}" 'the bar argument is not an integer'
+  ((status == 2))
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == "$(log::error "$script" 'expected integer argument: bar')" ]]
+  text::ends_with "${lines[1]}" 'actual: baz'
 }
