@@ -31,7 +31,7 @@ setup() {
 
   assert::exits prompt::yes_or_no 'foo' 'bar' 'baz'
 
-  ((status == 2))
+  ((status == 3))
   text::contains "${lines[0]}" '[prompt::yes_or_no]'
   text::ends_with "${lines[0]}" 'wrong default value'
   text::ends_with "${lines[1]}" 'actual: baz'

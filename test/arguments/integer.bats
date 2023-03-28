@@ -44,7 +44,7 @@ setup() {
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == "$(log error 'foo' 'expected integer argument: bar')" ]]
   [[ "${lines[1]}" == '      actual: baz' ]]
@@ -56,7 +56,7 @@ setup() {
 
   run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::integer' && arguments::integer 'foo' 'bar'"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 2))
   [[ "${lines[0]}" == "$(log error 'bash' 'expected integer argument: foo')" ]]
   [[ "${lines[1]}" == "       actual: bar" ]]
@@ -78,7 +78,7 @@ setup() {
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 2))
   [[ "${lines[0]}" == "$(log error "$script" 'expected integer argument: bar')" ]]
   text::ends_with "${lines[1]}" 'actual: baz'

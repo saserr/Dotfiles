@@ -1,4 +1,5 @@
 import 'arguments::expect'
+import 'abort'
 import 'command::exists'
 import 'homebrew::missing'
 import 'log'
@@ -7,8 +8,7 @@ homebrew::install() {
   arguments::expect $# 'formula' '...'
 
   if ! command::exists 'brew'; then
-    log error 'homebrew' 'is not installed' 1>&2
-    exit 1
+    abort platform_error 'homebrew' 'is not installed' 1>&2
   fi
 
   local formulas=("$@")

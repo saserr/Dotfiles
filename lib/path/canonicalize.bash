@@ -3,8 +3,8 @@ import 'platform::name'
 
 case "$(platform::name)" in
   'mac')
+    import 'abort'
     import 'command::exists'
-    import 'log'
 
     path::canonicalize() {
       arguments::expect $# 'path'
@@ -14,8 +14,7 @@ case "$(platform::name)" in
       if command::exists 'greadlink'; then
         greadlink -f "$path"
       else
-        log error 'mac' 'greadlink is not installed' 1>&2
-        exit 1
+        abort platform_error 'mac' 'greadlink is not installed' 1>&2
       fi
     }
     ;;

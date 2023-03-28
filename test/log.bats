@@ -78,7 +78,7 @@ setup() {
 
   assert::exits log test '' 'bar'
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == "$(log error 'log' 'expected nonempty argument: tag')" ]]
 }
 
@@ -91,7 +91,7 @@ setup() {
 
   assert::exits log test 'foo' ''
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == "$(log error 'log' 'expected nonempty argument: message')" ]]
 }
 

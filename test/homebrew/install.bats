@@ -26,7 +26,7 @@ setup() {
 
   assert::exits homebrew::install 'foo'
 
-  ((status == 1))
+  ((status == 2))
   [[ "$output" == "$(log error 'homebrew' 'is not installed')" ]]
 }
 

@@ -6,8 +6,11 @@ import 'arguments::expect'
 arguments::expect $# 'recipe'
 recipe=$1
 
+import 'abort'
 import 'recipe::load'
-recipe::load || exit 1
+if ! recipe::load; then
+  abort user_error "$recipe" 'setup aborted'
+fi
 
 import 'array::exists'
 import 'log'
@@ -51,21 +54,25 @@ if setup::missing "$recipe"; then
       Yes)
         echo
         for required_recipe in "${required[@]}"; do
-          ./setup.sh "$required_recipe" || exit 1
+          ./setup.sh "$required_recipe" || exit
           echo
         done
         ;;
       No)
-        exit 1
+        abort user_error "$recipe" 'setup aborted'
         ;;
     esac
   fi
 
   log info "$recipe" 'installing'
-  recipe::install || exit 1
+  if ! recipe::install; then
+    abort platform_error "$recipe" 'setup aborted'
+  fi
 
   log info "$recipe" 'configuring'
-  recipe::configure || exit 1
+  if ! recipe::configure; then
+    abort platform_error "$recipe" 'setup aborted'
+  fi
 
   setup::done "$recipe"
 else

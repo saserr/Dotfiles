@@ -58,6 +58,6 @@ setup() {
   local program='bar'
   assert::exits debian::install
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == "$(log error 'debian::install' "expected nonempty variables: recipe")" ]]
 }

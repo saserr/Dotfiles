@@ -52,7 +52,7 @@ setup() {
   foo=''
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -64,7 +64,7 @@ setup() {
   foo=()
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -76,7 +76,7 @@ setup() {
   declare foo
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -88,7 +88,7 @@ setup() {
   declare -a foo
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -105,7 +105,7 @@ setup() {
   declare -A foo
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -122,7 +122,7 @@ setup() {
   declare -g foo
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -134,7 +134,7 @@ setup() {
   local foo
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -147,7 +147,7 @@ setup() {
   readonly foo
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -158,7 +158,7 @@ setup() {
 
   assert::exits variable::expect 'foo'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo"
 }
 
@@ -170,7 +170,7 @@ setup() {
   foo='bar'
   assert::exits variable::expect 'foo' 'baz'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: baz"
 }
 
@@ -181,6 +181,6 @@ setup() {
 
   assert::exits variable::expect 'foo' 'bar'
 
-  ((status == 2))
+  ((status == 3))
   text::ends_with "${lines[0]}" "expected nonempty variables: foo bar"
 }

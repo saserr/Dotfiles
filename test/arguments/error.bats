@@ -30,7 +30,7 @@ setup() {
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 2))
   [[ "${lines[0]}" == "$(log error 'foo' 'bar')" ]]
   [[ "${lines[1]}" == "      at $script (line: 5)" ]]
@@ -43,7 +43,7 @@ setup() {
   test() { arguments::error 'foo' 'bar' 'baz'; }
   assert::exits test
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[1]}" == '       bar' ]]
   [[ "${lines[2]}" == '       baz' ]]
 }
@@ -53,7 +53,7 @@ setup() {
 
   run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::error' && arguments::error 'foo'"
 
-  ((status == 2))
+  ((status == 3))
   [[ "$output" == "$(log error 'bash' 'foo')" ]]
 }
 
@@ -72,6 +72,6 @@ setup() {
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   [[ "$output" == "$(log error "$script" 'bar')" ]]
 }

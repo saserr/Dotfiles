@@ -17,7 +17,7 @@ recipe::load() {
 
   # shellcheck source=/dev/null
   if ! source "$file"; then
-    abort "${recipe:?}" "failed to load from $file"
+    abort user_error "${recipe:?}" "failed to load from $file"
   fi
 
   local directory

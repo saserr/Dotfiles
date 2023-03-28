@@ -96,6 +96,7 @@ setup() {
   run recipe::file
 
   ((status == 1))
+  [[ "$output" == '' ]]
 }
 
 @test "fails if \$recipe is missing" {
@@ -105,6 +106,6 @@ setup() {
 
   assert::exits recipe::file
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == "$(log error 'recipe::file' "expected nonempty variables: recipe")" ]]
 }

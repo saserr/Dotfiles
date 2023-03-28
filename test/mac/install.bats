@@ -58,6 +58,6 @@ setup() {
   local program='bar'
   assert::exits mac::install
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == "$(log error 'mac::install' "expected nonempty variables: recipe")" ]]
 }

@@ -12,7 +12,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     fi
 
     if declare -F 'abort' >/dev/null 2>&1; then
-      abort "$tag" "${messages[@]}"
+      abort internal_error "$tag" "${messages[@]}"
     else
       # add stack trace
       if import 'stack_trace::create' && stack_trace::create; then
@@ -37,7 +37,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
         fi
       fi
 
-      exit 2
+      exit 3
     fi
   }
 

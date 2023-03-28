@@ -77,7 +77,7 @@
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *'expected argument: function' ]]
@@ -96,7 +96,7 @@
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *'expected argument: function' ]]
@@ -116,7 +116,7 @@
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == '[import] expected argument: function' ]]
   [[ "${lines[1]}" == "         at $script (line: 5)" ]]
@@ -182,7 +182,7 @@
   import 'foo'
   run foo
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *"the 'foo' function is missing in $BATS_TEST_TMPDIR/foo.bash" ]]
 }
@@ -208,7 +208,7 @@
 
   run import 'bar'
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *'unknown function: bar' ]]
 }
@@ -220,7 +220,7 @@
 
   run import 'foo'
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *'unknown function: foo' ]]
 }
@@ -240,7 +240,7 @@
     && import 'foo' \
     && foo"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[foo]'* ]]
   [[ "${lines[0]}" == *'is being loaded; do not call' ]]
@@ -264,7 +264,7 @@
     && import 'foo' \
     && foo"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[foo]'* ]]
   [[ "${lines[0]}" == *'is being loaded; do not call' ]]
@@ -289,7 +289,7 @@
     && import 'foo' \
     && foo"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == '[foo] is being loaded; do not call' ]]
   [[ "${lines[1]}" == "      at $BATS_TEST_TMPDIR/bar.bash (line: 2)" ]]
@@ -304,7 +304,7 @@
   import 'foo'
   run foo
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *"can't load the 'foo' function from $BATS_TEST_TMPDIR/foo.bash" ]]
 }
@@ -327,7 +327,7 @@ test_unknown_function() {
   chmod u+x "$BATS_TEST_TMPDIR/test.bash"
   run "$BATS_TEST_TMPDIR/test.bash"
 
-  ((status == 2))
+  ((status == 3))
   [[ ! -e "$unexpected" ]]
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[import]'* ]]

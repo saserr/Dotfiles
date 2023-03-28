@@ -64,8 +64,8 @@ setup() {
   local recipe='foo'
   assert::exits recipe::load
 
-  ((status == 2))
-  [[ "${lines[0]}" == "$(log error 'foo' "failed to load from $BATS_TEST_TMPDIR/foo/recipe.bash")" ]]
+  ((status == 1))
+  [[ "$output" == "$(log error 'foo' "failed to load from $BATS_TEST_TMPDIR/foo/recipe.bash")" ]]
 }
 
 @test "fails if cd to the \$recipe's directory fails" {
@@ -91,6 +91,6 @@ setup() {
 
   assert::exits recipe::load
 
-  ((status == 2))
+  ((status == 3))
   [[ "${lines[0]}" == "$(log error 'recipe::load' 'expected nonempty variables: recipe')" ]]
 }

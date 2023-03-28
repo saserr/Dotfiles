@@ -1,3 +1,4 @@
+import 'abort'
 import 'arguments::expect'
 import 'file::exists'
 import 'setup::directory'
@@ -9,7 +10,7 @@ setup::missing() {
 
   local directory
   if ! directory="$(setup::directory)"; then
-    abort 'setup::missing' 'failed to get the path to the state directory' 1>&2
+    abort internal_error "${FUNCNAME[0]}" 'failed to get the path to the state directory' 1>&2
   fi
 
   ! file::exists "$directory/$recipe"

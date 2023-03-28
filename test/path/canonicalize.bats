@@ -182,7 +182,7 @@ setup() {
 
   assert::exits path::canonicalize 'foo'
 
-  ((status == 1))
+  ((status == 2))
   [[ "$output" == "$(log error 'mac' 'greadlink is not installed')" ]]
 }
 

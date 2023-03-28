@@ -9,7 +9,7 @@ assert::wrong_usage() {
   local function=$1
   local arguments=("${@:2}")
 
-  ((${status:?} == 2))
+  ((${status:?} == 3))
   [[ "${lines[0]:?}" == "$(log error "$function" 'wrong number of arguments')" ]]
 
   local indentation

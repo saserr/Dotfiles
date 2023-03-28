@@ -1,3 +1,4 @@
+import 'abort::exit'
 import 'arguments::expect'
 import 'caller::name'
 import 'log'
@@ -15,5 +16,5 @@ arguments::error() {
   fi
 
   log error "$(caller::name)" "${messages[@]}"
-  exit 2
+  abort::exit internal_error
 }

@@ -22,7 +22,7 @@ setup() {
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 6))
   [[ "${lines[0]}" == "$(log error 'arguments::expect' 'wrong number of arguments')" ]]
   [[ "${lines[1]}" == '                    actual: 0' ]]
@@ -49,7 +49,7 @@ setup() {
 
   run "$script"
 
-  ((status == 2))
+  ((status == 3))
   ((${#lines[@]} == 4))
   [[ "${lines[0]}" == "$(log error 'arguments::expect' 'expected integer argument: $#')" ]]
   [[ "${lines[1]}" == '                    actual: bar' ]]
@@ -70,7 +70,7 @@ setup() {
 
   assert::exits arguments::expect 1
 
-  ((status == 2))
+  ((status == 3))
 }
 
 @test "fails when an argument is expected but there were none" {
@@ -79,7 +79,7 @@ setup() {
 
   assert::exits arguments::expect 0 'bar'
 
-  ((status == 2))
+  ((status == 3))
 }
 
 @test "succeeds when an argument is expected and there was one" {
@@ -95,7 +95,7 @@ setup() {
 
   assert::exits arguments::expect 2 'bar'
 
-  ((status == 2))
+  ((status == 3))
 }
 
 @test "fails when two arguments are expected but there were none" {
@@ -104,7 +104,7 @@ setup() {
 
   assert::exits arguments::expect 0 'bar' 'baz'
 
-  ((status == 2))
+  ((status == 3))
 }
 
 @test "fails when two arguments are expected but there is only one" {
@@ -113,7 +113,7 @@ setup() {
 
   assert::exits arguments::expect 1 'bar' 'baz'
 
-  ((status == 2))
+  ((status == 3))
 }
 
 @test "succeeds when two arguments are expected and there were two" {
@@ -143,7 +143,7 @@ setup() {
 
   assert::exits arguments::expect 2 '[bar]'
 
-  ((status == 2))
+  ((status == 3))
 }
 
 @test "succeeds when vararg is expected and there were none" {
