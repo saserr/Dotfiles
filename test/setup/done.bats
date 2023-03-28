@@ -4,7 +4,7 @@ setup() {
   source 'lib/import.bash'
   import 'setup::done'
 
-  [[ ! -e "$HOME/.setup/test" ]] # $HOME/.setup/test does not exist
+  XDG_STATE_HOME="$BATS_TEST_TMPDIR"
 }
 
 teardown() {
@@ -21,8 +21,13 @@ teardown() {
 }
 
 @test "creates a file under ~/.setup/ with value 1" {
+  import 'setup::directory'
+
+  local directory
+  directory="$(setup::directory)"
+
   setup::done 'test'
 
-  [[ -f "$HOME/.setup/test" ]] # $HOME/.setup/test is a file
-  [[ "$(cat "$HOME/.setup/test")" == '1' ]]
+  [[ -f "$directory/test" ]]
+  [[ "$(cat "$directory/test")" == '1' ]]
 }

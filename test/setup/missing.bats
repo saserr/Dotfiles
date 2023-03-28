@@ -3,6 +3,8 @@
 setup() {
   source 'lib/import.bash'
   import 'setup::missing'
+
+  XDG_STATE_HOME="$BATS_TEST_TMPDIR"
 }
 
 @test "fails without arguments" {
@@ -21,11 +23,12 @@ setup() {
 @test "is not missing if recipe has been set up" {
   load '../helpers/import.bash'
   import 'assert::fails'
+  import 'setup::directory'
 
-  mkdir -p "$HOME/.setup/"
-  touch "$HOME/.setup/test"
+  local directory
+  directory="$(setup::directory)"
+  mkdir -p "$directory"
+  touch "$directory/test"
 
   assert::fails setup::missing 'test'
-
-  rm "$HOME/.setup/test"
 }
