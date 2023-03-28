@@ -1,9 +1,22 @@
 import 'arguments::error'
 import 'arguments::expect'
 import 'value::empty'
+import 'variable::exists'
+import 'variable::nonempty'
+
+export trace_log_color=''     # none
+export info_log_color='0;32'  # green
+export warn_log_color='1;33'  # bold yellow
+export error_log_color='1;31' # bold red
 
 log() {
-  arguments::expect $# 'color' 'tag' 'message' '...'
+  arguments::expect $# 'level' 'tag' 'message' '...'
+
+  local level=$1
+  if value::empty "$level"; then
+    log warn 'log' "expected nonempty argument: level"
+    level='trace'
+  fi
 
   local tag=$2
   if value::empty "$tag"; then
@@ -15,11 +28,16 @@ log() {
     arguments::error 'expected nonempty argument: message'
   fi
 
-  if [[ "$1" ]]; then
-    local color="\033[${1}m"
-    local end_color='\033[0m'
-    echo -e "${color}[$tag]$end_color ${messages[0]}"
+  local color_variable_name="${level}_log_color"
+  if variable::exists "$color_variable_name"; then
+    if variable::nonempty "$color_variable_name"; then
+      local color="${!color_variable_name}"
+      echo -e "\033[${color}m[$tag]\033[0m ${messages[0]}"
+    else
+      echo "[$tag] ${messages[0]}"
+    fi
   else
+    log warn 'log' "expected variable: \$$color_variable_name"
     echo "[$tag] ${messages[0]}"
   fi
 

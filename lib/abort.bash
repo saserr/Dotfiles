@@ -1,5 +1,5 @@
 import 'arguments::expect'
-import 'log::error'
+import 'log'
 import 'stack_trace::create'
 
 abort() {
@@ -13,6 +13,6 @@ abort() {
     messages+=("${STACK_TRACE[@]:1}")
   fi
 
-  log::error "$tag" "${messages[@]}" 1>&2
+  log error "$tag" "${messages[@]}" 1>&2
   exit 2
 }

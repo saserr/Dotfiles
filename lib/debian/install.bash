@@ -1,6 +1,6 @@
 import 'apt::install'
 import 'arguments::expect'
-import 'log::error'
+import 'log'
 import 'variable::expect'
 import 'variable::nonempty'
 
@@ -18,6 +18,6 @@ debian::install() {
     return
   fi
 
-  log::error 'debian' "don't know how to install ${recipe:?}"
+  log error 'debian' "don't know how to install ${recipe:?}"
   return 1
 }

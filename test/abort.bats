@@ -26,12 +26,12 @@ setup() {
 @test "the output contains the tag and the message" {
   load 'helpers/import.bash'
   import 'assert::exits'
-  import 'log::error'
+  import 'log'
 
   assert::exits abort 'foo' 'bar'
 
   ((status == 2))
-  [[ "${lines[0]}" == "$(log::error 'foo' 'bar')" ]]
+  [[ "${lines[0]}" == "$(log error 'foo' 'bar')" ]]
 }
 
 @test "the output contains any additional messages" {
@@ -41,7 +41,7 @@ setup() {
   assert::exits abort 'test' 'foo' 'bar' 'baz'
 
   ((status == 2))
-  [[ "${lines[0]}" == "$(log::error 'test' 'foo')" ]]
+  [[ "${lines[0]}" == "$(log error 'test' 'foo')" ]]
   [[ "${lines[1]}" == '       bar' ]]
   [[ "${lines[2]}" == '       baz' ]]
 }
@@ -49,7 +49,7 @@ setup() {
 @test "the output contains the stack trace" {
   load 'helpers/import.bash'
   import 'file::write'
-  import 'log::error'
+  import 'log'
 
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
@@ -63,6 +63,6 @@ setup() {
 
   ((status == 2))
   ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == "$(log::error 'foo' 'bar')" ]]
+  [[ "${lines[0]}" == "$(log error 'foo' 'bar')" ]]
   [[ "${lines[1]}" == "      at $script (line: 4)" ]]
 }

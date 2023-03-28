@@ -19,8 +19,8 @@ if ! declare -F 'import' >/dev/null 2>&1; then
         messages+=("${STACK_TRACE[@]}")
       fi
 
-      if declare -F 'log::error' >/dev/null 2>&1; then
-        log::error "$tag" "${messages[@]}" 1>&2
+      if declare -F 'log' >/dev/null 2>&1; then
+        log error "$tag" "${messages[@]}" 1>&2
       else
         echo "[$tag] ${messages[0]}" 1>&2
         if ((${#messages[@]} > 1)); then
@@ -46,7 +46,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
 
     # if the function that is being loaded is used by __import::abort, unset it
     # so that this function is not again called which would lead to a call cycle
-    if [[ "$function" == 'abort' ]] || [[ "$function" == 'log::error' ]]; then
+    if [[ "$function" == 'abort' ]] || [[ "$function" == 'log' ]]; then
       unset -f "$function"
     fi
 
@@ -93,6 +93,6 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     __import::abort 'import' "unknown function: $function"
   }
 
-  import 'log::error'
+  import 'log'
   import 'abort'
 fi

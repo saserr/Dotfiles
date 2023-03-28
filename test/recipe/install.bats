@@ -33,12 +33,12 @@ setup() {
 @test "fails on any other platform" {
   platform::name() { echo 'windows'; }
 
-  import 'log::error'
+  import 'log'
   import 'recipe::install'
 
   local recipe='foo'
   run recipe::install
 
   ((status == 1))
-  [[ "$output" == "$(log::error 'windows' "don't know how to install foo")" ]]
+  [[ "$output" == "$(log error 'windows' "don't know how to install foo")" ]]
 }

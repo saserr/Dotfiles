@@ -104,12 +104,12 @@
   [[ "${lines[2]}" == "         at $script (line: 5)" ]]
 }
 
-@test "fails without arguments (no abort and log::error)" {
+@test "fails without arguments (no abort and log)" {
   local script="$BATS_TEST_TMPDIR/test.bash"
   echo '#!/usr/bin/env bash' >"$script"
   echo "source 'lib/import.bash'" >>"$script"
   echo "unset -f 'abort'" >>"$script"
-  echo "unset -f 'log::error'" >>"$script"
+  echo "unset -f 'log'" >>"$script"
   echo 'test() { import; }' >>"$script"
   echo 'test' >>"$script"
   chmod +x "$script"
@@ -272,7 +272,7 @@
   [[ "${lines[2]}" == "      at $BATS_TEST_TMPDIR/foo.bash (line: 2)" ]]
 }
 
-@test "fails if a function is used while being imported (no abort and log::error)" {
+@test "fails if a function is used while being imported (no abort and log)" {
   echo "import 'bar'" >"$BATS_TEST_TMPDIR/foo.bash"
   echo 'bar' >>"$BATS_TEST_TMPDIR/foo.bash"
   echo "foo() { echo 'foo'; }" >>"$BATS_TEST_TMPDIR/foo.bash"
@@ -285,7 +285,7 @@
   run bash -c "IMPORT_PATH=('$BATS_TEST_TMPDIR') \
     && source 'lib/import.bash' \
     && unset -f 'abort' \
-    && unset -f 'log::error' \
+    && unset -f 'log' \
     && import 'foo' \
     && foo"
 
@@ -351,11 +351,11 @@ test_unknown_function() {
   test_unknown_function
 }
 
-@test "exits if an unknown function is imported (no abort and log::error)" {
+@test "exits if an unknown function is imported (no abort and log)" {
   echo '#!/usr/bin/env bash' >"$BATS_TEST_TMPDIR/test.bash"
   echo "source 'lib/import.bash'" >>"$BATS_TEST_TMPDIR/test.bash"
   echo "unset -f 'abort'" >>"$BATS_TEST_TMPDIR/test.bash"
-  echo "unset -f 'log::error'" >>"$BATS_TEST_TMPDIR/test.bash"
+  echo "unset -f 'log'" >>"$BATS_TEST_TMPDIR/test.bash"
 
   test_unknown_function
 }

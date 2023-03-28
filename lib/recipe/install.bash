@@ -23,14 +23,14 @@ case "$(platform::name)" in
     ;;
   *)
     import 'arguments::expect'
-    import 'log::error'
+    import 'log'
     import 'variable::expect'
 
     recipe::install() {
       arguments::expect $# # none
       variable::expect 'recipe'
 
-      log::error "$(platform::name)" "don't know how to install ${recipe:?}"
+      log error "$(platform::name)" "don't know how to install ${recipe:?}"
       return 1
     }
     ;;

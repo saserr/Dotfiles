@@ -24,11 +24,9 @@ setup() {
 }
 
 @test "prompts the message" {
-  import 'log'
-
   run prompt::question 'foo' 'bar' <<<''
 
-  [[ "$output" == "$(log '0;34' 'foo' 'bar')" ]]
+  [[ "$output" == "$(echo -e '\033[0;34m[foo]\033[0m bar')" ]]
 }
 
 @test "echos the answer" {

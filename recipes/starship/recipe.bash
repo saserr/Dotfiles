@@ -1,7 +1,6 @@
 import 'file::append'
 import 'file::empty'
-import 'log::error'
-import 'log::trace'
+import 'log'
 import 'platform::login_shell'
 
 program='starship'
@@ -16,7 +15,7 @@ recipe::configure() {
   login_shell="$(platform::login_shell)" || return 1
   case "$login_shell" in
     'zsh')
-      log::trace 'starship' 'enabling in zsh'
+      log trace 'starship' 'enabling in zsh'
 
       local zshrc
       if setup::missing 'zsh'; then
@@ -34,7 +33,7 @@ recipe::configure() {
       file::append "$zshrc" 'eval "$(starship init zsh)"' || return 1
       ;;
     'bash')
-      log::trace 'starship' 'enabling in bash'
+      log trace 'starship' 'enabling in bash'
 
       local bashrc="$HOME/.bashrc"
       if ! file::empty "$bashrc"; then
@@ -46,7 +45,7 @@ recipe::configure() {
       file::append "$bashrc" 'eval "$(starship init bash)"' || return 1
       ;;
     *)
-      log::error 'starship' "don't know how to enable for $login_shell"
+      log error 'starship' "don't know how to enable for $login_shell"
       return 1
       ;;
   esac

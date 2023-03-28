@@ -1,6 +1,6 @@
 import 'arguments::expect'
 import 'caller::name'
-import 'log::error'
+import 'log'
 
 arguments::integer() {
   arguments::expect $# 'name' 'value'
@@ -18,7 +18,7 @@ arguments::integer() {
       messages+=("${STACK_TRACE[@]:2}")
     fi
 
-    log::error "$(caller::name)" "${messages[@]}"
+    log error "$(caller::name)" "${messages[@]}"
     exit 2
   fi
 }

@@ -1,5 +1,5 @@
 import 'arguments::expect'
-import 'log::error'
+import 'log'
 import 'variable::expect'
 
 assert::wrong_usage() {
@@ -10,7 +10,7 @@ assert::wrong_usage() {
   local arguments=("${@:2}")
 
   ((${status:?} == 2))
-  [[ "${lines[0]:?}" == "$(log::error "$function" 'wrong number of arguments')" ]]
+  [[ "${lines[0]:?}" == "$(log error "$function" 'wrong number of arguments')" ]]
 
   local indentation
   indentation="$(printf " %.0s" $(seq 1 $((${#function} + 2))))" || return

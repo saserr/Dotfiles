@@ -1,5 +1,5 @@
 import 'caller::name'
-import 'log::error'
+import 'log'
 import 'stack_trace::create'
 
 __arguments::expect::abort() {
@@ -42,7 +42,7 @@ __arguments::expect::abort() {
     messages+=("${STACK_TRACE[@]:$((stack_position + 1))}")
   fi
 
-  log::error "$function" "${messages[@]}"
+  log error "$function" "${messages[@]}"
   exit 2
 }
 
@@ -65,7 +65,7 @@ arguments::expect() {
       messages+=("${STACK_TRACE[@]:1}")
     fi
 
-    log::error "${FUNCNAME[0]}" "${messages[@]}"
+    log error "${FUNCNAME[0]}" "${messages[@]}"
     exit 2
   fi
 

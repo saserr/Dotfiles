@@ -9,7 +9,7 @@ recipe=$1
 import 'recipe::load'
 recipe::load || exit 1
 
-import 'log::info'
+import 'log'
 import 'platform::name'
 import 'prompt::yes_or_no'
 import 'recipe::configure'
@@ -61,15 +61,15 @@ if setup::missing "$recipe"; then
     esac
   fi
 
-  log::info "$recipe" 'installing'
+  log info "$recipe" 'installing'
   recipe::install || exit 1
 
-  log::info "$recipe" 'configuring'
+  log info "$recipe" 'configuring'
   recipe::configure || exit 1
 
   setup::done "$recipe"
 else
-  log::info "$recipe" 'already set up'
+  log info "$recipe" 'already set up'
 fi
 
 if variable::is_array 'recommended'; then

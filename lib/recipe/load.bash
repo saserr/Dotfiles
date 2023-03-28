@@ -1,6 +1,6 @@
 import 'abort'
 import 'arguments::expect'
-import 'log::warn'
+import 'log'
 import 'path::parent'
 import 'recipe::file'
 import 'variable::expect'
@@ -11,7 +11,7 @@ recipe::load() {
 
   local file
   if ! file="$(recipe::file)"; then
-    log::warn "${recipe:?}" 'has no recipe'
+    log warn "${recipe:?}" 'has no recipe'
     return 1
   fi
 

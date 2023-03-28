@@ -17,7 +17,7 @@ setup() {
 @test "the output contains the function name and the message" {
   load '../helpers/import.bash'
   import 'file::write'
-  import 'log::error'
+  import 'log'
 
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
@@ -32,7 +32,7 @@ setup() {
 
   ((status == 2))
   ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == "$(log::error 'foo' 'bar')" ]]
+  [[ "${lines[0]}" == "$(log error 'foo' 'bar')" ]]
   [[ "${lines[1]}" == "      at $script (line: 5)" ]]
 }
 
@@ -49,18 +49,18 @@ setup() {
 }
 
 @test "the output contains the shell if it is invoked outside of a function" {
-  import 'log::error'
+  import 'log'
 
   run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::error' && arguments::error 'foo'"
 
   ((status == 2))
-  [[ "$output" == "$(log::error 'bash' 'foo')" ]]
+  [[ "$output" == "$(log error 'bash' 'foo')" ]]
 }
 
 @test "the output contains the script name if it is invoked outside of a function" {
   load '../helpers/import.bash'
   import 'file::write'
-  import 'log::error'
+  import 'log'
 
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
@@ -73,5 +73,5 @@ setup() {
   run "$script"
 
   ((status == 2))
-  [[ "$output" == "$(log::error "$script" 'bar')" ]]
+  [[ "$output" == "$(log error "$script" 'bar')" ]]
 }

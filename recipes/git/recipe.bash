@@ -1,18 +1,17 @@
 import 'command::exists'
 import 'file::append'
 import 'file::empty'
-import 'log::trace'
-import 'log::warn'
+import 'log'
 
 program='git'
 recommended=('git-lfs')
 
 recipe::configure() {
-  log::trace 'git' 'setting up .gitconfig'
+  log trace 'git' 'setting up .gitconfig'
   ./configure
 
   if command::exists 'curl'; then
-    log::trace 'git' 'setting up .gitignore'
+    log trace 'git' 'setting up .gitignore'
     if ! file::empty "$HOME/.gitignore"; then
       file::append "$HOME/.gitignore"
     fi
@@ -26,6 +25,6 @@ recipe::configure() {
         ;;
     esac
   else
-    log::warn 'git' 'skipping setting up .gitignore; no curl'
+    log warn 'git' 'skipping setting up .gitignore; no curl'
   fi
 }

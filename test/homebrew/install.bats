@@ -20,14 +20,14 @@ setup() {
 @test "fails if homebrew is not installed" {
   load '../helpers/import.bash'
   import 'assert::exits'
-  import 'log::error'
+  import 'log'
 
   command::exists() { [[ "$1" != 'brew' ]]; }
 
   assert::exits homebrew::install 'foo'
 
   ((status == 1))
-  [[ "$output" == "$(log::error 'homebrew' 'is not installed')" ]]
+  [[ "$output" == "$(log error 'homebrew' 'is not installed')" ]]
 }
 
 @test "checks if formula is installed" {
@@ -48,7 +48,7 @@ setup() {
 
 @test "installs formula if not installed" {
   load '../helpers/mocks/stub.bash'
-  import 'log::trace'
+  import 'log'
 
   stub brew \
     'update : ' \
@@ -58,12 +58,12 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::trace 'homebrew' 'installing: foo')" ]]
+  [[ "$output" == "$(log trace 'homebrew' 'installing: foo')" ]]
 }
 
 @test "installs multiple formulas" {
   load '../helpers/mocks/stub.bash'
-  import 'log::trace'
+  import 'log'
 
   stub brew \
     'update : ' \
@@ -73,12 +73,12 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::trace 'homebrew' 'installing: foo bar baz')" ]]
+  [[ "$output" == "$(log trace 'homebrew' 'installing: foo bar baz')" ]]
 }
 
 @test "installs only missing formulas" {
   load '../helpers/mocks/stub.bash'
-  import 'log::trace'
+  import 'log'
 
   homebrew::missing() { [[ "$1" != 'bar' ]]; }
   stub brew \
@@ -89,13 +89,13 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "${lines[0]}" == "$(log::trace 'homebrew' 'already installed: bar')" ]]
-  [[ "${lines[1]}" == "$(log::trace 'homebrew' 'installing: foo baz')" ]]
+  [[ "${lines[0]}" == "$(log trace 'homebrew' 'already installed: bar')" ]]
+  [[ "${lines[1]}" == "$(log trace 'homebrew' 'installing: foo baz')" ]]
 }
 
 @test "succeeds if formula is already installed" {
   load '../helpers/mocks/stub.bash'
-  import 'log::trace'
+  import 'log'
 
   homebrew::missing() { return 1; }
   stub brew
@@ -104,12 +104,12 @@ setup() {
 
   unstub brew
   ((status == 0))
-  [[ "$output" == "$(log::trace 'homebrew' 'already installed: foo')" ]]
+  [[ "$output" == "$(log trace 'homebrew' 'already installed: foo')" ]]
 }
 
 @test "fails if brew update fails" {
   load '../helpers/mocks/stub.bash'
-  import 'log::error'
+  import 'log'
 
   stub brew 'update : exit 1'
 
@@ -117,12 +117,12 @@ setup() {
 
   unstub brew
   ((status == 1))
-  [[ "${lines[1]}" == "$(log::error 'homebrew' 'installation failed')" ]]
+  [[ "${lines[1]}" == "$(log error 'homebrew' 'installation failed')" ]]
 }
 
 @test "fails if brew install fails" {
   load '../helpers/mocks/stub.bash'
-  import 'log::error'
+  import 'log'
 
   stub brew \
     'update : ' \
@@ -132,5 +132,5 @@ setup() {
 
   unstub brew
   ((status == 1))
-  [[ "${lines[1]}" == "$(log::error 'homebrew' 'installation failed')" ]]
+  [[ "${lines[1]}" == "$(log error 'homebrew' 'installation failed')" ]]
 }

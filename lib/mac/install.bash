@@ -1,6 +1,6 @@
 import 'arguments::expect'
 import 'homebrew::install'
-import 'log::error'
+import 'log'
 import 'variable::expect'
 import 'variable::nonempty'
 
@@ -18,6 +18,6 @@ mac::install() {
     return
   fi
 
-  log::error 'mac' "don't know how to install ${recipe:?}"
+  log error 'mac' "don't know how to install ${recipe:?}"
   return 1
 }

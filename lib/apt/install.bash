@@ -1,8 +1,6 @@
 import 'apt::missing'
 import 'arguments::expect'
-import 'log::error'
-import 'log::trace'
-import 'log::warn'
+import 'log'
 import 'platform::is_root'
 
 apt::install() {
@@ -21,7 +19,7 @@ apt::install() {
   done
 
   if ((${#installed[@]})); then
-    log::trace 'apt' "already installed: ${installed[*]}"
+    log trace 'apt' "already installed: ${installed[*]}"
   fi
 
   if ((${#missing[@]} == 0)); then
@@ -30,18 +28,18 @@ apt::install() {
 
   __apt_install() {
     if ! { apt update && apt -y install "${missing[@]}"; }; then
-      log::error 'apt' 'installation failed'
+      log error 'apt' 'installation failed'
       return 1
     fi
 
     return 0
   }
 
-  log::trace 'apt' "installing: ${missing[*]}"
+  log trace 'apt' "installing: ${missing[*]}"
   if platform::is_root; then
     __apt_install
   else
-    log::warn 'apt' 'running as non-root; sudo is needed'
+    log warn 'apt' 'running as non-root; sudo is needed'
     export -f __apt_install
     sudo /usr/bin/env bash -c "$(declare -p missing); __apt_install"
   fi
