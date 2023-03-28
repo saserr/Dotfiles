@@ -1,8 +1,8 @@
 import 'arguments::expect'
+import 'array::exists'
 import 'bash::support::associative_array'
 import 'bash::support::declare_reference'
 import 'variable::exists'
-import 'variable::is_array'
 
 variable::nonempty() {
   arguments::expect $# 'name'
@@ -13,7 +13,7 @@ variable::nonempty() {
     return 1
   fi
 
-  if variable::is_array "$name"; then
+  if array::exists "$name"; then
     if bash::support::declare_reference; then
       declare -n array="$name"
       ((${#array[@]})) # check if array has size > 0

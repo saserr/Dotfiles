@@ -20,10 +20,10 @@ setup() {
 }
 
 @test "appends 'recipes' to \$RECIPES_PATH if \$RECIPES_PATH is an array" {
-  import 'variable::is_array'
+  import 'array::exists'
 
   local RECIPES_PATH=('foo')
-  variable::is_array 'RECIPES_PATH'
+  array::exists 'RECIPES_PATH'
 
   source 'lib/recipe/file.bash'
 
@@ -34,13 +34,13 @@ setup() {
 
 @test "redeclares \$RECIPES_PATH as an array and appends 'recipes' if \$RECIPES_PATH is not an array" {
   load '../helpers/import.bash'
+  import 'array::exists'
   import 'assert::fails'
   import 'variable::exists'
-  import 'variable::is_array'
 
   local RECIPES_PATH='foo'
   variable::exists 'RECIPES_PATH'
-  assert::fails variable::is_array 'RECIPES_PATH'
+  assert::fails array::exists 'RECIPES_PATH'
 
   source 'lib/recipe/file.bash'
 

@@ -2,40 +2,40 @@
 
 setup() {
   source 'lib/import.bash'
-  import 'variable::is_array'
+  import 'array::exists'
 }
 
 @test "fails without arguments" {
   load '../helpers/import.bash'
   import 'assert::wrong_usage'
 
-  run variable::is_array
+  run array::exists
 
-  assert::wrong_usage 'variable::is_array' 'name'
+  assert::wrong_usage 'array::exists' 'name'
 }
 
 @test "succeeds if variable is a non-empty array with a non-empty first element" {
   foo=('bar')
 
-  variable::is_array 'foo'
+  array::exists 'foo'
 }
 
 @test "succeeds if variable is a non-empty array with an empty first element" {
   foo=('')
 
-  variable::is_array 'foo'
+  array::exists 'foo'
 }
 
 @test "succeeds if variable is an empty array" {
   foo=()
 
-  variable::is_array 'foo'
+  array::exists 'foo'
 }
 
 @test "succeeds if variable is declared as an indexed array" {
   declare -a foo
 
-  variable::is_array 'foo'
+  array::exists 'foo'
 }
 @test "succeeds if variable is declared as an associative array" {
   import 'bash::support::associative_array'
@@ -45,13 +45,13 @@ setup() {
 
   declare -A foo
 
-  variable::is_array 'foo'
+  array::exists 'foo'
 }
 
 @test "succeeds if variable is localy declared as an indexed array" {
   local -a foo
 
-  variable::is_array 'foo'
+  array::exists 'foo'
 }
 
 @test "succeeds if variable is localy declared as an associative array" {
@@ -62,7 +62,7 @@ setup() {
 
   local -A foo
 
-  variable::is_array 'foo'
+  array::exists 'foo'
 }
 
 @test "fails if variable a non-array value" {
@@ -71,7 +71,7 @@ setup() {
 
   foo='bar'
 
-  assert::fails variable::is_array 'foo'
+  assert::fails array::exists 'foo'
 }
 
 @test "fails if variable is only globally declared" {
@@ -85,7 +85,7 @@ setup() {
 
   declare -g foo
 
-  assert::fails variable::is_array 'foo'
+  assert::fails array::exists 'foo'
 }
 
 @test "fails if variable is only localy declared" {
@@ -94,7 +94,7 @@ setup() {
 
   local foo
 
-  assert::fails variable::is_array 'foo'
+  assert::fails array::exists 'foo'
 }
 
 @test "fails if variable is only readonly declared" {
@@ -104,12 +104,12 @@ setup() {
   local foo
   readonly foo
 
-  assert::fails variable::is_array 'foo'
+  assert::fails array::exists 'foo'
 }
 
 @test "fails if variable is not declared" {
   load '../helpers/import.bash'
   import 'assert::fails'
 
-  assert::fails variable::is_array 'foo'
+  assert::fails array::exists 'foo'
 }

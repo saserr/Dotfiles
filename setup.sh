@@ -9,6 +9,7 @@ recipe=$1
 import 'recipe::load'
 recipe::load || exit 1
 
+import 'array::exists'
 import 'log'
 import 'platform::name'
 import 'prompt::yes_or_no'
@@ -16,10 +17,9 @@ import 'recipe::configure'
 import 'recipe::install'
 import 'setup::done'
 import 'setup::missing'
-import 'variable::is_array'
 
 if setup::missing "$recipe"; then
-  if variable::is_array 'required'; then
+  if array::exists 'required'; then
     maybe_required=("${required[@]}")
   else
     maybe_required=()
@@ -27,12 +27,12 @@ if setup::missing "$recipe"; then
 
   case "$(platform::name)" in
     'mac')
-      if variable::is_array 'mac_required'; then
+      if array::exists 'mac_required'; then
         maybe_required+=("${mac_required[@]}")
       fi
       ;;
     'debian')
-      if variable::is_array 'debian_required'; then
+      if array::exists 'debian_required'; then
         maybe_required+=("${debian_required[@]}")
       fi
       ;;
@@ -72,7 +72,7 @@ else
   log info "$recipe" 'already set up'
 fi
 
-if variable::is_array 'recommended'; then
+if array::exists 'recommended'; then
   for recommended_recipe in "${recommended[@]:?}"; do
     if setup::missing "$recommended_recipe"; then
       if [[ "$(prompt::yes_or_no "$recipe" "do you want to install $recommended_recipe")" == 'Yes' ]]; then

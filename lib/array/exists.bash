@@ -1,7 +1,7 @@
 import 'arguments::expect'
 import 'text::starts_with'
 
-variable::is_array() {
+array::exists() {
   arguments::expect $# 'name'
 
   local name=$1
