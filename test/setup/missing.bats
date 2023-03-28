@@ -17,18 +17,32 @@ setup() {
 }
 
 @test "is missing if recipe has not been set up" {
-  setup::missing 'test'
+  setup::missing 'foo'
 }
 
 @test "is not missing if recipe has been set up" {
   load '../helpers/import.bash'
   import 'assert::fails'
-  import 'setup::directory'
+  import 'path::parent'
+  import 'setup::file'
 
-  local directory
-  directory="$(setup::directory)"
-  mkdir -p "$directory"
-  touch "$directory/test"
+  local file
+  file="$(setup::file 'foo')"
+  mkdir -p "$(path::parent "$file")"
+  touch "$file"
 
-  assert::fails setup::missing 'test'
+  assert::fails setup::missing 'foo'
+}
+
+@test "fails if setup::file fails" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
+  import 'log'
+
+  setup::file() { return 1; }
+
+  assert::exits setup::missing 'foo'
+
+  ((status == 3))
+  [[ "${lines[0]}" == "$(log error 'setup::missing' 'failed to get the path to the foo'\''s state file')" ]]
 }

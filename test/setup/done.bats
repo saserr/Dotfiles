@@ -21,13 +21,26 @@ teardown() {
 }
 
 @test "creates a file under ~/.setup/ with value 1" {
-  import 'setup::directory'
+  import 'setup::file'
 
-  local directory
-  directory="$(setup::directory)"
+  local file
+  file="$(setup::file 'foo')"
 
-  setup::done 'test'
+  setup::done 'foo'
 
-  [[ -f "$directory/test" ]]
-  [[ "$(cat "$directory/test")" == '1' ]]
+  [[ -f "$file" ]]
+  [[ "$(cat "$file")" == '1' ]]
+}
+
+@test "fails if setup::file fails" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
+  import 'log'
+
+  setup::file() { return 1; }
+
+  assert::exits setup::done 'foo'
+
+  ((status == 3))
+  [[ "${lines[0]}" == "$(log error 'setup::done' 'failed to get the path to the foo'\''s state file')" ]]
 }
