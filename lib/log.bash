@@ -43,7 +43,7 @@ log() {
 
   if ((${#messages[@]} > 1)); then
     local indentation
-    if ! indentation="$(printf " %.0s" $(seq 1 $((${#tag} + 2))))"; then
+    if ! printf -v indentation ' %.0s' $(seq 1 $((${#tag} + 2))); then
       indentation=' '
     fi
 

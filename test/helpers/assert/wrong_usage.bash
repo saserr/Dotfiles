@@ -13,6 +13,6 @@ assert::wrong_usage() {
   [[ "${lines[0]:?}" == "$(log error "$function" 'wrong number of arguments')" ]]
 
   local indentation
-  indentation="$(printf " %.0s" $(seq 1 $((${#function} + 2))))" || return
+  printf -v indentation " %.0s" $(seq 1 $((${#function} + 2)))
   [[ "${lines[3]:?}" == "$indentation arguments: ${arguments[*]}" ]]
 }

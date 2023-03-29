@@ -18,10 +18,12 @@ variable::nonempty() {
       declare -n array="$name"
       ((${#array[@]})) # check if array has size > 0
     elif bash::support::associative_array; then
+      local test
       # shellcheck disable=SC2016
       # ignore the expansion in the first argument of printf because it is
       # meant for the eval function
-      eval "$(printf '((${#%q[@]}))' "$name")" # check if array has size > 0
+      printf -v test '((${#%q[@]}))' "$name" # check if array has size > 0
+      eval "$test"
     else
       # check if first element of the array is not null. note that this check
       # does not work with an associative array, hence it is not safe to use it

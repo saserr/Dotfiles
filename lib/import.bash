@@ -25,7 +25,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
         echo "[$tag] ${messages[0]}" 1>&2
         if ((${#messages[@]} > 1)); then
           local indentation
-          if ! indentation="$(printf " %.0s" $(seq 1 $((${#tag} + 2))))"; then
+          if ! printf -v indentation ' %.0s' $(seq 1 $((${#tag} + 2))); then
             indentation=' '
           fi
 
@@ -57,12 +57,14 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     local function="${FUNCNAME[1]}"
     local file=$1
 
+    local declaration
     # shellcheck source=/dev/null
-    if ! { eval "$(printf '%q() { __import::not_loaded; };' "$function")" && source "$file"; }; then
+    if ! { printf -v declaration '%q() { __import::not_loaded; };' "$function" \
+      && eval "$declaration" \
+      && source "$file"; }; then
       __import::abort 'import' "can't load the '$function' function from $file"
     fi
 
-    local declaration
     if ! declaration="$(declare -f "$function" 2>&1)" \
       || [[ "$declaration" == *'__import::not_loaded'* ]]; then
       __import::abort 'import' "the '$function' function is missing in $file"
@@ -83,7 +85,9 @@ if ! declare -F 'import' >/dev/null 2>&1; then
     for path in "${IMPORT_PATH[@]}"; do
       local file="$path/${function//:://}.bash"
       if [[ -e "$file" ]] && [[ ! -d "$file" ]]; then
-        if ! eval "$(printf '%q() { __import::load '\''%q'\''; %q "$@"; };' "$function" "$file" "$function")"; then
+        local declaration
+        if ! { printf -v declaration '%q() { __import::load '\''%q'\''; %q "$@"; };' "$function" "$file" "$function" \
+          && eval "$declaration"; }; then
           __import::abort "can't declare the '$function' function"
         fi
         return 0
