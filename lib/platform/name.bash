@@ -11,8 +11,13 @@ platform::name() {
       echo 'mac'
       ;;
     'Linux')
+      local id
       # shellcheck source=/dev/null
-      printf '%s\n' "$(source '/etc/os-release' && echo "$ID")"
+      if id="$(source '/etc/os-release' && echo "${ID:-$os_name}")"; then
+        echo "$id"
+      else
+        echo "$os_name"
+      fi
       ;;
     *)
       echo "$os_name"
