@@ -21,11 +21,11 @@ __zsh::path() {
 
 recipe::configure() {
   local platform
-  platform="$(platform::name)" || return 1
+  platform="$(platform::name)" || return
   local zsh_path
-  platform=$(__zsh::path "$platform") || return 1
+  platform=$(__zsh::path "$platform") || return
   local login_shell
-  login_shell="$(platform::login_shell)" || return 1
+  login_shell="$(platform::login_shell)" || return
 
   if [[ "$login_shell" != "$zsh_path" ]]; then
     case $(prompt::yes_or_no "$platform" "do you want to set zsh as login shell (current: $login_shell)?" 'Yes') in

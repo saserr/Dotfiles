@@ -32,8 +32,12 @@ homebrew::install() {
   fi
 
   log trace 'homebrew' "installing: ${missing[*]}"
-  if ! { brew update && brew install "${missing[@]}"; }; then
+  brew update && brew install "${missing[@]}"
+  local -i status=$?
+
+  if ((status)); then
     log error 'homebrew' "installation failed"
-    return 1
   fi
+
+  return "$status"
 }

@@ -27,12 +27,12 @@ apt::install() {
   fi
 
   __apt_install() {
-    if ! { apt update && apt -y install "${missing[@]}"; }; then
+    apt update && apt -y install "${missing[@]}"
+    local -i status=$?
+    if ((status)); then
       log error 'apt' 'installation failed'
-      return 1
     fi
-
-    return 0
+    return "$status"
   }
 
   log trace 'apt' "installing: ${missing[*]}"

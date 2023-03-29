@@ -18,10 +18,10 @@ recipe::configure() {
 
     case "$(platform::name)" in
       'mac')
-        curl 'https://www.toptal.com/developers/gitignore/api/macos' >>"$HOME/.gitignore" || return 1
+        curl 'https://www.toptal.com/developers/gitignore/api/macos' >>"$HOME/.gitignore" || return
         ;;
       *)
-        curl 'https://www.toptal.com/developers/gitignore/api/linux' >>"$HOME/.gitignore" || return 1
+        curl 'https://www.toptal.com/developers/gitignore/api/linux' >>"$HOME/.gitignore" || return
         ;;
     esac
   else

@@ -30,7 +30,7 @@ prompt::yes_or_no() {
 
   while true; do
     local answer
-    answer="$(prompt::question "$tag" "$question")" || return 1
+    answer="$(prompt::question "$tag" "$question")" || return
     case "$answer" in
       [yY] | [yY][eE][sS])
         echo 'Yes'

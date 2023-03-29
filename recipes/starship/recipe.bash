@@ -12,7 +12,7 @@ debian::install() {
 
 recipe::configure() {
   local login_shell
-  login_shell="$(platform::login_shell)" || return 1
+  login_shell="$(platform::login_shell)" || return
   case "$login_shell" in
     'zsh')
       log trace 'starship' 'enabling in zsh'
@@ -27,10 +27,10 @@ recipe::configure() {
       if ! file::empty "$zshrc"; then
         file::append "$zshrc"
       fi
-      file::append "$zshrc" '# enable https://starship.rs' || return 1
+      file::append "$zshrc" '# enable https://starship.rs' || return
       # shellcheck disable=SC2016
       # this eval is intentionally not evaluated here, hence single-quote string
-      file::append "$zshrc" 'eval "$(starship init zsh)"' || return 1
+      file::append "$zshrc" 'eval "$(starship init zsh)"' || return
       ;;
     'bash')
       log trace 'starship' 'enabling in bash'
@@ -39,10 +39,10 @@ recipe::configure() {
       if ! file::empty "$bashrc"; then
         file::append "$bashrc"
       fi
-      file::append "$bashrc" '# enable https://starship.rs' || return 1
+      file::append "$bashrc" '# enable https://starship.rs' || return
       # shellcheck disable=SC2016
       # this eval is intentionally not evaluated here, hence single-quote string
-      file::append "$bashrc" 'eval "$(starship init bash)"' || return 1
+      file::append "$bashrc" 'eval "$(starship init bash)"' || return
       ;;
     *)
       log error 'starship' "don't know how to enable for $login_shell"

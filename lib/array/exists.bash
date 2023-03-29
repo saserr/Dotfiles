@@ -6,7 +6,7 @@ array::exists() {
 
   local name=$1
   local declaration
-  declaration="$(declare -p "$name" 2>&1)" || return 1
+  declaration="$(declare -p "$name" 2>&1)" || return
 
   text::starts_with "$declaration" 'declare -a' \
     || text::starts_with "$declaration" 'declare -A'

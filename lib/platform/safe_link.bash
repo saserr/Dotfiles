@@ -36,7 +36,7 @@ platform::safe_link() {
     case "$(prompt::yes_or_no "$name" "$from exists; do you want to replace it?" 'Yes')" in
       Yes)
         log trace "$name" "$from will be moved to $from.old"
-        mv "$from" "$from.old" || return 1
+        mv "$from" "$from.old" || return
         ;;
       *)
         log warn "$name" "$from will not be linked to $to"

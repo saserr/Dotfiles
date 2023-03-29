@@ -20,9 +20,9 @@ assert::exits() {
     $command "${arguments[@]}"
 
     # this code should be unreachable, because $command is expected to exit
-    local -i return_code=$?
+    local -i status=$?
     touch "$unexpected"
-    return "$return_code"
+    return "$status"
   }
   run __test
 
