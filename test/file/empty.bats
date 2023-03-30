@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'file::empty'
 
   test_file="$BATS_TEST_TMPDIR/test"

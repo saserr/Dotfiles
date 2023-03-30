@@ -1,5 +1,5 @@
-import 'abort::exit'
 import 'caller::name'
+import 'error::status'
 import 'log'
 import 'stack_trace::create'
 
@@ -44,7 +44,8 @@ __arguments::expect::abort() {
   fi
 
   log error "$function" "${messages[@]}"
-  abort::exit internal_error
+  error::status internal_error
+  exit
 }
 
 arguments::expect() {
@@ -67,7 +68,8 @@ arguments::expect() {
     fi
 
     log error "${FUNCNAME[0]}" "${messages[@]}"
-    abort::exit internal_error
+    error::status internal_error
+    exit
   fi
 
   ((actual == ($# - 1))) && return 0

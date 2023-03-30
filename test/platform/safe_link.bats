@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'platform::safe_link'
 
   from="$BATS_TEST_TMPDIR/from"

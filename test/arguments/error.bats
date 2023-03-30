@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'arguments::error'
 }
 
@@ -22,7 +22,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'arguments::error'" \
     "foo() { arguments::error 'bar'; }" \
     'foo'
@@ -51,7 +51,9 @@ setup() {
 @test "the output contains the shell if it is invoked outside of a function" {
   import 'log'
 
-  run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::error' && arguments::error 'foo'"
+  run /usr/bin/env bash -c "source 'lib/configure.bash' \
+    && import 'arguments::error' \
+    && arguments::error 'foo'"
 
   ((status == 3))
   [[ "$output" == "$(log error 'bash' 'foo')" ]]
@@ -65,7 +67,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'arguments::error'" \
     "arguments::error 'bar'"
   chmod +x "$script"

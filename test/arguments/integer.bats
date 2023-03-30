@@ -1,5 +1,5 @@
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'arguments::integer'
 }
 
@@ -36,7 +36,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'arguments::integer'" \
     "foo() { arguments::integer 'bar' 'baz'; }" \
     'foo'
@@ -54,7 +54,9 @@ setup() {
 @test "the failure message contains the shell if it is invoked outside of a function" {
   import 'log'
 
-  run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::integer' && arguments::integer 'foo' 'bar'"
+  run /usr/bin/env bash -c "source 'lib/configure.bash' \
+    && import 'arguments::integer' \
+    && arguments::integer 'foo' 'bar'"
 
   ((status == 3))
   ((${#lines[@]} == 2))
@@ -71,7 +73,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'arguments::integer'" \
     "arguments::integer 'bar' 'baz'"
   chmod +x "$script"

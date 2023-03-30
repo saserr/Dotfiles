@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'arguments::expect'
 }
 
@@ -14,7 +14,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'arguments::expect'" \
     "foo() { arguments::expect; }" \
     'foo'
@@ -41,7 +41,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'arguments::expect'" \
     "foo() { arguments::expect 'bar'; }" \
     'foo'
@@ -247,7 +247,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'arguments::expect'" \
     'foo() { arguments::expect 1; }' \
     'foo'
@@ -265,7 +265,9 @@ setup() {
 @test "the failure message contains the shell if it is invoked outside of a function" {
   import 'log'
 
-  run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::expect' && arguments::expect 1"
+  run /usr/bin/env bash -c "source 'lib/configure.bash' \
+    && import 'arguments::expect' \
+    && arguments::expect 1"
 
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == "$(log error 'bash' 'wrong number of arguments')" ]]
@@ -282,7 +284,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'arguments::expect'" \
     'arguments::expect 1'
   chmod +x "$script"

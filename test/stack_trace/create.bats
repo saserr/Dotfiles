@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
 }
 
 @test "\$STACK_TRACE contains the stack trace" {
@@ -11,7 +11,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'stack_trace::create'" \
     'stack_trace::create' \
     'printf "%s\n" "${STACK_TRACE[@]}"'
@@ -42,7 +42,7 @@ setup() {
   file::write "$baz" \
     '#!/usr/bin/env bash' \
     "IMPORT_PATH=('$BATS_TEST_TMPDIR')" \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'bar'" \
     'bar'
   chmod +x "$baz"
@@ -57,7 +57,7 @@ setup() {
 }
 
 @test "\$STACK_TRACE does not contain stack trace when invoked directly in the shell" {
-  run /usr/bin/env bash -c "source 'lib/import.bash' \
+  run /usr/bin/env bash -c "source 'lib/configure.bash' \
     && import 'stack_trace::create' \
     && stack_trace::create \
     && printf '%s\n' \"${STACK_TRACE[@]}\""
@@ -86,7 +86,7 @@ setup() {
   file::write "$baz" \
     '#!/usr/bin/env bash' \
     "IMPORT_PATH=('$BATS_TEST_TMPDIR')" \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'bar'" \
     'bar'
   chmod +x "$baz"

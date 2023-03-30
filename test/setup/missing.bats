@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'setup::missing'
 
   XDG_STATE_HOME="$BATS_TEST_TMPDIR"

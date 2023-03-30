@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'path::exists'
 
   test_path="$BATS_TEST_TMPDIR/foo"

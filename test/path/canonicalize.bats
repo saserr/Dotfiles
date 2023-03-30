@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'path::canonicalize'
 
   # get the physical directory of BATS_TEST_TMPDIR; this fixes the issue on the

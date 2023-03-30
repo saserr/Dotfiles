@@ -1,6 +1,6 @@
-import 'abort::exit'
 import 'arguments::expect'
 import 'caller::name'
+import 'error::status'
 import 'log'
 import 'value::integer'
 
@@ -21,6 +21,7 @@ arguments::integer() {
     fi
 
     log error "$(caller::name)" "${messages[@]}"
-    abort::exit internal_error
+    error::status internal_error
+    exit
   fi
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load '../setup.bash'
   import 'caller::name'
 }
 
@@ -36,7 +36,9 @@ setup() {
 }
 
 @test "returns the shell name when invoked directly in the shell" {
-  run /usr/bin/env bash -c "source 'lib/import.bash' && import 'caller::name' && caller::name"
+  run /usr/bin/env bash -c "source 'lib/configure.bash' \
+    && import 'caller::name' \
+    && caller::name"
 
   ((status == 0))
   [[ "$output" == 'bash' ]]
@@ -49,7 +51,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'caller::name'" \
     'caller::name'
   chmod +x "$script"

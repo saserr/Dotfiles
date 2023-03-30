@@ -1,7 +1,30 @@
+import 'abort'
 import 'assert::fails'
 import 'arguments::expect'
 import 'path::exists'
 import 'temporary::file'
+
+export __assert_exits_unexpected
+if ! __assert_exits_unexpected="$(temporary::file "$BATS_TEST_TMPDIR")"; then
+  abort 'assert::exits' 'failed to create a temporary file'
+fi
+
+__assert_exits_test() {
+  local command=$1
+  local arguments=("${@:2}")
+
+  # delete the temporary file
+  rm -f "$__assert_exits_unexpected"
+  # check that it doesn't exist
+  assert::fails path::exists "$__assert_exits_unexpected"
+
+  $command "${arguments[@]}"
+
+  # this code should be unreachable, because $command is expected to exit
+  local -i status=$?
+  touch "$__assert_exits_unexpected"
+  return "$status"
+}
 
 assert::exits() {
   arguments::expect $# 'command' '[argument]' '...'
@@ -9,23 +32,8 @@ assert::exits() {
   local command=$1
   local arguments=("${@:2}")
 
-  local unexpected
-  unexpected="$(temporary::file "$BATS_TEST_TMPDIR")"
-  rm "$unexpected"                         # delete the temporary file
-  assert::fails path::exists "$unexpected" # check that it doesn't exist
-
-  # shellcheck disable=SC2317
-  # __test is called by the run method bellow
-  __test() {
-    $command "${arguments[@]}"
-
-    # this code should be unreachable, because $command is expected to exit
-    local -i status=$?
-    touch "$unexpected"
-    return "$status"
-  }
-  run __test
+  run __assert_exits_test "$command" "${arguments[@]}"
 
   # check that the temporary file still doesn't exist
-  assert::fails path::exists "$unexpected"
+  assert::fails path::exists "$__assert_exits_unexpected"
 }

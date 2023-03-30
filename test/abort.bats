@@ -1,10 +1,10 @@
 #!/usr/bin/env bats
 
 setup() {
-  source 'lib/import.bash'
+  load 'setup.bash'
   import 'abort'
 
-  export test_abort_status=42
+  export test_status=42
 }
 
 @test "fails without arguments" {
@@ -66,7 +66,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'abort'" \
     "abort test 'foo' 'bar'"
   chmod +x "$script"
@@ -85,7 +85,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'abort'" \
     "ABORT_WITH_STACK_TRACE+=('test')" \
     "abort test 'foo' 'bar'"
@@ -127,7 +127,7 @@ setup() {
   local script="$BATS_TEST_TMPDIR/foo"
   file::write "$script" \
     '#!/usr/bin/env bash' \
-    "source 'lib/import.bash'" \
+    "source 'lib/configure.bash'" \
     "import 'abort'" \
     "abort internal_error 'foo' 'bar'"
   chmod +x "$script"
@@ -138,4 +138,24 @@ setup() {
   ((${#lines[@]} == 2))
   [[ "${lines[0]}" == "$(log error 'foo' 'bar')" ]]
   [[ "${lines[1]}" == "      at $script (line: 4)" ]]
+}
+
+@test "abort in subshell still outputs the error" {
+  load 'helpers/import.bash'
+  import 'assert::exits'
+  import 'log'
+  import 'variable::expect'
+
+  variable::expect 'RUNTIME_DIR'
+
+  test() {
+    (abort test 'foo' 'bar')
+  }
+
+  run test
+  ((status == 42))
+
+  run cat "$RUNTIME_DIR/abort"
+  [[ "${lines[0]}" == '42' ]]
+  [[ "${lines[1]}" == "$(log error 'foo' 'bar')" ]]
 }
