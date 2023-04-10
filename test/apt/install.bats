@@ -32,7 +32,9 @@ setup() {
 }
 
 @test "installs package if not installed" {
+  load '../helpers/import.bash'
   load '../helpers/mocks/stub.bash'
+  import 'capture::stderr'
   import 'log'
 
   stub apt \
@@ -43,11 +45,13 @@ setup() {
 
   unstub apt
   ((status == 0))
-  [[ "$output" == "$(log trace 'apt' 'installing: foo')" ]]
+  [[ "$output" == "$(capture::stderr log trace 'apt' 'installing: foo')" ]]
 }
 
 @test "installs multiple packages" {
+  load '../helpers/import.bash'
   load '../helpers/mocks/stub.bash'
+  import 'capture::stderr'
   import 'log'
 
   stub apt \
@@ -58,11 +62,13 @@ setup() {
 
   unstub apt
   ((status == 0))
-  [[ "$output" == "$(log trace 'apt' 'installing: foo bar baz')" ]]
+  [[ "$output" == "$(capture::stderr log trace 'apt' 'installing: foo bar baz')" ]]
 }
 
 @test "installs only missing packages" {
+  load '../helpers/import.bash'
   load '../helpers/mocks/stub.bash'
+  import 'capture::stderr'
   import 'log'
 
   apt::missing() { [[ "$1" != 'bar' ]]; }
@@ -75,12 +81,14 @@ setup() {
 
   unstub apt
   ((status == 0))
-  [[ "${lines[0]}" == "$(log trace 'apt' 'already installed: bar')" ]]
-  [[ "${lines[1]}" == "$(log trace 'apt' 'installing: foo baz')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log trace 'apt' 'already installed: bar')" ]]
+  [[ "${lines[1]}" == "$(capture::stderr log trace 'apt' 'installing: foo baz')" ]]
 }
 
 @test "installs package with sudo if the current user is not root" {
+  load '../helpers/import.bash'
   load '../helpers/mocks/stub.bash'
+  import 'capture::stderr'
   import 'log'
 
   platform::is_root() { return 1; }
@@ -94,10 +102,12 @@ setup() {
   unstub apt
   unstub sudo
   ((status == 0))
-  [[ "${lines[1]}" == "$(log warn 'apt' 'running as non-root; sudo is needed')" ]]
+  [[ "${lines[1]}" == "$(capture::stderr log warn 'apt' 'running as non-root; sudo is needed')" ]]
 }
 
 @test "succeeds if package is already installed" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
 
   apt::missing() { return 1; }
@@ -105,11 +115,13 @@ setup() {
   run apt::install 'foo'
 
   ((status == 0))
-  [[ "$output" == "$(log trace 'apt' 'already installed: foo')" ]]
+  [[ "$output" == "$(capture::stderr log trace 'apt' 'already installed: foo')" ]]
 }
 
 @test "fails if apt update fails" {
+  load '../helpers/import.bash'
   load '../helpers/mocks/stub.bash'
+  import 'capture::stderr'
   import 'log'
 
   stub apt 'update : exit 1'
@@ -118,11 +130,13 @@ setup() {
 
   unstub apt
   ((status == 1))
-  [[ "${lines[1]}" == "$(log error 'apt' 'installation failed')" ]]
+  [[ "${lines[1]}" == "$(capture::stderr log error 'apt' 'installation failed')" ]]
 }
 
 @test "fails if apt install fails" {
+  load '../helpers/import.bash'
   load '../helpers/mocks/stub.bash'
+  import 'capture::stderr'
   import 'log'
 
   stub apt \
@@ -133,5 +147,5 @@ setup() {
 
   unstub apt
   ((status == 1))
-  [[ "${lines[1]}" == "$(log error 'apt' 'installation failed')" ]]
+  [[ "${lines[1]}" == "$(capture::stderr log error 'apt' 'installation failed')" ]]
 }

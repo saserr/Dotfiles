@@ -6,16 +6,20 @@ setup() {
 }
 
 @test "fails if there is no \$recipe file" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
 
   local recipe='foo'
   run recipe::load
 
   ((status == 1))
-  [[ "$output" == "$(log warn 'foo' 'has no recipe')" ]]
+  [[ "$output" == "$(capture::stderr log warn 'foo' 'has no recipe')" ]]
 }
 
 @test "fails if recipe::file fails" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
 
   recipe::file() { return 1; }
@@ -24,7 +28,7 @@ setup() {
   run recipe::load
 
   ((status == 1))
-  [[ "$output" == "$(log warn 'foo' 'has no recipe')" ]]
+  [[ "$output" == "$(capture::stderr log warn 'foo' 'has no recipe')" ]]
 }
 
 @test "loads the \$recipe file" {
@@ -55,6 +59,7 @@ setup() {
 @test "fails if loading the \$recipe file fails" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
 
@@ -65,7 +70,7 @@ setup() {
   assert::exits recipe::load
 
   ((status == 1))
-  [[ "$output" == "$(log error 'foo' "failed to load from $BATS_TEST_TMPDIR/foo/recipe.bash")" ]]
+  [[ "$output" == "$(capture::stderr log error 'foo' "failed to load from $BATS_TEST_TMPDIR/foo/recipe.bash")" ]]
 }
 
 @test "fails if cd to the \$recipe's directory fails" {
@@ -87,10 +92,11 @@ setup() {
 @test "fails if \$recipe is missing" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'log'
 
   assert::exits recipe::load
 
   ((status == 3))
-  [[ "${lines[0]}" == "$(log error 'recipe::load' 'expected nonempty variables: recipe')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'recipe::load' 'expected nonempty variables: recipe')" ]]
 }

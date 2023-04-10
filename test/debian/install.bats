@@ -40,18 +40,21 @@ setup() {
 }
 
 @test "fails if both \$apt_package and \$program are missing" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
 
   local recipe='foo'
   run debian::install
 
   ((status == 1))
-  [[ "$output" == "$(log error 'debian' "don't know how to install foo")" ]]
+  [[ "$output" == "$(capture::stderr log error 'debian' "don't know how to install foo")" ]]
 }
 
 @test "fails if \$recipe is missing" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'log'
 
   local apt_package='foo'
@@ -59,5 +62,5 @@ setup() {
   assert::exits debian::install
 
   ((status == 3))
-  [[ "${lines[0]}" == "$(log error 'debian::install' "expected nonempty variables: recipe")" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'debian::install' "expected nonempty variables: recipe")" ]]
 }

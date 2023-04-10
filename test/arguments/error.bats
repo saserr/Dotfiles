@@ -16,6 +16,7 @@ setup() {
 
 @test "the output contains the function name and the message" {
   load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
 
@@ -32,13 +33,14 @@ setup() {
 
   ((status == 3))
   ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == "$(log error 'foo' 'bar')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'foo' 'bar')" ]]
   [[ "${lines[1]}" == "      at $script (line: 5)" ]]
 }
 
 @test "the output contains the additional messages" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
 
   test() { arguments::error 'foo' 'bar' 'baz'; }
   assert::exits test
@@ -49,16 +51,19 @@ setup() {
 }
 
 @test "the output contains the shell if it is invoked outside of a function" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
 
   run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::error' && arguments::error 'foo'"
 
   ((status == 3))
-  [[ "$output" == "$(log error 'bash' 'foo')" ]]
+  [[ "$output" == "$(capture::stderr log error 'bash' 'foo')" ]]
 }
 
 @test "the output contains the script name if it is invoked outside of a function" {
   load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
 
@@ -73,5 +78,5 @@ setup() {
   run "$script"
 
   ((status == 3))
-  [[ "$output" == "$(log error "$script" 'bar')" ]]
+  [[ "$output" == "$(capture::stderr log error "$script" 'bar')" ]]
 }

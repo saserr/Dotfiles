@@ -14,7 +14,7 @@ case "$(platform::name)" in
       if command::exists 'greadlink'; then
         greadlink -f "$path"
       else
-        abort platform_error 'mac' 'greadlink is not installed' 1>&2
+        abort platform_error 'mac' 'greadlink is not installed'
       fi
     }
     ;;

@@ -8,7 +8,7 @@ homebrew::install() {
   arguments::expect $# 'formula' '...'
 
   if ! command::exists 'brew'; then
-    abort platform_error 'homebrew' 'is not installed' 1>&2
+    abort platform_error 'homebrew' 'is not installed'
   fi
 
   local formulas=("$@")

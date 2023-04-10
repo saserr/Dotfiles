@@ -32,13 +32,13 @@ log() {
   if variable::exists "$color_variable_name"; then
     if variable::nonempty "$color_variable_name"; then
       local color="${!color_variable_name}"
-      echo -e "\033[${color}m[$tag]\033[0m ${messages[0]}"
+      echo -e "\033[${color}m[$tag]\033[0m ${messages[0]}" 1>&2
     else
-      echo "[$tag] ${messages[0]}"
+      echo "[$tag] ${messages[0]}" 1>&2
     fi
   else
     log warn 'log' "expected variable: \$$color_variable_name"
-    echo "[$tag] ${messages[0]}"
+    echo "[$tag] ${messages[0]}" 1>&2
   fi
 
   if ((${#messages[@]} > 1)); then
@@ -51,7 +51,7 @@ log() {
     local messages=("${messages[@]:1}")
     for message in "${messages[@]}"; do
       if ! value::empty "$message"; then
-        echo "$indentation $message"
+        echo "$indentation $message" 1>&2
       fi
     done
   fi

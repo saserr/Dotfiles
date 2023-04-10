@@ -8,6 +8,7 @@ setup() {
 @test "fails without arguments" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
 
@@ -24,7 +25,7 @@ setup() {
 
   ((status == 3))
   ((${#lines[@]} == 6))
-  [[ "${lines[0]}" == "$(log error 'arguments::expect' 'wrong number of arguments')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'arguments::expect' 'wrong number of arguments')" ]]
   [[ "${lines[1]}" == '                    actual: 0' ]]
   [[ "${lines[2]}" == '                    expected: 1 (or more)' ]]
   [[ "${lines[3]}" == '                    arguments: $# [name] ...' ]]
@@ -35,6 +36,7 @@ setup() {
 @test "fails when first argument is not an integer" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
 
@@ -51,7 +53,7 @@ setup() {
 
   ((status == 3))
   ((${#lines[@]} == 4))
-  [[ "${lines[0]}" == "$(log error 'arguments::expect' 'expected integer argument: $#')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'arguments::expect' 'expected integer argument: $#')" ]]
   [[ "${lines[1]}" == '                    actual: bar' ]]
   [[ "${lines[2]}" == "                    at $script (line: 4)" ]]
   [[ "${lines[3]}" == "                    at $script (line: 5)" ]]
@@ -168,6 +170,8 @@ setup() {
 }
 
 @test "the failure message contains the function name and the reason" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
   import 'text::starts_with'
 
@@ -177,7 +181,7 @@ setup() {
 
   run foo
 
-  text::starts_with "${lines[0]}" "$(log error 'foo' 'wrong number of arguments')"
+  text::starts_with "${lines[0]}" "$(capture::stderr log error 'foo' 'wrong number of arguments')"
 }
 
 @test "the failure message contains the actual number of arguments" {
@@ -240,6 +244,7 @@ setup() {
 
 @test "the failure message contains the stack trace" {
   load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
   import 'text::ends_with'
@@ -256,25 +261,28 @@ setup() {
   run "$script"
 
   ((${#lines[@]} == 4))
-  [[ "${lines[0]}" == "$(log error 'foo' 'wrong number of arguments')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'foo' 'wrong number of arguments')" ]]
   [[ "${lines[1]}" == '      actual: 1' ]]
   [[ "${lines[2]}" == '      expected: 0' ]]
   [[ "${lines[3]}" == "      at $script (line: 5)" ]]
 }
 
 @test "the failure message contains the shell if it is invoked outside of a function" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
 
   run /usr/bin/env bash -c "source 'lib/import.bash' && import 'arguments::expect' && arguments::expect 1"
 
   ((${#lines[@]} == 3))
-  [[ "${lines[0]}" == "$(log error 'bash' 'wrong number of arguments')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'bash' 'wrong number of arguments')" ]]
   [[ "${lines[1]}" == '       actual: 1' ]]
   [[ "${lines[2]}" == '       expected: 0' ]]
 }
 
 @test "the failure message contains the script name if it is invoked outside of a function" {
   load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
   import 'text::ends_with'
@@ -290,7 +298,7 @@ setup() {
   run "$script"
 
   ((${#lines[@]} == 3))
-  [[ "${lines[0]}" == "$(log error "$script" 'wrong number of arguments')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error "$script" 'wrong number of arguments')" ]]
   text::ends_with "${lines[1]}" 'actual: 1'
   text::ends_with "${lines[2]}" 'expected: 0'
 }

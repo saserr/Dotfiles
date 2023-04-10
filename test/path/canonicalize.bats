@@ -176,6 +176,7 @@ setup() {
 
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'log'
 
   command::exists() { [[ "$1" != 'greadlink' ]]; }
@@ -183,7 +184,7 @@ setup() {
   assert::exits path::canonicalize 'foo'
 
   ((status == 2))
-  [[ "$output" == "$(log error 'mac' 'greadlink is not installed')" ]]
+  [[ "$output" == "$(capture::stderr log error 'mac' 'greadlink is not installed')" ]]
 }
 
 @test "fails if readlink fails on any other platform" {

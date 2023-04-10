@@ -37,29 +37,32 @@ setup() {
 @test "the output contains the tag and the message" {
   load 'helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'log'
 
   assert::exits abort test 'foo' 'bar'
 
   ((status == 42))
-  [[ "$output" == "$(log error 'foo' 'bar')" ]]
+  [[ "$output" == "$(capture::stderr log error 'foo' 'bar')" ]]
 }
 
 @test "the output contains any additional messages" {
   load 'helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
 
   assert::exits abort test 'test' 'foo' 'bar' 'baz'
 
   ((status == 42))
   ((${#lines[@]} == 3))
-  [[ "${lines[0]}" == "$(log error 'test' 'foo')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'test' 'foo')" ]]
   [[ "${lines[1]}" == '       bar' ]]
   [[ "${lines[2]}" == '       baz' ]]
 }
 
 @test "the output does not contain the stack trace if error is not in \$ABORT_WITH_STACK_TRACE" {
   load 'helpers/import.bash'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
 
@@ -74,11 +77,12 @@ setup() {
   run "$script"
 
   ((status == 42))
-  [[ "$output" == "$(log error 'foo' 'bar')" ]]
+  [[ "$output" == "$(capture::stderr log error 'foo' 'bar')" ]]
 }
 
 @test "the output contains the stack trace if error is in \$ABORT_WITH_STACK_TRACE" {
   load 'helpers/import.bash'
+  import 'capture::stderr'
   import 'file::write'
   import 'log'
 
@@ -95,33 +99,36 @@ setup() {
 
   ((status == 42))
   ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == "$(log error 'foo' 'bar')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'foo' 'bar')" ]]
   [[ "${lines[1]}" == "      at $script (line: 5)" ]]
 }
 
 @test "the user_error does not print stack trace" {
   load 'helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
 
   assert::exits abort user_error 'foo' 'bar'
 
   ((status == 1))
-  [[ "$output" == "$(log error 'foo' 'bar')" ]]
+  [[ "$output" == "$(capture::stderr log error 'foo' 'bar')" ]]
 }
 
 @test "the platform_error does not print stack trace" {
   load 'helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
 
   assert::exits abort platform_error 'foo' 'bar'
 
   ((status == 2))
-  [[ "$output" == "$(log error 'foo' 'bar')" ]]
+  [[ "$output" == "$(capture::stderr log error 'foo' 'bar')" ]]
 }
 
 @test "the internal_error prints stack trace" {
   load 'helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'file::write'
 
   local script="$BATS_TEST_TMPDIR/foo"
@@ -136,6 +143,6 @@ setup() {
 
   ((status == 3))
   ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == "$(log error 'foo' 'bar')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'foo' 'bar')" ]]
   [[ "${lines[1]}" == "      at $script (line: 4)" ]]
 }

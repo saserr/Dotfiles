@@ -20,7 +20,7 @@ if ! declare -F 'import' >/dev/null 2>&1; then
       fi
 
       if declare -F 'log' >/dev/null 2>&1; then
-        log error "$tag" "${messages[@]}" 1>&2
+        log error "$tag" "${messages[@]}"
       else
         echo "[$tag] ${messages[0]}" 1>&2
         if ((${#messages[@]} > 1)); then

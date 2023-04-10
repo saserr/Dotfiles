@@ -20,6 +20,6 @@ abort() {
     messages+=("${STACK_TRACE[@]:1}")
   fi
 
-  log error "$tag" "${messages[@]}" 1>&2
+  log error "$tag" "${messages[@]}"
   abort::exit "$error"
 }

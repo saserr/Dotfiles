@@ -10,7 +10,7 @@ prompt::question() {
   local tag=$1
   local question=$2
 
-  question="$(log question "$tag" "$question")" || return
+  question="$(log question "$tag" "$question" 2>&1)" || return
   printf '%s' "$question" 1>&2 || return
 
   local answer

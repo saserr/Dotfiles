@@ -40,18 +40,21 @@ setup() {
 }
 
 @test "fails if both \$homebrew_formula and \$program are missing" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
 
   local recipe='foo'
   run mac::install
 
   ((status == 1))
-  [[ "$output" == "$(log error 'mac' "don't know how to install foo")" ]]
+  [[ "$output" == "$(capture::stderr log error 'mac' "don't know how to install foo")" ]]
 }
 
 @test "fails if \$recipe is missing" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'log'
 
   local homebrew_formula='foo'
@@ -59,5 +62,5 @@ setup() {
   assert::exits mac::install
 
   ((status == 3))
-  [[ "${lines[0]}" == "$(log error 'mac::install' "expected nonempty variables: recipe")" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'mac::install' "expected nonempty variables: recipe")" ]]
 }

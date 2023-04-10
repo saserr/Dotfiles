@@ -19,6 +19,7 @@ setup() {
 @test "prints a warning and exits with the status 3 if the status for the given error is not an integer" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
 
   local test_abort_status='foo'
 
@@ -26,18 +27,19 @@ setup() {
 
   ((status == 3))
   ((${#lines[@]} == 2))
-  [[ "${lines[0]}" == "$(log warn 'abort::exit' 'expect integer variable: $test_abort_status')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log warn 'abort::exit' 'expect integer variable: $test_abort_status')" ]]
   [[ "${lines[1]}" == '              actual: foo' ]]
 }
 
 @test "the empty error prints a warning and exits with the status 3" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
 
   assert::exits abort::exit ''
 
   ((status == 3))
-  [[ "$output" == "$(log warn 'abort::exit' 'expect nonempty argument: error')" ]]
+  [[ "$output" == "$(capture::stderr log warn 'abort::exit' 'expect nonempty argument: error')" ]]
 }
 
 @test "the user_error exits with the status 1" {
@@ -73,9 +75,10 @@ setup() {
 @test "an unknown error prints a warning and exits with the status 3" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
 
   assert::exits abort::exit test
 
   ((status == 3))
-  [[ "$output" == "$(log warn 'abort::exit' 'expect integer variable: $test_abort_status')" ]]
+  [[ "$output" == "$(capture::stderr log warn 'abort::exit' 'expect integer variable: $test_abort_status')" ]]
 }

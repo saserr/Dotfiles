@@ -31,14 +31,21 @@ setup() {
 }
 
 @test "fails on any other platform" {
-  platform::name() { echo 'windows'; }
-
+  load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'log'
   import 'recipe::install'
+
+  # capture error message before platform::name is mocked because
+  # capture::stderr depends on platform::name
+  local error_message
+  error_message="$(capture::stderr log error 'windows' "don't know how to install foo")"
+
+  platform::name() { echo 'windows'; }
 
   local recipe='foo'
   run recipe::install
 
   ((status == 1))
-  [[ "$output" == "$(log error 'windows' "don't know how to install foo")" ]]
+  [[ "$output" == "$error_message" ]]
 }

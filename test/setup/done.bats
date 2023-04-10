@@ -35,6 +35,7 @@ teardown() {
 @test "fails if setup::file fails" {
   load '../helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'log'
 
   setup::file() { return 1; }
@@ -42,5 +43,5 @@ teardown() {
   assert::exits setup::done 'foo'
 
   ((status == 3))
-  [[ "${lines[0]}" == "$(log error 'setup::done' 'failed to get the path to the foo'\''s state file')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'setup::done' 'failed to get the path to the foo'\''s state file')" ]]
 }

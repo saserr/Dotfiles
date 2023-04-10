@@ -62,16 +62,20 @@ setup() {
 }
 
 @test "the empty level prints a warning and uses no color" {
+  load 'helpers/import.bash'
+  import 'capture::stderr'
+
   run log '' 'foo' 'bar'
 
   ((status == 0))
-  [[ "${lines[0]}" == "$(log warn 'log' 'expected nonempty argument: level')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log warn 'log' 'expected nonempty argument: level')" ]]
   [[ "${lines[1]}" == '[foo] bar' ]]
 }
 
 @test "fails if tag is empty" {
   load 'helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'log'
 
   test_log_color='0;34' # blue
@@ -79,12 +83,13 @@ setup() {
   assert::exits log test '' 'bar'
 
   ((status == 3))
-  [[ "${lines[0]}" == "$(log error 'log' 'expected nonempty argument: tag')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'log' 'expected nonempty argument: tag')" ]]
 }
 
 @test "fails if the first message is empty" {
   load 'helpers/import.bash'
   import 'assert::exits'
+  import 'capture::stderr'
   import 'log'
 
   test_log_color='0;34' # blue
@@ -92,7 +97,7 @@ setup() {
   assert::exits log test 'foo' ''
 
   ((status == 3))
-  [[ "${lines[0]}" == "$(log error 'log' 'expected nonempty argument: message')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log error 'log' 'expected nonempty argument: message')" ]]
 }
 
 @test "the trace level uses no color" {
@@ -124,9 +129,12 @@ setup() {
 }
 
 @test "an unknown level prints a warning and uses no color" {
+  load 'helpers/import.bash'
+  import 'capture::stderr'
+
   run log test 'foo' 'bar'
 
   ((status == 0))
-  [[ "${lines[0]}" == "$(log warn 'log' 'expected variable: $test_log_color')" ]]
+  [[ "${lines[0]}" == "$(capture::stderr log warn 'log' 'expected variable: $test_log_color')" ]]
   [[ "${lines[1]}" == '[foo] bar' ]]
 }
