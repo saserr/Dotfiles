@@ -2,7 +2,7 @@
 
 setup() {
   source 'lib/import.bash'
-  import 'platform::is_root'
+  import 'user::root'
 }
 
 @test "succeeds if the current user is root" {
@@ -10,7 +10,7 @@ setup() {
 
   stub id '-u : echo 0'
 
-  run platform::is_root
+  run user::root
 
   unstub id
   ((status == 0))
@@ -22,7 +22,7 @@ setup() {
 
   stub id '-u : echo 1000'
 
-  run platform::is_root
+  run user::root
 
   unstub id
   ((status == 1))
@@ -38,7 +38,7 @@ setup() {
 
   stub id '-u : exit 1'
 
-  assert::exits platform::is_root
+  assert::exits user::root
 
   unstub id
   ((status == 2))

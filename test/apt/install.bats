@@ -7,7 +7,7 @@ setup() {
   # return that any package is not installed
   apt::missing() { return 0; }
   # return that the current user is root
-  platform::is_root() { return 0; }
+  user::root() { return 0; }
 }
 
 @test "fails without arguments" {
@@ -91,7 +91,7 @@ setup() {
   import 'capture::stderr'
   import 'log'
 
-  platform::is_root() { return 1; }
+  user::root() { return 1; }
   stub sudo '/usr/bin/env bash -c \* : /usr/bin/env bash -c "$4" '
   stub apt \
     'update : ' \

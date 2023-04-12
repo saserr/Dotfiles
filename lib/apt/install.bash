@@ -2,7 +2,7 @@ import 'abort'
 import 'apt::missing'
 import 'arguments::expect'
 import 'log'
-import 'platform::is_root'
+import 'user::root'
 
 apt::install() {
   arguments::expect $# 'package' '...'
@@ -37,7 +37,7 @@ apt::install() {
   }
 
   log trace 'apt' "installing: ${missing[*]}"
-  if platform::is_root; then
+  if user::root; then
     __apt_install
   else
     log warn 'apt' 'running as non-root' 'sudo is needed'

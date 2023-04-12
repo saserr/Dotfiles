@@ -1,11 +1,11 @@
 import 'file::append'
 import 'file::contains'
 import 'log'
-import 'platform::is_root'
 import 'platform::login_shell'
 import 'platform::name'
 import 'platform::safe_link'
 import 'prompt::yes_or_no'
+import 'user::root'
 
 program='zsh'
 recommended=('starship')
@@ -35,7 +35,7 @@ recipe::configure() {
       if [[ "$platform" != 'mac' ]] || file::contains '/etc/shells' '/usr/local/bin/zsh'; then
         chsh -s "$zsh_path"
       else
-        if platform::is_root; then
+        if user::root; then
           file:append '/etc/shells' '/usr/local/bin/zsh' && chsh -s "$zsh_path"
         else
           log warn "$platform" 'running as non-root' 'sudo is needed!'

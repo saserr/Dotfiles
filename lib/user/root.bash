@@ -1,7 +1,7 @@
 import 'abort'
 import 'arguments::expect'
 
-platform::is_root() {
+user::root() {
   arguments::expect $# # none
 
   local current_user
