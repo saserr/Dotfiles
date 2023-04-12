@@ -1,3 +1,4 @@
+import 'abort'
 import 'apt::missing'
 import 'arguments::expect'
 import 'log'
@@ -39,8 +40,14 @@ apt::install() {
   if platform::is_root; then
     __apt_install
   else
-    log warn 'apt' 'running as non-root; sudo is needed'
+    log warn 'apt' 'running as non-root' 'sudo is needed'
+
+    local missing_declaration
+    if ! missing_declaration="$(declare -p missing)"; then
+      abort platform_error 'declare' 'command failed'
+    fi
+
     export -f __apt_install
-    sudo /usr/bin/env bash -c "$(declare -p missing); __apt_install"
+    sudo /usr/bin/env bash -c "$missing_declaration && __apt_install"
   fi
 }

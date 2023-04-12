@@ -28,7 +28,11 @@ if setup::missing "$recipe"; then
     maybe_required=()
   fi
 
-  case "$(platform::name)" in
+  if ! platform="$(platform::name)"; then
+    abort platform_error "$recipe" 'unable to determine required recipes'
+  fi
+
+  case "$platform" in
     'mac')
       if array::exists 'mac_required'; then
         maybe_required+=("${mac_required[@]}")
@@ -50,7 +54,11 @@ if setup::missing "$recipe"; then
   done
 
   if ((${#required[@]})); then
-    case "$(prompt::yes_or_no "$recipe" "requires (${required[*]}); do you want to set them up?" 'Yes')" in
+    if ! answer="$(prompt::yes_or_no "$recipe" "requires (${required[*]}); do you want to set them up?" 'Yes')"; then
+      abort internal_error "$recipe" 'unable to set up required recipes'
+    fi
+
+    case "$answer" in
       Yes)
         echo
         for required_recipe in "${required[@]}"; do
@@ -66,15 +74,17 @@ if setup::missing "$recipe"; then
 
   log info "$recipe" 'installing'
   if ! recipe::install; then
-    abort platform_error "$recipe" 'setup aborted'
+    abort platform_error "$recipe" 'unable to install'
   fi
 
   log info "$recipe" 'configuring'
   if ! recipe::configure; then
-    abort platform_error "$recipe" 'setup aborted'
+    abort platform_error "$recipe" 'unable to configure'
   fi
 
-  setup::done "$recipe"
+  if ! setup::done "$recipe"; then
+    abort platform_error "$recipe" 'setup aborted'
+  fi
 else
   log info "$recipe" 'already set up'
 fi
@@ -82,9 +92,15 @@ fi
 if array::exists 'recommended'; then
   for recommended_recipe in "${recommended[@]:?}"; do
     if setup::missing "$recommended_recipe"; then
-      if [[ "$(prompt::yes_or_no "$recipe" "do you want to install $recommended_recipe")" == 'Yes' ]]; then
+      if ! answer="$(prompt::yes_or_no "$recipe" "do you want to install $recommended_recipe")"; then
+        log warn "$recommended_recipe" 'unable to set up' 'skipping!'
+      fi
+
+      if [[ "$answer" == 'Yes' ]]; then
         echo
-        ./setup.sh "$recommended_recipe"
+        if ! ./setup.sh "$recommended_recipe"; then
+          log warn "$recommended_recipe" 'setup failed' 'ignoring!'
+        fi
       fi
     fi
   done

@@ -5,5 +5,5 @@ command::exists() {
 
   local name=$1
 
-  hash "$name" 2>|/dev/null
+  hash "$name" >/dev/null 2>&1
 }

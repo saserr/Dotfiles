@@ -16,7 +16,9 @@ recipe::configure() {
       file::append "$HOME/.gitignore"
     fi
 
-    case "$(platform::name)" in
+    local platform
+    platform="$(platform::name)" || return
+    case "$platform" in
       'mac')
         curl 'https://www.toptal.com/developers/gitignore/api/macos' >>"$HOME/.gitignore" || return
         ;;
@@ -25,6 +27,6 @@ recipe::configure() {
         ;;
     esac
   else
-    log warn 'git' 'skipping setting up .gitignore; no curl'
+    log warn 'git' 'no curl' 'skipping setting up .gitignore'
   fi
 }

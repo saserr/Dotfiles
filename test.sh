@@ -19,7 +19,9 @@ if (($#)); then
   bats "$@"
 else
   __find() {
-    case "$(uname -s)" in
+    local platform
+    platform="$(uname -s)" || exit
+    case "$platform" in
       'Darwin')
         gfind "$@"
         ;;

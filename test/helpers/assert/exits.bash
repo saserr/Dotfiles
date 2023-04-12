@@ -10,7 +10,7 @@ assert::exits() {
   local arguments=("${@:2}")
 
   local unexpected
-  unexpected="$(temporary::file "$BATS_TEST_TMPDIR")"
+  unexpected="$(temporary::file "$BATS_TEST_TMPDIR")" || return
   rm "$unexpected"                         # delete the temporary file
   assert::fails path::exists "$unexpected" # check that it doesn't exist
 

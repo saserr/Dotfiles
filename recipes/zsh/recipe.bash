@@ -23,29 +23,28 @@ recipe::configure() {
   local platform
   platform="$(platform::name)" || return
   local zsh_path
-  platform=$(__zsh::path "$platform") || return
+  platform="$(__zsh::path "$platform")" || return
   local login_shell
   login_shell="$(platform::login_shell)" || return
 
   if [[ "$login_shell" != "$zsh_path" ]]; then
-    case $(prompt::yes_or_no "$platform" "do you want to set zsh as login shell (current: $login_shell)?" 'Yes') in
-      Yes)
-        log trace "$platform" 'changing login shell to zsh'
-        if [[ "$platform" != 'mac' ]] || file::contains '/etc/shells' '/usr/local/bin/zsh'; then
-          chsh -s "$zsh_path"
+    local answer
+    if answer="$(prompt::yes_or_no "$platform" "do you want to set zsh as login shell (current: $login_shell)?" 'Yes')" \
+      && [[ "$answer" == 'Yes' ]]; then
+      log trace "$platform" 'changing login shell to zsh'
+      if [[ "$platform" != 'mac' ]] || file::contains '/etc/shells' '/usr/local/bin/zsh'; then
+        chsh -s "$zsh_path"
+      else
+        if platform::is_root; then
+          file:append '/etc/shells' '/usr/local/bin/zsh' && chsh -s "$zsh_path"
         else
-          if platform::is_root; then
-            file:append '/etc/shells' '/usr/local/bin/zsh' && chsh -s "$zsh_path"
-          else
-            log warn "$platform" 'running as non-root; sudo is needed'
-            sudo file:append '/etc/shells' '/usr/local/bin/zsh' && chsh -s "$zsh_path"
-          fi
+          log warn "$platform" 'running as non-root' 'sudo is needed!'
+          sudo file:append '/etc/shells' '/usr/local/bin/zsh' && chsh -s "$zsh_path"
         fi
-        ;;
-      No)
-        log trace "$platform" "$login_shell will remain the login shell"
-        ;;
-    esac
+      fi
+    else
+      log trace "$platform" "$login_shell will remain the login shell"
+    fi
   fi
 
   log trace 'zsh' 'setting up .zshenv'

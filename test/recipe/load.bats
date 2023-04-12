@@ -14,7 +14,7 @@ setup() {
   run recipe::load
 
   ((status == 1))
-  [[ "$output" == "$(capture::stderr log warn 'foo' 'has no recipe')" ]]
+  [[ "$output" == "$(capture::stderr log error 'foo' 'file is missing')" ]]
 }
 
 @test "fails if recipe::file fails" {
@@ -28,7 +28,7 @@ setup() {
   run recipe::load
 
   ((status == 1))
-  [[ "$output" == "$(capture::stderr log warn 'foo' 'has no recipe')" ]]
+  [[ "$output" == "$(capture::stderr log error 'foo' 'file is missing')" ]]
 }
 
 @test "loads the \$recipe file" {
@@ -58,7 +58,6 @@ setup() {
 
 @test "fails if loading the \$recipe file fails" {
   load '../helpers/import.bash'
-  import 'assert::exits'
   import 'capture::stderr'
   import 'file::write'
   import 'log'
@@ -67,18 +66,43 @@ setup() {
   file::write "$BATS_TEST_TMPDIR/foo/recipe.bash" 'return 1'
 
   local recipe='foo'
-  assert::exits recipe::load
+  run recipe::load
 
   ((status == 1))
   [[ "$output" == "$(capture::stderr log error 'foo' "failed to load from $BATS_TEST_TMPDIR/foo/recipe.bash")" ]]
 }
 
-@test "fails if cd to the \$recipe's directory fails" {
+@test "fails if it can't determine the \$recipe's parent directory" {
   load '../helpers/import.bash'
+  import 'capture::stderr'
   import 'file::write'
 
   local RECIPES_PATH=("$BATS_TEST_TMPDIR")
   file::write "$BATS_TEST_TMPDIR/foo/recipe.bash" "echo 'bar'"
+
+  path::parent() { return 1; }
+
+  local recipe='foo'
+  run recipe::load
+
+  ((status == 1))
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == 'bar' ]]
+  [[ "${lines[1]}" == "$(capture::stderr log error 'foo' 'failed to cd into recipe'\''s directory')" ]]
+}
+
+@test "fails if cd to the \$recipe's directory fails" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
+  import 'file::write'
+
+  local RECIPES_PATH=("$BATS_TEST_TMPDIR")
+  file::write "$BATS_TEST_TMPDIR/foo/recipe.bash" "echo 'bar'"
+
+  # capture error message before platform::name is mocked because
+  # capture::stderr indirectly depends on platform::name
+  local error_message
+  error_message="$(capture::stderr log error 'foo' 'failed to cd into recipe'\''s directory')"
 
   cd() { return 1; }
 
@@ -86,7 +110,9 @@ setup() {
   run recipe::load
 
   ((status == 1))
-  [[ "$output" == 'bar' ]]
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == 'bar' ]]
+  [[ "${lines[1]}" == "$error_message" ]]
 }
 
 @test "fails if \$recipe is missing" {

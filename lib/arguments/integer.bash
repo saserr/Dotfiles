@@ -20,7 +20,12 @@ arguments::integer() {
       messages+=("${STACK_TRACE[@]:2}")
     fi
 
-    log error "$(caller::name)" "${messages[@]}"
+    local caller
+    if ! caller="$(caller::name)"; then
+      caller='__unknown__'
+    fi
+    log error "$caller" "${messages[@]}"
+
     abort::exit internal_error
   fi
 }

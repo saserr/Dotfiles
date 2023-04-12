@@ -20,7 +20,8 @@ teardown() {
   assert::wrong_usage 'setup::done' 'recipe'
 }
 
-@test "creates a file under ~/.setup/ with value 1" {
+@test "creates a file with value 1" {
+  import 'file::exists'
   import 'setup::file'
 
   local file
@@ -28,20 +29,48 @@ teardown() {
 
   setup::done 'foo'
 
-  [[ -f "$file" ]]
+  file::exists "$file"
   [[ "$(cat "$file")" == '1' ]]
 }
 
 @test "fails if setup::file fails" {
   load '../helpers/import.bash'
-  import 'assert::exits'
   import 'capture::stderr'
   import 'log'
 
   setup::file() { return 1; }
 
-  assert::exits setup::done 'foo'
+  run setup::done 'foo'
 
-  ((status == 3))
-  [[ "${lines[0]}" == "$(capture::stderr log error 'setup::done' 'failed to get the path to the foo'\''s state file')" ]]
+  ((status == 1))
+  ((${#lines[@]} == 1))
+  [[ "${lines[0]}" == "$(capture::stderr log error 'foo' 'failed to save the state file')" ]]
+}
+
+@test "fails if it can't determine the parent directory of setup::file" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
+  import 'log'
+
+  path::parent() { return 1; }
+
+  run setup::done 'foo'
+
+  ((status == 1))
+  ((${#lines[@]} == 1))
+  [[ "${lines[0]}" == "$(capture::stderr log error 'foo' 'failed to save the state file')" ]]
+}
+
+@test "fails if can't create the parent directory for setup::file" {
+  load '../helpers/import.bash'
+  import 'capture::stderr'
+  import 'log'
+
+  mkdir() { return 1; }
+
+  run setup::done 'foo'
+
+  ((status == 1))
+  ((${#lines[@]} == 1))
+  [[ "${lines[0]}" == "$(capture::stderr log error 'foo' 'failed to save the state file')" ]]
 }

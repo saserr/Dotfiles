@@ -1,10 +1,13 @@
+import 'abort'
 import 'arguments::expect'
 
 platform::name() {
   arguments::expect $# # none
 
   local os_name
-  os_name="$(uname -s)"
+  if ! os_name="$(uname -s)"; then
+    abort platform_error 'uname' 'command failed'
+  fi
 
   case $os_name in
     'Darwin')

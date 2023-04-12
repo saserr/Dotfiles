@@ -1,3 +1,4 @@
+import 'abort'
 import 'arguments::expect'
 import 'array::exists'
 import 'bash::support::associative_array'
@@ -22,7 +23,12 @@ variable::nonempty() {
       # shellcheck disable=SC2016
       # ignore the expansion in the first argument of printf because it is
       # meant for the eval function
-      printf -v test '((${#%q[@]}))' "$name" # check if array has size > 0
+      if ! printf -v test '((${#%q[@]}))' "$name"; then
+        abort internal_error "${FUNCNAME[0]}" \
+          'failed to create create the non-empty array test'
+      fi
+
+      # check if array has size > 0
       eval "$test"
     else
       # check if first element of the array is not null. note that this check

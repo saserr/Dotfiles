@@ -1,6 +1,12 @@
+import 'log'
 import 'platform::name'
 
-case "$(platform::name)" in
+if ! platform="$(platform::name)"; then
+  log error 'temporary::file' 'unable to determine the platform name'
+  return 1
+fi
+
+case "$platform" in
   'mac')
     import 'arguments::expect'
 

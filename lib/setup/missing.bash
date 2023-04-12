@@ -10,7 +10,7 @@ setup::missing() {
 
   local file
   if ! file="$(setup::file "$recipe")"; then
-    abort internal_error "${FUNCNAME[0]}" "failed to get the path to the ${recipe}'s state file"
+    abort internal_error "$recipe" 'the state file is missing'
   fi
 
   ! file::exists "$file"

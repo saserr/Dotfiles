@@ -63,3 +63,23 @@ setup() {
 
   [[ "$(path::parent "$baz")" == "$bar" ]]
 }
+
+@test "fails if unable to determine the parent directory" {
+  load '../helpers/import.bash'
+  load '../helpers/mocks/stub.bash'
+  import 'capture::stderr'
+  import 'log'
+
+  local foo="$BATS_TEST_TMPDIR/foo"
+  touch "$foo"
+
+  stub dirname "-- $foo : exit 1"
+
+  run path::parent "$foo"
+
+  unstub dirname
+  ((status == 1))
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == "$(capture::stderr log error 'path::parent' 'unable to determine the parent directory')" ]]
+  [[ "${lines[1]}" == "               file: $foo" ]]
+}

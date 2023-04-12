@@ -150,57 +150,67 @@ setup() {
   [[ "$output" == '' ]]
 }
 
-@test "fails if greadlink fails on the mac platform" {
-  import 'platform::name'
-  if [[ "$(platform::name)" != 'mac' ]]; then
-    skip 'running on a non-mac platform'
-  fi
-
-  load '../helpers/mocks/stub.bash'
+@test "fails if platform::name fails" {
   load '../helpers/import.bash'
-  import 'assert::fails'
+  import 'assert::exits'
+  import 'capture::stderr'
+  import 'file::write'
+  import 'log'
 
+  local script="$BATS_TEST_TMPDIR/foo"
+  file::write "$script" \
+    '#!/usr/bin/env bash' \
+    'platform::name() { return 1; }' \
+    "source 'lib/import.bash'" \
+    "import 'path::canonicalize'" \
+    "path::canonicalize '$script'"
+  chmod +x "$script"
+
+  run "$script"
+
+  ((status == 3))
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == "$(capture::stderr log error 'path::canonicalize' 'unable to determine the platform name')" ]]
+  [[ "${lines[1]}" == "$(capture::stderr log error 'import' "can't load the 'path::canonicalize' function")"* ]]
+  [[ "${lines[2]}" == "         at $script (line: 5)" ]]
+}
+
+@test "fails if greadlink fails on the mac platform" {
+  load '../helpers/mocks/stub.bash'
+
+  platform::name() { echo 'mac'; }
   stub greadlink 'exit 1'
 
-  assert::fails path::canonicalize "$bar"
+  run path::canonicalize "$bar"
 
   unstub greadlink
+  ((status == 1))
   [[ "$output" == '' ]]
 }
 
 @test "fails if greadlink is missing on mac platform" {
-  import 'platform::name'
-  if [[ "$(platform::name)" != 'mac' ]]; then
-    skip 'running on a non-mac platform'
-  fi
+  platform::name() { echo 'mac'; }
+  command::exists() { [[ "$1" != 'greadlink' ]]; }
 
   load '../helpers/import.bash'
-  import 'assert::exits'
   import 'capture::stderr'
   import 'log'
 
-  command::exists() { [[ "$1" != 'greadlink' ]]; }
+  run path::canonicalize 'foo'
 
-  assert::exits path::canonicalize 'foo'
-
-  ((status == 2))
+  ((status == 1))
   [[ "$output" == "$(capture::stderr log error 'mac' 'greadlink is not installed')" ]]
 }
 
 @test "fails if readlink fails on any other platform" {
-  import 'platform::name'
-  if [[ "$(platform::name)" == 'mac' ]]; then
-    skip 'running on the mac platform'
-  fi
-
   load '../helpers/mocks/stub.bash'
-  load '../helpers/import.bash'
-  import 'assert::fails'
 
+  platform::name() { echo 'foo'; }
   stub readlink 'exit 1'
 
-  assert::fails path::canonicalize "$bar"
+  run path::canonicalize "$bar"
 
   unstub readlink
+  ((status == 1))
   [[ "$output" == '' ]]
 }

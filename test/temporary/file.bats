@@ -31,6 +31,31 @@ setup() {
   file::empty "$output"
 }
 
+@test "fails if platform::name fails" {
+  load '../helpers/import.bash'
+  import 'assert::exits'
+  import 'capture::stderr'
+  import 'file::write'
+  import 'log'
+
+  local script="$BATS_TEST_TMPDIR/foo"
+  file::write "$script" \
+    '#!/usr/bin/env bash' \
+    'platform::name() { return 1; }' \
+    "source 'lib/import.bash'" \
+    "import 'temporary::file'" \
+    'temporary::file'
+  chmod +x "$script"
+
+  run "$script"
+
+  ((status == 3))
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == "$(capture::stderr log error 'temporary::file' 'unable to determine the platform name')" ]]
+  [[ "${lines[1]}" == "$(capture::stderr log error 'import' "can't load the 'temporary::file' function")"* ]]
+  [[ "${lines[2]}" == "         at $script (line: 5)" ]]
+}
+
 @test "fails if mktemp fails" {
   load '../helpers/mocks/stub.bash'
 

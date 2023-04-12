@@ -112,6 +112,7 @@ setup() {
 @test "moves \$from to \$from.old if \$from exists and a positive answer is given at the prompt" {
   load '../helpers/import.bash'
   import 'capture::stderr'
+  import 'file::exists'
   import 'log'
   import 'text::ends_with'
 
@@ -122,7 +123,7 @@ setup() {
 
   ((status == 0))
   text::ends_with "${lines[1]}" "$(capture::stderr log trace 'test' "$from will be moved to $from.old")"
-  [[ -f "$from.old" ]] # $from.old is a file
+  file::exists "$from.old"
   [[ "$(cat "$from.old")" == 'foo' ]]
 }
 
@@ -142,6 +143,7 @@ setup() {
 @test "fails and leaves things unchanged if \$from.old exists" {
   load '../helpers/import.bash'
   import 'capture::stderr'
+  import 'file::exists'
   import 'log'
 
   echo 'foo' >"$from"
@@ -151,17 +153,21 @@ setup() {
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 1))
-  [[ "${lines[1]}" == "$(capture::stderr log error 'test' "both $from and $from.old already exist; aborting!")" ]]
-  [[ -f "$from" ]] # $from is still a file
+  [[ "${lines[1]}" == "$(capture::stderr log error 'test' "both $from and $from.old already exist")" ]]
+  [[ "${lines[2]}" == '       aborting!' ]]
+  file::exists "$from"
   [[ "$(cat "$from")" == 'foo' ]]
-  [[ -f "$from.old" ]] # $from.old is a file
+  file::exists "$from.old"
   [[ "$(cat "$from.old")" == 'bar' ]]
 }
 
 @test "fails and leaves things unchanged if \$from exists and a negative answer is given at the prompt" {
   load '../helpers/import.bash'
+  import 'assert::fails'
   import 'capture::stderr'
+  import 'file::exists'
   import 'log'
+  import 'path::exists'
   import 'text::ends_with'
 
   echo 'foo' >"$from"
@@ -171,20 +177,82 @@ setup() {
 
   ((status == 1))
   text::ends_with "${lines[1]}" "$(capture::stderr log warn 'test' "$from will not be linked to $to")"
-  [[ -f "$from" ]] # $from is still a file
+  file::exists "$from"
   [[ "$(cat "$from")" == 'foo' ]]
-  [[ ! -e "$from.old" ]] # $from.old does not exist
+  assert::fails path::exists "$from.old"
 }
 
 @test "fails and leaves things unchanged if \$to does not exist" {
   load '../helpers/import.bash'
+  import 'assert::fails'
   import 'capture::stderr'
   import 'log'
+  import 'path::exists'
 
   run platform::safe_link 'test' "$from" "$to" <<<''
 
   ((status == 1))
-  [[ "$output" == "$(capture::stderr log error 'test' "$to does not exist; aborting!")" ]]
-  [[ ! -e "$from" ]] # $from does not exist
-  [[ ! -e "$to" ]]   # $to does not exist
+  [[ "$output" == "$(capture::stderr log error 'test' "$to does not exist" 'aborting!')" ]]
+  assert::fails path::exists "$from"
+  assert::fails path::exists "$to"
+}
+
+@test "fails and leaves things unchanged if path::canonicalize \$from fails" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+  import 'capture::stderr'
+  import 'log'
+  import 'path::exists'
+
+  echo 'foo' >"$to"
+
+  path::canonicalize() { [[ "$1" != "$from" ]] && echo "$1"; }
+  run platform::safe_link 'test' "$from" "$to" <<<''
+
+  ((status == 1))
+  [[ "$output" == "$(capture::stderr log error 'test' "unable to cannonicalize path: $from" 'aborting!')" ]]
+  assert::fails path::exists "$from"
+  [[ "$(cat "$to")" == 'foo' ]]
+}
+
+@test "fails and leaves things unchanged if path::canonicalize \$to fails" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+  import 'capture::stderr'
+  import 'log'
+  import 'path::exists'
+
+  echo 'foo' >"$to"
+
+  path::canonicalize() { [[ "$1" != "$to" ]] && echo "$1"; }
+  run platform::safe_link 'test' "$from" "$to" <<<''
+
+  ((status == 1))
+  [[ "$output" == "$(capture::stderr log error 'test' "unable to cannonicalize path: $to" 'aborting!')" ]]
+  assert::fails path::exists "$from"
+  [[ "$(cat "$to")" == 'foo' ]]
+}
+
+@test "fails and leaves things unchanged if \$from exists and it fails to ask a question to move it" {
+  load '../helpers/import.bash'
+  import 'assert::fails'
+  import 'capture::stderr'
+  import 'file::exists'
+  import 'log'
+  import 'path::exists'
+  import 'text::ends_with'
+
+  echo 'foo' >"$from"
+  echo 'bar' >"$to"
+
+  prompt::yes_or_no() { return 1; }
+
+  run platform::safe_link 'test' "$from" "$to" <<<''
+
+  ((status == 1))
+  [[ "${lines[1]}" == "$(capture::stderr log error 'test' "$from exists")" ]]
+  [[ "${lines[2]}" == "       it will not be linked to $to" ]]
+  file::exists "$from"
+  [[ "$(cat "$from")" == 'foo' ]]
+  assert::fails path::exists "$from.old"
 }

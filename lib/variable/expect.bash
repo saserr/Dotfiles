@@ -17,6 +17,10 @@ variable::expect() {
   done
 
   if ((${#missing[@]})); then
-    abort internal_error "$(caller::name)" "expected nonempty variables: ${missing[*]}"
+    local caller
+    if ! caller="$(caller::name)"; then
+      caller='__unknown__'
+    fi
+    abort internal_error "$caller" "expected nonempty variables: ${missing[*]}"
   fi
 }

@@ -79,3 +79,19 @@ setup() {
   unstub uname
   [[ "$output" == 'Linux' ]]
 }
+
+@test "fails if printing the kernel name fails" {
+  load '../helpers/import.bash'
+  load '../helpers/mocks/stub.bash'
+  import 'capture::stderr'
+  import 'log'
+
+  stub uname '-s : exit 1'
+
+  # assert::exits can't be used because it indirectly depends on platform::name
+  run platform::name
+
+  unstub uname
+  ((status == 2))
+  [[ "$output" == "$(capture::stderr log error 'uname' 'command failed')" ]]
+}

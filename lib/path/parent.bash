@@ -1,4 +1,5 @@
 import 'arguments::expect'
+import 'log'
 import 'path::exists'
 
 path::parent() {
@@ -7,9 +8,15 @@ path::parent() {
   local file=$1
 
   local parent
-  parent="$(dirname -- "$file")" || return
+  if ! parent="$(dirname -- "$file")"; then
+    log error "${FUNCNAME[0]}" \
+      'unable to determine the parent directory' \
+      "file: $file"
+    return 1
+  fi
+
   if path::exists "$parent"; then
-    (cd -- "$(dirname -- "$file")" >/dev/null 2>&1 && pwd)
+    (cd -- "$parent" >/dev/null && pwd)
   else
     echo "$parent"
   fi

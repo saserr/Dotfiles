@@ -19,15 +19,14 @@ setup() {
 
 @test "fails if homebrew is not installed" {
   load '../helpers/import.bash'
-  import 'assert::exits'
   import 'capture::stderr'
   import 'log'
 
   command::exists() { [[ "$1" != 'brew' ]]; }
 
-  assert::exits homebrew::install 'foo'
+  run homebrew::install 'foo'
 
-  ((status == 2))
+  ((status == 1))
   [[ "$output" == "$(capture::stderr log error 'homebrew' 'is not installed')" ]]
 }
 

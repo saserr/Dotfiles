@@ -11,7 +11,10 @@ assert::wrong_usage() {
   local arguments=("${@:2}")
 
   ((${status:?} == 3))
-  [[ "${lines[0]:?}" == "$(capture::stderr log error "$function" 'wrong number of arguments')" ]]
+
+  local error_message
+  error_message="$(capture::stderr log error "$function" 'wrong number of arguments')" || return
+  [[ "${lines[0]:?}" == "$error_message" ]]
 
   local indentation
   printf -v indentation " %.0s" $(seq 1 $((${#function} + 2)))

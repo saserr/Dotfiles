@@ -8,7 +8,7 @@ capture::stderr() {
   local arguments=("${@:2}")
 
   local error
-  error="$(temporary::file "$BATS_TEST_TMPDIR")"
+  error="$(temporary::file "$BATS_TEST_TMPDIR")" || return
   $command "${arguments[@]}" 2>"$error"
 
   cat "$error"

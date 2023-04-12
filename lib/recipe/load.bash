@@ -1,4 +1,3 @@
-import 'abort'
 import 'arguments::expect'
 import 'log'
 import 'path::parent'
@@ -11,16 +10,19 @@ recipe::load() {
 
   local file
   if ! file="$(recipe::file)"; then
-    log warn "${recipe:?}" 'has no recipe'
+    log error "${recipe:?}" 'file is missing'
     return 1
   fi
 
   # shellcheck source=/dev/null
   if ! source "$file"; then
-    abort user_error "${recipe:?}" "failed to load from $file"
+    log error "${recipe:?}" "failed to load from $file"
+    return 1
   fi
 
   local directory
-  directory="$(path::parent "$file")" || return
-  cd "$directory" || return
+  if ! { directory="$(path::parent "$file")" && cd "$directory"; }; then
+    log error "${recipe:?}" 'failed to cd into recipe'\''s directory'
+    return 1
+  fi
 }

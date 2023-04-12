@@ -1,21 +1,27 @@
 import 'arguments::expect'
+import 'log'
 import 'platform::name'
 
-case "$(platform::name)" in
+if ! platform="$(platform::name)"; then
+  log error 'path::canonicalize' 'unable to determine the platform name'
+  return 1
+fi
+
+case "$platform" in
   'mac')
-    import 'abort'
     import 'command::exists'
 
     path::canonicalize() {
       arguments::expect $# 'path'
 
+      if ! command::exists 'greadlink'; then
+        log error 'mac' 'greadlink is not installed'
+        return 1
+      fi
+
       local path=$1
 
-      if command::exists 'greadlink'; then
-        greadlink -f "$path"
-      else
-        abort platform_error 'mac' 'greadlink is not installed'
-      fi
+      greadlink -f "$path"
     }
     ;;
   *)

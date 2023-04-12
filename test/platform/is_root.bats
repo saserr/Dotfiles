@@ -29,14 +29,18 @@ setup() {
   [[ "$output" == '' ]]
 }
 
-@test "fails if retrieving the current user fails" {
+@test "fails if printing the effective user ID fails" {
+  load '../helpers/import.bash'
   load '../helpers/mocks/stub.bash'
+  import 'assert::exits'
+  import 'capture::stderr'
+  import 'log'
 
   stub id '-u : exit 1'
 
-  run platform::is_root
+  assert::exits platform::is_root
 
   unstub id
-  ((status == 1))
-  [[ "$output" == '' ]]
+  ((status == 2))
+  [[ "$output" == "$(capture::stderr log error 'id' 'command failed')" ]]
 }

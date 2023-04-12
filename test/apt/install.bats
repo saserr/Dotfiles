@@ -102,7 +102,8 @@ setup() {
   unstub apt
   unstub sudo
   ((status == 0))
-  [[ "${lines[1]}" == "$(capture::stderr log warn 'apt' 'running as non-root; sudo is needed')" ]]
+  [[ "${lines[1]}" == "$(capture::stderr log warn 'apt' 'running as non-root')" ]]
+  [[ "${lines[2]}" == '      sudo is needed' ]]
 }
 
 @test "succeeds if package is already installed" {

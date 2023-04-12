@@ -1,6 +1,12 @@
+import 'log'
 import 'platform::name'
 
-case "$(platform::name)" in
+if ! platform="$(platform::name)"; then
+  log error 'recipe::install' 'unable to determine the platform name'
+  return 1
+fi
+
+case "$platform" in
   'mac')
     import 'arguments::expect'
     import 'mac::install'
@@ -23,7 +29,6 @@ case "$(platform::name)" in
     ;;
   *)
     import 'arguments::expect'
-    import 'log'
     import 'variable::expect'
 
     recipe::install() {

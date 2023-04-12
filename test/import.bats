@@ -1,5 +1,20 @@
 #!/usr/bin/env bats
 
+@test "fails if unable to determine the parent directory" {
+  load 'helpers/mocks/stub.bash'
+
+  stub dirname 'exit 1'
+
+  run source 'lib/import.bash'
+
+  unstub dirname
+  ((status == 3))
+  ((${#lines[@]} == 2))
+  [[ "${lines[0]}" == '[import] unable to determine the parent directory' ]]
+  [[ "${lines[1]}" == '         file: '* ]]
+  [[ "${lines[1]}" == *'lib/import.bash' ]]
+}
+
 @test "creates \$IMPORT_PATH with 'recipes' if \$IMPORT_PATH is not declared" {
   declare -p 'IMPORT_PATH' && return 1 # test that IMPORT_PATH is not declared
 

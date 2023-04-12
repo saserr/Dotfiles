@@ -1,5 +1,11 @@
 if ! declare -F 'import' >/dev/null 2>&1; then
-  IMPORT_PATH+=("$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)")
+  if ! { __parent_dir="$(dirname -- "${BASH_SOURCE[0]}")" \
+    && IMPORT_PATH+=("$(cd -- "$__parent_dir" >/dev/null && pwd)"); }; then
+    echo '[import] unable to determine the parent directory' 1>&2
+    echo "         file: ${BASH_SOURCE[0]}" 1>&2
+    exit 3
+  fi
+
   SKIP_ON_STACK_TRACE+=("${BASH_SOURCE[0]}")
 
   __import::abort() {

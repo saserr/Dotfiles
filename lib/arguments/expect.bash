@@ -95,6 +95,10 @@ arguments::expect() {
 
   if ((actual < required)) \
     || { ((vararg == 0)) && ((actual > (required + optional))); }; then
-    __arguments::expect::abort "$(caller::name)" 1 "$actual" "${names[@]}"
+    local caller
+    if ! caller="$(caller::name)"; then
+      caller='__unknown__'
+    fi
+    __arguments::expect::abort "$caller" 1 "$actual" "${names[@]}"
   fi
 }
