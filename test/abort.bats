@@ -71,7 +71,8 @@ setup() {
     '#!/usr/bin/env bash' \
     "source 'lib/import.bash'" \
     "import 'abort'" \
-    "abort test 'foo' 'bar'"
+    "abort test 'foo' 'bar'" \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"
@@ -92,7 +93,8 @@ setup() {
     "source 'lib/import.bash'" \
     "import 'abort'" \
     "ABORT_WITH_STACK_TRACE+=('test')" \
-    "abort test 'foo' 'bar'"
+    "abort test 'foo' 'bar'" \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"
@@ -136,7 +138,8 @@ setup() {
     '#!/usr/bin/env bash' \
     "source 'lib/import.bash'" \
     "import 'abort'" \
-    "abort internal_error 'foo' 'bar'"
+    "abort internal_error 'foo' 'bar'" \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"

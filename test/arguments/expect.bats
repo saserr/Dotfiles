@@ -18,7 +18,8 @@ setup() {
     "source 'lib/import.bash'" \
     "import 'arguments::expect'" \
     "foo() { arguments::expect; }" \
-    'foo'
+    'foo' \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"
@@ -46,7 +47,8 @@ setup() {
     "source 'lib/import.bash'" \
     "import 'arguments::expect'" \
     "foo() { arguments::expect 'bar'; }" \
-    'foo'
+    'foo' \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"
@@ -255,7 +257,8 @@ setup() {
     "source 'lib/import.bash'" \
     "import 'arguments::expect'" \
     'foo() { arguments::expect 1; }' \
-    'foo'
+    'foo' \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"
@@ -292,7 +295,8 @@ setup() {
     '#!/usr/bin/env bash' \
     "source 'lib/import.bash'" \
     "import 'arguments::expect'" \
-    'arguments::expect 1'
+    'arguments::expect 1' \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"

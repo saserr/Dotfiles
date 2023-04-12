@@ -17,7 +17,8 @@ setup() {
     'platform::name() { return 1; }' \
     "source 'lib/import.bash'" \
     "import 'recipe::install'" \
-    "recipe::install"
+    "recipe::install" \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"

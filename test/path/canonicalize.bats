@@ -163,7 +163,8 @@ setup() {
     'platform::name() { return 1; }' \
     "source 'lib/import.bash'" \
     "import 'path::canonicalize'" \
-    "path::canonicalize '$script'"
+    "path::canonicalize '$script'" \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"

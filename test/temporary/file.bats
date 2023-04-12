@@ -44,7 +44,8 @@ setup() {
     'platform::name() { return 1; }' \
     "source 'lib/import.bash'" \
     "import 'temporary::file'" \
-    'temporary::file'
+    'temporary::file' \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"

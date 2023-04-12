@@ -26,7 +26,8 @@ setup() {
     "source 'lib/import.bash'" \
     "import 'arguments::error'" \
     "foo() { arguments::error 'bar'; }" \
-    'foo'
+    'foo' \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"
@@ -72,7 +73,8 @@ setup() {
     '#!/usr/bin/env bash' \
     "source 'lib/import.bash'" \
     "import 'arguments::error'" \
-    "arguments::error 'bar'"
+    "arguments::error 'bar'" \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"

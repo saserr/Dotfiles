@@ -88,6 +88,7 @@
   echo "source 'lib/import.bash'" >>"$script"
   echo 'test() { import; }' >>"$script"
   echo 'test' >>"$script"
+  echo "echo 'unreachable'" >>"$script"
   chmod +x "$script"
 
   run "$script"
@@ -107,6 +108,7 @@
   echo "unset -f 'abort'" >>"$script"
   echo 'test() { import; }' >>"$script"
   echo 'test' >>"$script"
+  echo "echo 'unreachable'" >>"$script"
   chmod +x "$script"
 
   run "$script"
@@ -127,6 +129,7 @@
   echo "unset -f 'log'" >>"$script"
   echo 'test() { import; }' >>"$script"
   echo 'test' >>"$script"
+  echo "echo 'unreachable'" >>"$script"
   chmod +x "$script"
 
   run "$script"
@@ -324,53 +327,68 @@
   [[ "${lines[0]}" == *"can't load the 'foo' function from $BATS_TEST_TMPDIR/foo.bash" ]]
 }
 
-test_unknown_function() {
-  echo 'test() {' >>"$BATS_TEST_TMPDIR/test.bash"
+@test "exits if an unknown function is imported" {
+  local script="$BATS_TEST_TMPDIR/test.bash"
+  echo '#!/usr/bin/env bash' >"$script"
+  echo "source 'lib/import.bash'" >>"$script"
+  echo 'test() {' >>"$script"
+  echo "import 'foo'" >>"$script"
+  echo "echo 'unreachable'" >>"$script"
+  echo '}' >>"$script"
+  echo 'test' >>"$script"
+  chmod u+x "$script"
 
-  echo "import 'foo'" >>"$BATS_TEST_TMPDIR/test.bash"
-  local -i import_line
-  import_line="$(wc -l <"$BATS_TEST_TMPDIR/test.bash")"
-
-  local unexpected="$BATS_TEST_TMPDIR/unexpected"
-  echo "touch '$unexpected'" >>"$BATS_TEST_TMPDIR/test.bash"
-  echo '}' >>"$BATS_TEST_TMPDIR/test.bash"
-
-  echo 'test' >>"$BATS_TEST_TMPDIR/test.bash"
-  local -i call_line
-  call_line="$(wc -l <"$BATS_TEST_TMPDIR/test.bash")"
-
-  chmod u+x "$BATS_TEST_TMPDIR/test.bash"
-  run "$BATS_TEST_TMPDIR/test.bash"
+  run "$script"
 
   ((status == 3))
-  [[ ! -e "$unexpected" ]]
   ((${#lines[@]} == 3))
   [[ "${lines[0]}" == *'[import]'* ]]
   [[ "${lines[0]}" == *'unknown function: foo' ]]
-  [[ "${lines[1]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: $import_line)" ]]
-  [[ "${lines[2]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: $call_line)" ]]
-}
-
-@test "exits if an unknown function is imported" {
-  echo '#!/usr/bin/env bash' >"$BATS_TEST_TMPDIR/test.bash"
-  echo "source 'lib/import.bash'" >>"$BATS_TEST_TMPDIR/test.bash"
-
-  test_unknown_function
+  [[ "${lines[1]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: 4)" ]]
+  [[ "${lines[2]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: 7)" ]]
 }
 
 @test "exits if an unknown function is imported (no abort)" {
-  echo '#!/usr/bin/env bash' >"$BATS_TEST_TMPDIR/test.bash"
-  echo "source 'lib/import.bash'" >>"$BATS_TEST_TMPDIR/test.bash"
-  echo "unset -f 'abort'" >>"$BATS_TEST_TMPDIR/test.bash"
+  local script="$BATS_TEST_TMPDIR/test.bash"
+  echo '#!/usr/bin/env bash' >"$script"
+  echo "source 'lib/import.bash'" >>"$script"
+  echo "unset -f 'abort'" >>"$script"
+  echo 'test() {' >>"$script"
+  echo "import 'foo'" >>"$script"
+  echo "echo 'unreachable'" >>"$script"
+  echo '}' >>"$script"
+  echo 'test' >>"$script"
+  chmod u+x "$script"
 
-  test_unknown_function
+  run "$script"
+
+  ((status == 3))
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == *'[import]'* ]]
+  [[ "${lines[0]}" == *'unknown function: foo' ]]
+  [[ "${lines[1]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: 5)" ]]
+  [[ "${lines[2]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: 8)" ]]
 }
 
 @test "exits if an unknown function is imported (no abort and log)" {
-  echo '#!/usr/bin/env bash' >"$BATS_TEST_TMPDIR/test.bash"
-  echo "source 'lib/import.bash'" >>"$BATS_TEST_TMPDIR/test.bash"
-  echo "unset -f 'abort'" >>"$BATS_TEST_TMPDIR/test.bash"
-  echo "unset -f 'log'" >>"$BATS_TEST_TMPDIR/test.bash"
+  local script="$BATS_TEST_TMPDIR/test.bash"
+  echo '#!/usr/bin/env bash' >"$script"
+  echo "source 'lib/import.bash'" >>"$script"
+  echo "unset -f 'abort'" >>"$script"
+  echo "unset -f 'log'" >>"$script"
+  echo 'test() {' >>"$script"
+  echo "import 'foo'" >>"$script"
+  echo "echo 'unreachable'" >>"$script"
+  echo '}' >>"$script"
+  echo 'test' >>"$script"
+  chmod u+x "$script"
 
-  test_unknown_function
+  run "$script"
+
+  ((status == 3))
+  ((${#lines[@]} == 3))
+  [[ "${lines[0]}" == *'[import]'* ]]
+  [[ "${lines[0]}" == *'unknown function: foo' ]]
+  [[ "${lines[1]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: 6)" ]]
+  [[ "${lines[2]}" == "         at $BATS_TEST_TMPDIR/test.bash (line: 9)" ]]
 }

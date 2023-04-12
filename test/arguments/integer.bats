@@ -40,7 +40,8 @@ setup() {
     "source 'lib/import.bash'" \
     "import 'arguments::integer'" \
     "foo() { arguments::integer 'bar' 'baz'; }" \
-    'foo'
+    'foo' \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"
@@ -77,7 +78,8 @@ setup() {
     '#!/usr/bin/env bash' \
     "source 'lib/import.bash'" \
     "import 'arguments::integer'" \
-    "arguments::integer 'bar' 'baz'"
+    "arguments::integer 'bar' 'baz'" \
+    "echo 'unreachable'"
   chmod +x "$script"
 
   run "$script"
